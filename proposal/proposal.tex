@@ -174,10 +174,44 @@ Naturally, this question raises several underlying questions such as:
 \begin{itemize}
 \item How do we prioritize practice areas (pitch, tempo, etc.) in our visualization?
 \item What are the most effective ways of visualizing those practice areas?
+\item Is frequency data such as note counts valuable to a musician?
 \end{itemize}
 
 In an effort to pinpoint mistakes, we will need to find the best ways to
 represent our musical data, so the user will see value in the tool.
+
+\section{Design Goals}
+
+At a high level, we intend to construct a dashboard split into two panes: the
+file pane and the graph pane.
+
+The file pane will contain a list of active MIDI files which are each given a
+color for encoding purposes. That means the dashboard will be able to support
+at most 19 simultaneous MIDI files. This should be more than enough considering
+the practicality of comparing that many recordings.
+
+Each file in the file pane will be able to be selected for viewing purposes
+in the graph pane. When unselected, the file's background color will be neutral.
+When selected, the file's background color will mirror its color in the graph
+pane.
+
+Meanwhile, the graph pane will contain several graphs:
+
+\begin{itemize}
+\item Notes versus Time (master graph)
+\item Notes versus Frequency
+\item Velocity versus Time
+\item Sustain versus Time
+\end{itemize}
+
+Each graph will be connected with the master graph for filtering purposes.
+When a section of time is selected in the master graph, all other graphs will
+be updated to reflect the new subsection of data. This will allow a user
+to hone in on specific mistakes.
+
+As an added bonus, graphs will contain tooltips which will highlight areas with
+the highest amount of mistakes. These tooltips will include high level notes
+to assist the user in understanding the data.
 
 \section{Using the Style Template}
 
