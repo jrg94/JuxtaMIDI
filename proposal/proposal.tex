@@ -116,21 +116,6 @@ in music data? For the sake of scope, we have chosen to focus on MIDI recordings
  \CCScat{K.7.m}{The Computing Profession}{Miscellaneous}{Ethics}
 }
 
-%% Uncomment below to include a teaser figure.
-%\teaser{
-%  \centering
-%  \includegraphics[width=\linewidth]{CypressView}
-%  \caption{In the Clouds: Vancouver from Cypress Mountain. Note that the teaser may not be wider than the abstract block.}
-%	\label{fig:teaser}
-%}
-
-%% Uncomment below to disable the manuscript note
-%\renewcommand{\manuscriptnotetxt}{}
-
-%% Copyright space is enabled by default as required by guidelines.
-%% It is disabled by the 'review' option or via the following command:
-% \nocopyrightspace
-
 \vgtcinsertpkg
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -138,9 +123,6 @@ in music data? For the sake of scope, we have chosen to focus on MIDI recordings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-
-%% The ``\maketitle'' command must be the first command after the
-%% ``\begin{document}'' command. It prepares and prints the title block.
 
 %% the only exception to this rule is the \firstsection command
 \firstsection{Introduction}
@@ -204,14 +186,17 @@ Meanwhile, the graph pane will contain several graphs:
 \item Sustain versus Time
 \end{itemize}
 
-Each graph will be connected with the master graph for filtering purposes.
-When a section of time is selected in the master graph, all other graphs will
-be updated to reflect the new subsection of data. This will allow a user
-to hone in on specific mistakes.
+As a stretch goal, each graph will be connected with the master graph for
+filtering purposes. When a section of time is selected in the master graph,
+all other graphs will be updated to reflect the new subsection of data. This
+will allow a user to hone in on specific mistakes.
 
-As an added bonus, graphs will contain tooltips which will highlight areas with
+In addition, graphs will contain tooltips which will highlight areas with
 the highest amount of mistakes. These tooltips will include high level notes
 to assist the user in understanding the data.
+
+Finally, the dashboard can be extended to include realtime recording and sheet
+music comparison.
 
 \section{Hardware and Software Requirements}
 
@@ -241,6 +226,8 @@ tasks in GitHub. Namely, we will be designing and implementing the following:
 \item Velocity versus Time Graph
 \item Sustain versus Time Graph
 \item Mistake Analysis for Tooltips
+\item Realtime Recording
+\item Sheet Music Rendering and Comparison
 \end{itemize}
 
 Each of these tasks can probably be broken down into smaller tasks as they all
@@ -252,11 +239,4 @@ It may seem odd to want to think of music in a visual way, but we feel our
 system will have a positive impact on musicians who want to improve their
 practice sessions.
 
-%\bibliographystyle{abbrv}
-%\bibliographystyle{abbrv-doi}
-%\bibliographystyle{abbrv-doi-narrow}
-%\bibliographystyle{abbrv-doi-hyperref}
-%\bibliographystyle{abbrv-doi-hyperref-narrow}
-
-%\bibliography{template}
 \end{document}
