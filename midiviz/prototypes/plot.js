@@ -11,7 +11,7 @@ d3.select("body").append("svg")
 
 var svg = d3.select("svg");
 
-function genreHistogram(track) {
+function noteHistogram(track) {
   var mapping = populateNoteFrequencyMap(track);
   mapping.sort((a, b) => b.count - a.count);
   console.log(mapping);
@@ -69,7 +69,7 @@ function genreHistogram(track) {
  */
 function midiLoadCallback(obj) {
   console.log(obj);
-  genreHistogram(obj.track);
+  noteHistogram(obj.track);
 }
 
 /**
