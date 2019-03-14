@@ -5,33 +5,45 @@ var width = 800;
 var height = 800;
 var padding = 50;
 
+d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+var svg = d3.select("svg");
+
 function midiLoadCallback(obj) {
   console.log(obj);
-  genreHistogram(obj);
+  genreHistogram(obj.track);
 }
 
-function genreHistogram(data) {
-
-    var mapping = []
-    data.forEach(function(d) {
-        if (d.genre == null) {
-            d.genre = "None";
-        }
-        var found = false;
-        for (var i = 0; i < mapping.length && !found; i++) {
-            if (mapping[i].genre == d.genre) {
-                mapping[i].count += 1;
-                found = true;
+function populateMap(track) {
+  var mapping = []
+  track.forEach(function(midiEvent) {
+      midiEvent.event.forEach(function(d) {
+          if (d.type == 9) {
+            var found = false;
+            for (var i = 0; i < mapping.length && !found; i++) {
+                if (mapping[i].note == d.data[0]) {
+                    mapping[i].count += 1;
+                    found = true;
+                }
             }
-        }
-        if (!found) {
-            mapping.push({"genre": d.genre, "count": 1})
-        }
-    });
-    mapping.sort((a, b) => b.count - a.count)
+            if (!found) {
+                mapping.push({"note": d.data[0], "count": 1})
+            }
+          }
+      });
+  });
+  return mapping;
+}
+
+function genreHistogram(track) {
+    var mapping = populateMap(track);
+    mapping.sort((a, b) => b.count - a.count);
+    console.log(mapping);
 
     var xScale = d3.scaleBand()
-        .domain(mapping.map(function(d) { return d.genre; }))
+        .domain(mapping.map(function(d) { return d.note; }))
         .range([padding, width - padding * 2])
         .padding(.1);
 
@@ -59,7 +71,7 @@ function genreHistogram(data) {
         .attr("class", "bar")
         .attr("fill", "#dc3912")
         .attr("x", function (d) {
-            return xScale(d.genre);
+            return xScale(d.note);
         })
         .attr("y", function (d) {
             return yScale(d.count);
@@ -69,7 +81,7 @@ function genreHistogram(data) {
             return height - yScale(d.count) - padding;
         });
 
-    drawTitle("Genre Histogram");
+    drawTitle("Note Histogram");
 }
 
 /**
