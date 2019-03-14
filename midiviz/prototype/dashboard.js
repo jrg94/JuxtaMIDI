@@ -3,7 +3,10 @@ function setup() {
   MIDIParser.parse(source, midiLoadCallback);
 }
 
-function noteHistogram(track) {
+/**
+ * Creates the note histogram given a track set.
+ */
+function noteHistogram(trackSet) {
   var svg = d3.select("#note-frequency");
 
   var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
@@ -14,7 +17,7 @@ function noteHistogram(track) {
     .attr("width", width)
     .attr("height", height);
 
-  var mapping = populateNoteFrequencyMap(track);
+  var mapping = populateNoteFrequencyMap(trackSet);
   mapping.sort((a, b) => b.count - a.count);
 
   var xScale = d3.scaleBand()
