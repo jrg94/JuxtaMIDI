@@ -22,6 +22,8 @@ function setup() {
 
 /**
  * Creates the note histogram given a track set.
+ *
+ * @param {Object} trackSet - a list of tracks
  */
 function noteHistogram(trackSet) {
   var svg = d3.select("#note-frequency");
