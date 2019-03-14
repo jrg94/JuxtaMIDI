@@ -5,12 +5,17 @@
     <title>Note Histogram - CSE 5544</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://gitcdn.link/repo/colxi/midi-parser-js/master/src/midi-parser.js"></script>
+    <script src="dashboard.js"></script>
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
   <div class="container">
     <div class="box input-file-pane">
-      <input type="file" id="input">
+      <div id="input-file-form">
+        <input type="file" id="input" onchange="buildFileList(this.files)">
+        <label for="input">Select MIDI Files</label>
+      </div>
+      <div id="input-file-list"></div>
     </div>
     <div class="box master-graph-pane">
       <svg id="notes-over-time"></svg>
@@ -22,7 +27,6 @@
       <svg id="velocity-over-time"></svg>
     </div>
   </div>
-  <script src="dashboard.js"></script>
-
+  <script>setup()</script>
 </body>
 </html>
