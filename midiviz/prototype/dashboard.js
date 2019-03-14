@@ -1,20 +1,21 @@
-var source = document.getElementById('input');
-var midiFile = MIDIParser.parse(source, midiLoadCallback);
-
-var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
-var height = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().height;
-var padding = 50;
-
-d3.select("#note-frequency")
-  .attr("width", width)
-  .attr("height", height);
-
-var svg = d3.select("#note-frequency");
+function setup() {
+  var source = document.getElementById('input');
+  MIDIParser.parse(source, midiLoadCallback);
+}
 
 function noteHistogram(track) {
+  var svg = d3.select("#note-frequency");
+
+  var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
+  var height = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().height;
+  var padding = 50;
+
+  d3.select("#note-frequency")
+    .attr("width", width)
+    .attr("height", height);
+
   var mapping = populateNoteFrequencyMap(track);
   mapping.sort((a, b) => b.count - a.count);
-  console.log(mapping);
 
   var xScale = d3.scaleBand()
     .domain(mapping.map(function(d) {
@@ -58,14 +59,13 @@ function noteHistogram(track) {
       return height - yScale(d.count) - padding;
     });
 
-  drawTitle("Note Histogram");
+  drawTitle(svg, width, height, padding, "Note Histogram");
 }
 
 /**
  * A helpful method for building the file list menu.
  */
 function buildFileList(files) {
-  console.log(files);
   file_list = document.getElementById("input-file-list");
   for (var i = 0; i < files.length; i++) {
     var node = document.createElement("div");
@@ -82,7 +82,6 @@ function buildFileList(files) {
  * @param {Object} obj - a parsed midi file as JSON
  */
 function midiLoadCallback(obj) {
-  console.log(obj);
   noteHistogram(obj.track);
 }
 
@@ -120,7 +119,7 @@ function populateNoteFrequencyMap(track) {
  *
  * @param {string} title - the title to be drawn
  */
-function drawTitle(title) {
+function drawTitle(svg, width, height, padding, title) {
   svg.append("text")
     .attr("class", "title")
     .attr("dy", padding / 2)
