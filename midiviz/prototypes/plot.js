@@ -1,8 +1,8 @@
 var source = document.getElementById('input');
 var midiFile = MIDIParser.parse(source, midiLoadCallback);
 
-var width = 600;
-var height = 400;
+var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
+var height = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().height;
 var padding = 50;
 
 d3.select("#note-frequency")

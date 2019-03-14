@@ -4,6 +4,7 @@
   grid-template-columns: 10% 45% 45%;
   grid-template-rows: 60% auto;
   width: 95%;
+  height: 95vh;
 }
 
 .box {
@@ -29,4 +30,9 @@
 .velocity-over-time-graph-pane {
   grid-column: 3;
   grid-row: 2;
+}
+
+#note-frequency {
+  width: inherit;
+  height: inherit;
 }
