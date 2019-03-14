@@ -62,6 +62,20 @@ function noteHistogram(track) {
 }
 
 /**
+ * A helpful method for building the file list menu.
+ */
+function buildFileList(files) {
+  console.log(files);
+  file_list = document.getElementById("input-file-list");
+  for (var i = 0; i < files.length; i++) {
+    var node = document.createElement("div");
+    node.className = "file-list-item";
+    node.innerHTML += files[0].name;
+    file_list.appendChild(node);
+  }
+}
+
+/**
  * The midi load callback function. Loads the midi file, logs it,
  * and plots it on a histogram.
  *

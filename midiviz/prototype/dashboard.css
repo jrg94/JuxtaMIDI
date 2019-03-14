@@ -12,6 +12,17 @@
   border-radius: 5px;
 }
 
+#input-file-list {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.file-list-item {
+  border-radius: 5px;
+  text-align: center;
+  background-color: #dc3912;
+}
+
 #input-file-form {
   width: 98%;
   margin: 10px auto;
