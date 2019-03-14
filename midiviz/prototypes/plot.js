@@ -11,12 +11,23 @@ d3.select("body").append("svg")
 
 var svg = d3.select("svg");
 
+/**
+ * The midi load callback function. Loads the midi file, logs it,
+ * and plots it on a histogram.
+ *
+ * @param {Object} obj - a parsed midi file as JSON
+ */
 function midiLoadCallback(obj) {
   console.log(obj);
   genreHistogram(obj.track);
 }
 
-function populateMap(track) {
+/**
+ * Populates a mapping based on note frequency.
+ *
+ * @param {Object} track - the track array
+ */
+function populateNoteFrequencyMap(track) {
   var mapping = []
   track.forEach(function(midiEvent) {
       midiEvent.event.forEach(function(d) {
@@ -38,7 +49,7 @@ function populateMap(track) {
 }
 
 function genreHistogram(track) {
-    var mapping = populateMap(track);
+    var mapping = populateNoteFrequencyMap(track);
     mapping.sort((a, b) => b.count - a.count);
     console.log(mapping);
 
