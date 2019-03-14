@@ -12,6 +12,9 @@ const noteLUT = [
   "C9", "C#9", "D9", "D#9", "E9", "F9", "F#9", "G9"
 ];
 
+/**
+ * Sets up the environment to begin playing with MIDI files.
+ */
 function setup() {
   var source = document.getElementById('input');
   MIDIParser.parse(source, midiLoadCallback);
