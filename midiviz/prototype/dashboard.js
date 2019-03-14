@@ -120,6 +120,10 @@ function populateNoteFrequencyMap(track) {
 /**
  * Draws a title on the master SVG
  *
+ * @param {Object} svg - the svg reference
+ * @param {number} width - the width of the svg
+ * @param {number} height - the height of the svg
+ * @param {number} padding - the padding of the svg
  * @param {string} title - the title to be drawn
  */
 function drawTitle(svg, width, height, padding, title) {
