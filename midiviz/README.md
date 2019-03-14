@@ -5,4 +5,4 @@ prototypes:
 
 - [Mario Theme Note Frequency Graph][1]
 
-[1]: prototypes/note-histogram.html
+[1]: prototype/dashboard.html

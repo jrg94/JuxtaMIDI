@@ -1,15 +1,15 @@
 var source = document.getElementById('input');
 var midiFile = MIDIParser.parse(source, midiLoadCallback);
 
-var width = 800;
-var height = 800;
+var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
+var height = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().height;
 var padding = 50;
 
-d3.select("body").append("svg")
+d3.select("#note-frequency")
   .attr("width", width)
   .attr("height", height);
 
-var svg = d3.select("svg");
+var svg = d3.select("#note-frequency");
 
 function noteHistogram(track) {
   var mapping = populateNoteFrequencyMap(track);
