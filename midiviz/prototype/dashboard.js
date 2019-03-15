@@ -89,13 +89,20 @@ function noteHistogram() {
 }
 
 /**
+ * A helper function for clearing the fileList.
+ */
+function clearFileList(fileList) {
+  while (fileList.firstChild) {
+    fileList.removeChild(fileList.firstChild);
+  }
+}
+
+/**
  * A helpful method for building the file list menu.
  */
 function buildFileList() {
   file_list = document.getElementById("input-file-list");
-  while (file_list.firstChild) {
-    file_list.removeChild(file_list.firstChild);
-  }
+  clearFileList(file_list);
   keys = Object.keys(midiFiles);
   for (var i = 0; i < keys.length; i++) {
     var node = document.createElement("div");
