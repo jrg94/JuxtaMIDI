@@ -21,6 +21,8 @@
   border-radius: 5px;
   text-align: center;
   margin: 5px;
+  padding: 2px;
+  border-style: solid;
 }
 
 #input-file-form {

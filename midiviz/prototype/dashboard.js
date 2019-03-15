@@ -40,25 +40,30 @@ function noteHistogram() {
     .attr("width", width)
     .attr("height", height);
 
-  var mapping = populateNoteFrequencyMap(midiFiles[Object.keys(midiFiles)[0]].track);
+  var mapping = populateNoteFrequencyMap(midiFiles);
   mapping.sort((a, b) => b.count - a.count);
 
-  var xScale = d3.scaleBand()
-    .domain(mapping.map(function(d) {
-      return d.note;
-    }))
+  var xNoteScale = d3.scaleBand()
+    .domain(mapping.map(d => d.note))
     .range([padding, width - padding * 2])
     .padding(.1);
 
+  const trackNames = [...new Set(mapping.map(d => d.name))];
+  var xTrackScale = d3.scaleBand()
+    .domain(trackNames)
+    .rangeRound([0, xNoteScale.bandwidth()])
+    .padding(0.05);
+
   var yScale = d3.scaleLinear()
-    .domain([0, d3.max(mapping, function(d) {
-      return d.count;
-    })])
+    .domain([0, d3.max(mapping, d => d.count)])
     .range([height - padding, padding]);
+
+  var colorScale = d3.scaleOrdinal()
+    .range(colorLUT);
 
   svg.append("g")
     .attr("transform", "translate(0," + (height - padding) + ")")
-    .call(d3.axisBottom(xScale))
+    .call(d3.axisBottom(xNoteScale))
     .selectAll("text")
     .style("text-anchor", "end")
     .attr("dx", "-.8em")
@@ -69,21 +74,20 @@ function noteHistogram() {
     .attr("transform", "translate(" + padding + ", 0)")
     .call(d3.axisLeft(yScale));
 
-  svg.selectAll(".bar")
+  svg.append("g")
+    .selectAll("g")
     .data(mapping)
-    .enter().append("rect")
-    .attr("class", "bar")
-    .attr("fill", colorLUT[0])
-    .attr("x", function(d) {
-      return xScale(d.note);
-    })
-    .attr("y", function(d) {
-      return yScale(d.count);
-    })
-    .attr("width", xScale.bandwidth())
-    .attr("height", function(d) {
-      return height - yScale(d.count) - padding;
-    });
+    .join("g")
+      .attr("transform", d => `translate(${xNoteScale(d.note)},0)`)
+    .selectAll("rect")
+    .data(d => keys.map(key => {return {key: key, value: d.count}}))
+    .join("rect")
+      .attr("class", "bar")
+      .attr("x", d => xTrackScale(d.key))
+      .attr("y", d => yScale(d.value))
+      .attr("width", xTrackScale.bandwidth())
+      .attr("height", d => height - yScale(d.value) - padding)
+      .attr("fill", d => colorScale(d.key));
 
   drawTitle(svg, width, height, padding, "Note Histogram");
 }
@@ -130,35 +134,48 @@ function midiLoadCallback(obj) {
   buildFileList();
   clearSVGs();
   noteHistogram();
+  // TODO: Implement other two charts
 }
 
 /**
  * Populates a mapping based on note frequency.
  *
- * @param {Object} track - the track array
+ * @param {Object} midiFiles - the set of all midi files
  */
-function populateNoteFrequencyMap(track) {
+function populateNoteFrequencyMap(midiFiles) {
   var mapping = []
-  track.forEach(function(midiEvent) {
-    midiEvent.event.forEach(function(d) {
-      if (d.type == 9) {
-        var found = false;
-        for (var i = 0; i < mapping.length && !found; i++) {
-          if (mapping[i].note == noteLUT[d.data[0]]) {
-            mapping[i].count += 1;
-            found = true;
-          }
+  for (const [name, trackSet] of Object.entries(midiFiles)) {
+    var track = trackSet.track;
+    track.forEach(function(midiEvent) {
+      midiEvent.event.forEach(function(d) {
+        if (d.type == 9) {
+          populateMapping(mapping, "note", "count", noteLUT[d.data[0]], name);
         }
-        if (!found) {
-          mapping.push({
-            "note": noteLUT[d.data[0]],
-            "count": 1
-          })
-        }
-      }
+      });
     });
-  });
+  }
   return mapping;
+}
+
+/**
+ * A helper function which populates a mapping given some key string,
+ * value string, and value to find for comparison.
+ */
+function populateMapping(mapping, key, value, find, name) {
+  var found = false;
+  for (var i = 0; i < mapping.length && !found; i++) {
+    if (mapping[i]["name"] == name && mapping[i][key] == find) {
+      mapping[i][value] += 1;
+      found = true;
+    }
+  }
+  if (!found) {
+    mapping.push({
+      ["name"]: name,
+      [key]: find,
+      [value]: 1
+    })
+  }
 }
 
 /**
