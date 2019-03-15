@@ -40,7 +40,8 @@ function noteHistogram() {
     .attr("width", width)
     .attr("height", height);
 
-  var mapping = populateNoteFrequencyMap(midiFiles[Object.keys(midiFiles)[0]].track);
+  var mapping = populateNoteFrequencyMap(midiFiles);
+  console.log(mapping);
   mapping.sort((a, b) => b.count - a.count);
 
   var xScale = d3.scaleBand()
@@ -135,30 +136,38 @@ function midiLoadCallback(obj) {
 /**
  * Populates a mapping based on note frequency.
  *
- * @param {Object} track - the track array
+ * @param {Object} midiFiles - the set of all midi files
  */
-function populateNoteFrequencyMap(track) {
-  var mapping = []
-  track.forEach(function(midiEvent) {
-    midiEvent.event.forEach(function(d) {
-      if (d.type == 9) {
-        var found = false;
-        for (var i = 0; i < mapping.length && !found; i++) {
-          if (mapping[i].note == noteLUT[d.data[0]]) {
-            mapping[i].count += 1;
-            found = true;
+function populateNoteFrequencyMap(midiFiles) {
+  var mappingSet = {};
+  for (const [name, trackSet] of Object.entries(midiFiles)) {
+    var mapping = []
+    console.log(name);
+    console.log(trackSet);
+    var track = trackSet.track;
+    track.forEach(function(midiEvent) {
+      midiEvent.event.forEach(function(d) {
+        if (d.type == 9) {
+          var found = false;
+          for (var i = 0; i < mapping.length && !found; i++) {
+            if (mapping[i].note == noteLUT[d.data[0]]) {
+              mapping[i].count += 1;
+              found = true;
+            }
+          }
+          if (!found) {
+            mapping.push({
+              "note": noteLUT[d.data[0]],
+              "count": 1
+            })
           }
         }
-        if (!found) {
-          mapping.push({
-            "note": noteLUT[d.data[0]],
-            "count": 1
-          })
-        }
-      }
+      });
     });
-  });
-  return mapping;
+    mappingSet[name] = mapping;
+  }
+
+  return mappingSet;
 }
 
 /**
