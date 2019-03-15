@@ -40,14 +40,12 @@ function noteHistogram() {
     .attr("width", width)
     .attr("height", height);
 
-  var mapping = populateNoteFrequencyMap(midiFiles);
-  console.log(mapping);
-  mapping.sort((a, b) => b.count - a.count);
+  var mappingSet = populateNoteFrequencyMap(midiFiles);
+  var [max, uniqueNotes] = getDomains(mappingSet);
+  //mapping.sort((a, b) => b.count - a.count);
 
   var xScale = d3.scaleBand()
-    .domain(mapping.map(function(d) {
-      return d.note;
-    }))
+    .domain(uniqueNotes)
     .range([padding, width - padding * 2])
     .padding(.1);
 
@@ -131,6 +129,26 @@ function midiLoadCallback(obj) {
   buildFileList();
   clearSVGs();
   noteHistogram();
+}
+
+/**
+ * A helper function for determining all of the unique values in a
+ * set for mapping purposes.
+ */
+function getDomains(mappingSet) {
+  var uniqueValues = [];
+  var max = 0;
+  for (const [name, mapping] of Object.entries(mappingSet)) {
+    for (const index in Object.keys(mapping)) {
+      if (!uniqueValues.includes(mapping[index].note)) {
+        uniqueValues.push(mapping[index].note);
+      }
+      if (mapping[index].count > max) {
+        max = mapping[index].count;
+      }
+    }
+  }
+  return [max, uniqueValues];
 }
 
 /**
