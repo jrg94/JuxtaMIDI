@@ -77,13 +77,9 @@ function noteHistogram() {
     .attr("class", "bar")
     .attr("fill", colorLUT[0])
     .attr("x", d => xNoteScale(d.note))
-    .attr("y", function(d) {
-      return yScale(d.count);
-    })
+    .attr("y", d => yScale(d.count))
     .attr("width", xNoteScale.bandwidth())
-    .attr("height", function(d) {
-      return height - yScale(d.count) - padding;
-    });
+    .attr("height", d => height - yScale(d.count) - padding);
 
   drawTitle(svg, width, height, padding, "Note Histogram");
 }
@@ -161,8 +157,6 @@ function populateNoteFrequencyMap(midiFiles) {
   var mappingSet = {};
   for (const [name, trackSet] of Object.entries(midiFiles)) {
     var mapping = []
-    console.log(name);
-    console.log(trackSet);
     var track = trackSet.track;
     track.forEach(function(midiEvent) {
       midiEvent.event.forEach(function(d) {
