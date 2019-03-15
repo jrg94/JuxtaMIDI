@@ -134,6 +134,7 @@ function midiLoadCallback(obj) {
   buildFileList();
   clearSVGs();
   noteHistogram();
+  // TODO: Implement other two charts
 }
 
 /**
