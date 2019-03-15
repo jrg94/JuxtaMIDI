@@ -16,6 +16,8 @@ const colorLUT = [
   "#dc3912"
 ]
 
+var midiFiles = [];
+
 /**
  * Sets up the environment to begin playing with MIDI files.
  */
@@ -26,10 +28,8 @@ function setup() {
 
 /**
  * Creates the note histogram given a track set.
- *
- * @param {Object} trackSet - a list of tracks
  */
-function noteHistogram(trackSet) {
+function noteHistogram() {
   var svg = d3.select("#note-frequency");
 
   var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
@@ -40,7 +40,7 @@ function noteHistogram(trackSet) {
     .attr("width", width)
     .attr("height", height);
 
-  var mapping = populateNoteFrequencyMap(trackSet);
+  var mapping = populateNoteFrequencyMap(midiFiles[0].track);
   mapping.sort((a, b) => b.count - a.count);
 
   var xScale = d3.scaleBand()
@@ -108,7 +108,8 @@ function buildFileList(files) {
  * @param {Object} obj - a parsed midi file as JSON
  */
 function midiLoadCallback(obj) {
-  noteHistogram(obj.track);
+  midiFiles.push(obj);
+  noteHistogram();
 }
 
 /**
