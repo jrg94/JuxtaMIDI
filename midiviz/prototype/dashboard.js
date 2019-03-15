@@ -153,7 +153,6 @@ function populateNoteFrequencyMap(midiFiles) {
       });
     });
   }
-  console.log(mapping);
   return mapping;
 }
 
