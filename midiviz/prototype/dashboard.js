@@ -44,20 +44,23 @@ function noteHistogram() {
   var [max, uniqueNotes] = getDomains(mappingSet);
   //mapping.sort((a, b) => b.count - a.count);
 
-  var xScale = d3.scaleBand()
+  var xNoteScale = d3.scaleBand()
     .domain(uniqueNotes)
     .range([padding, width - padding * 2])
     .padding(.1);
 
+  var xTrackScale = d3.scaleBand()
+    .domain(Object.keys(mappingSet))
+    .rangeRound([0, xNoteScale.bandwidth()])
+    .padding(0.05);
+
   var yScale = d3.scaleLinear()
-    .domain([0, d3.max(mapping, function(d) {
-      return d.count;
-    })])
+    .domain([0, max])
     .range([height - padding, padding]);
 
   svg.append("g")
     .attr("transform", "translate(0," + (height - padding) + ")")
-    .call(d3.axisBottom(xScale))
+    .call(d3.axisBottom(xNoteScale))
     .selectAll("text")
     .style("text-anchor", "end")
     .attr("dx", "-.8em")
@@ -69,17 +72,15 @@ function noteHistogram() {
     .call(d3.axisLeft(yScale));
 
   svg.selectAll(".bar")
-    .data(mapping)
+    .data(mappingSet[Object.keys(mappingSet)[0]])
     .enter().append("rect")
     .attr("class", "bar")
     .attr("fill", colorLUT[0])
-    .attr("x", function(d) {
-      return xScale(d.note);
-    })
+    .attr("x", d => xNoteScale(d.note))
     .attr("y", function(d) {
       return yScale(d.count);
     })
-    .attr("width", xScale.bandwidth())
+    .attr("width", xNoteScale.bandwidth())
     .attr("height", function(d) {
       return height - yScale(d.count) - padding;
     });
