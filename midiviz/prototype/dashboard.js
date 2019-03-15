@@ -12,6 +12,10 @@ const noteLUT = [
   "C9", "C#9", "D9", "D#9", "E9", "F9", "F#9", "G9"
 ];
 
+const colorLUT = [
+  "#dc3912"
+]
+
 /**
  * Sets up the environment to begin playing with MIDI files.
  */
@@ -69,7 +73,7 @@ function noteHistogram(trackSet) {
     .data(mapping)
     .enter().append("rect")
     .attr("class", "bar")
-    .attr("fill", "#dc3912")
+    .attr("fill", colorLUT[0])
     .attr("x", function(d) {
       return xScale(d.note);
     })
