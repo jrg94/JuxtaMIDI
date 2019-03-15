@@ -113,6 +113,10 @@ function buildFileList() {
   }
 }
 
+function clearSVGs() {
+  d3.selectAll("svg > *").remove();
+}
+
 /**
  * The midi load callback function. Loads the midi file, logs it,
  * and plots it on a histogram.
@@ -124,6 +128,7 @@ function midiLoadCallback(obj) {
   latestFile = fileList.files[fileList.files.length - 1];
   midiFiles[latestFile.name] = obj;
   buildFileList();
+  clearSVGs();
   noteHistogram();
 }
 
