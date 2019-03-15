@@ -148,19 +148,7 @@ function populateNoteFrequencyMap(midiFiles) {
     track.forEach(function(midiEvent) {
       midiEvent.event.forEach(function(d) {
         if (d.type == 9) {
-          var found = false;
-          for (var i = 0; i < mapping.length && !found; i++) {
-            if (mapping[i].note == noteLUT[d.data[0]]) {
-              mapping[i].count += 1;
-              found = true;
-            }
-          }
-          if (!found) {
-            mapping.push({
-              "note": noteLUT[d.data[0]],
-              "count": 1
-            })
-          }
+          populateMapping(mapping, "note", "count", d);
         }
       });
     });
@@ -168,6 +156,26 @@ function populateNoteFrequencyMap(midiFiles) {
   }
 
   return mappingSet;
+}
+
+/**
+ * A helper function which populates a mapping given some key,
+ * value, and data for comparison.
+ */
+function populateMapping(mapping, key, value, d) {
+  var found = false;
+  for (var i = 0; i < mapping.length && !found; i++) {
+    if (mapping[i][key] == noteLUT[d.data[0]]) {
+      mapping[i][value] += 1;
+      found = true;
+    }
+  }
+  if (!found) {
+    mapping.push({
+      [key]: noteLUT[d.data[0]],
+      [value]: 1
+    })
+  }
 }
 
 /**
