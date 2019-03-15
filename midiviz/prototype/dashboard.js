@@ -16,7 +16,7 @@ const colorLUT = [
   "#dc3912"
 ]
 
-var midiFiles = [];
+var midiFiles = {};
 
 /**
  * Sets up the environment to begin playing with MIDI files.
@@ -91,12 +91,17 @@ function noteHistogram() {
 /**
  * A helpful method for building the file list menu.
  */
-function buildFileList(files) {
+function buildFileList() {
   file_list = document.getElementById("input-file-list");
-  for (var i = 0; i < files.length; i++) {
+  while (file_list.firstChild) {
+    file_list.removeChild(file_list.firstChild);
+  }
+  keys = Object.keys(midiFiles);
+  for (var i = 0; i < keys.length; i++) {
     var node = document.createElement("div");
     node.className = "file-list-item";
-    node.innerHTML += files[0].name;
+    node.innerHTML += keys[i];
+    node.style.backgroundColor = colorLUT[i % colorLUT.length];
     file_list.appendChild(node);
   }
 }
@@ -108,7 +113,10 @@ function buildFileList(files) {
  * @param {Object} obj - a parsed midi file as JSON
  */
 function midiLoadCallback(obj) {
-  midiFiles.push(obj);
+  fileList = document.getElementById("input");
+  latestFile = fileList.files[fileList.files.length - 1];
+  midiFiles[latestFile.name] = obj;
+  buildFileList();
   noteHistogram();
 }
 
