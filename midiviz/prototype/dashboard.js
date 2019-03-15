@@ -40,22 +40,22 @@ function noteHistogram() {
     .attr("width", width)
     .attr("height", height);
 
-  var mappingSet = populateNoteFrequencyMap(midiFiles);
-  var [max, uniqueNotes] = getDomains(mappingSet);
+  var mapping = populateNoteFrequencyMap(midiFiles);
+  //var [max, uniqueNotes] = getDomains(mappingSet);
   //mapping.sort((a, b) => b.count - a.count);
 
   var xNoteScale = d3.scaleBand()
-    .domain(uniqueNotes)
+    .domain(mapping.map(d => d.note))
     .range([padding, width - padding * 2])
     .padding(.1);
 
   var xTrackScale = d3.scaleBand()
-    .domain(Object.keys(mappingSet))
+    .domain(mapping.map(d => d.name))
     .rangeRound([0, xNoteScale.bandwidth()])
     .padding(0.05);
 
   var yScale = d3.scaleLinear()
-    .domain([0, max])
+    .domain([0, d3.max(d => d.count)])
     .range([height - padding, padding]);
 
   svg.append("g")
@@ -71,15 +71,21 @@ function noteHistogram() {
     .attr("transform", "translate(" + padding + ", 0)")
     .call(d3.axisLeft(yScale));
 
-  svg.selectAll(".bar")
-    .data(mappingSet[Object.keys(mappingSet)[0]])
-    .enter().append("rect")
-    .attr("class", "bar")
-    .attr("fill", colorLUT[0])
-    .attr("x", d => xNoteScale(d.note))
-    .attr("y", d => yScale(d.count))
-    .attr("width", xNoteScale.bandwidth())
-    .attr("height", d => height - yScale(d.count) - padding);
+  console.log(mappingSet);
+
+  svg.append("g")
+    .selectAll("g")
+    .data(mappingSet)
+    .join("g")
+      .attr("transform", d => `translate(${xNoteScale(d[note])},0)`)
+    .selectAll("rect")
+    .join("rect")
+      .attr("class", "bar")
+      .attr("fill", colorLUT[0])
+      .attr("x", d => xTrackScale(Object.keys(d)[0]))
+      .attr("y", d => yScale(d.count))
+      .attr("width", xTrackScale.bandwidth())
+      .attr("height", d => height - yScale(d.count) - padding);
 
   drawTitle(svg, width, height, padding, "Note Histogram");
 }
@@ -154,37 +160,36 @@ function getDomains(mappingSet) {
  * @param {Object} midiFiles - the set of all midi files
  */
 function populateNoteFrequencyMap(midiFiles) {
-  var mappingSet = {};
+  var mapping = []
   for (const [name, trackSet] of Object.entries(midiFiles)) {
-    var mapping = []
     var track = trackSet.track;
     track.forEach(function(midiEvent) {
       midiEvent.event.forEach(function(d) {
         if (d.type == 9) {
-          populateMapping(mapping, "note", "count", noteLUT[d.data[0]]);
+          populateMapping(mapping, "note", "count", noteLUT[d.data[0]], name);
         }
       });
     });
-    mappingSet[name] = mapping;
   }
-
-  return mappingSet;
+  console.log(mapping);
+  return mapping;
 }
 
 /**
  * A helper function which populates a mapping given some key string,
  * value string, and value to find for comparison.
  */
-function populateMapping(mapping, key, value, find) {
+function populateMapping(mapping, key, value, find, name) {
   var found = false;
   for (var i = 0; i < mapping.length && !found; i++) {
-    if (mapping[i][key] == find) {
+    if (mapping[i]["name"] == name && mapping[i][key] == find) {
       mapping[i][value] += 1;
       found = true;
     }
   }
   if (!found) {
     mapping.push({
+      ["name"]: name,
       [key]: find,
       [value]: 1
     })
