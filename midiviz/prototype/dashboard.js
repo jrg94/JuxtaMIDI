@@ -40,7 +40,7 @@ function noteHistogram() {
     .attr("width", width)
     .attr("height", height);
 
-  var mapping = populateNoteFrequencyMap(midiFiles[0].track);
+  var mapping = populateNoteFrequencyMap(midiFiles[Object.keys(midiFiles)[0]].track);
   mapping.sort((a, b) => b.count - a.count);
 
   var xScale = d3.scaleBand()
