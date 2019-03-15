@@ -63,7 +63,7 @@ function noteHistogram(trackSet) {
     .style("text-anchor", "end")
     .attr("dx", "-.8em")
     .attr("dy", ".15em")
-    .attr("transform", "rotate(-35)");
+    .attr("transform", "rotate(-45)");
 
   svg.append("g")
     .attr("transform", "translate(" + padding + ", 0)")
@@ -123,14 +123,14 @@ function populateNoteFrequencyMap(track) {
       if (d.type == 9) {
         var found = false;
         for (var i = 0; i < mapping.length && !found; i++) {
-          if (mapping[i].note == d.data[0]) {
+          if (mapping[i].note == noteLUT[d.data[0]]) {
             mapping[i].count += 1;
             found = true;
           }
         }
         if (!found) {
           mapping.push({
-            "note": d.data[0],
+            "note": noteLUT[d.data[0]],
             "count": 1
           })
         }
