@@ -13,7 +13,7 @@ const noteLUT = [
 ];
 
 const colorLUT = [
-  "#dc3912"
+  "#dc3912", "#8A2BE2"
 ]
 
 var midiFiles = {};
