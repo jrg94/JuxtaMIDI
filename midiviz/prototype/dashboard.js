@@ -41,7 +41,6 @@ function noteHistogram() {
     .attr("height", height);
 
   var mapping = populateNoteFrequencyMap(midiFiles);
-  //var [max, uniqueNotes] = getDomains(mappingSet);
   //mapping.sort((a, b) => b.count - a.count);
 
   var xNoteScale = d3.scaleBand()
@@ -49,14 +48,18 @@ function noteHistogram() {
     .range([padding, width - padding * 2])
     .padding(.1);
 
+  const trackNames = [...new Set(mapping.map(d => d.name))];
   var xTrackScale = d3.scaleBand()
-    .domain(mapping.map(d => d.name))
+    .domain(trackNames)
     .rangeRound([0, xNoteScale.bandwidth()])
     .padding(0.05);
 
   var yScale = d3.scaleLinear()
-    .domain([0, d3.max(d => d.count)])
+    .domain([0, d3.max(mapping, d => d.count)])
     .range([height - padding, padding]);
+
+  var colorScale = d3.scaleOrdinal()
+    .range(colorLUT);
 
   svg.append("g")
     .attr("transform", "translate(0," + (height - padding) + ")")
@@ -71,21 +74,20 @@ function noteHistogram() {
     .attr("transform", "translate(" + padding + ", 0)")
     .call(d3.axisLeft(yScale));
 
-  console.log(mappingSet);
-
   svg.append("g")
     .selectAll("g")
-    .data(mappingSet)
+    .data(mapping)
     .join("g")
-      .attr("transform", d => `translate(${xNoteScale(d[note])},0)`)
+      .attr("transform", d => `translate(${xNoteScale(d["note"])},0)`)
     .selectAll("rect")
+    .data(d => trackNames.map(key => ({key, value: d[key]})))
     .join("rect")
       .attr("class", "bar")
-      .attr("fill", colorLUT[0])
-      .attr("x", d => xTrackScale(Object.keys(d)[0]))
-      .attr("y", d => yScale(d.count))
+      .attr("x", d => xTrackScale(d.key))
+      .attr("y", d => yScale(d.value))
       .attr("width", xTrackScale.bandwidth())
-      .attr("height", d => height - yScale(d.count) - padding);
+      .attr("height", d => height - yScale(d.value) - padding)
+      .attr("fill", d => colorScale(d.count));
 
   drawTitle(svg, width, height, padding, "Note Histogram");
 }
@@ -132,26 +134,6 @@ function midiLoadCallback(obj) {
   buildFileList();
   clearSVGs();
   noteHistogram();
-}
-
-/**
- * A helper function for determining all of the unique values in a
- * set for mapping purposes.
- */
-function getDomains(mappingSet) {
-  var uniqueValues = [];
-  var max = 0;
-  for (const [name, mapping] of Object.entries(mappingSet)) {
-    for (const index in Object.keys(mapping)) {
-      if (!uniqueValues.includes(mapping[index].note)) {
-        uniqueValues.push(mapping[index].note);
-      }
-      if (mapping[index].count > max) {
-        max = mapping[index].count;
-      }
-    }
-  }
-  return [max, uniqueValues];
 }
 
 /**
