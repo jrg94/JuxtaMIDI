@@ -20,7 +20,7 @@
 .file-list-item {
   border-radius: 5px;
   text-align: center;
-  background-color: #dc3912;
+  margin: 5px;
 }
 
 #input-file-form {

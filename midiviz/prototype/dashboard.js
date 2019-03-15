@@ -12,6 +12,12 @@ const noteLUT = [
   "C9", "C#9", "D9", "D#9", "E9", "F9", "F#9", "G9"
 ];
 
+const colorLUT = [
+  "#dc3912", "#8A2BE2"
+]
+
+var midiFiles = {};
+
 /**
  * Sets up the environment to begin playing with MIDI files.
  */
@@ -22,10 +28,8 @@ function setup() {
 
 /**
  * Creates the note histogram given a track set.
- *
- * @param {Object} trackSet - a list of tracks
  */
-function noteHistogram(trackSet) {
+function noteHistogram() {
   var svg = d3.select("#note-frequency");
 
   var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
@@ -36,7 +40,7 @@ function noteHistogram(trackSet) {
     .attr("width", width)
     .attr("height", height);
 
-  var mapping = populateNoteFrequencyMap(trackSet);
+  var mapping = populateNoteFrequencyMap(midiFiles[Object.keys(midiFiles)[0]].track);
   mapping.sort((a, b) => b.count - a.count);
 
   var xScale = d3.scaleBand()
@@ -59,7 +63,7 @@ function noteHistogram(trackSet) {
     .style("text-anchor", "end")
     .attr("dx", "-.8em")
     .attr("dy", ".15em")
-    .attr("transform", "rotate(-35)");
+    .attr("transform", "rotate(-45)");
 
   svg.append("g")
     .attr("transform", "translate(" + padding + ", 0)")
@@ -69,7 +73,7 @@ function noteHistogram(trackSet) {
     .data(mapping)
     .enter().append("rect")
     .attr("class", "bar")
-    .attr("fill", "#dc3912")
+    .attr("fill", colorLUT[0])
     .attr("x", function(d) {
       return xScale(d.note);
     })
@@ -85,16 +89,32 @@ function noteHistogram(trackSet) {
 }
 
 /**
+ * A helper function for clearing the fileList.
+ */
+function clearFileList(fileList) {
+  while (fileList.firstChild) {
+    fileList.removeChild(fileList.firstChild);
+  }
+}
+
+/**
  * A helpful method for building the file list menu.
  */
-function buildFileList(files) {
+function buildFileList() {
   file_list = document.getElementById("input-file-list");
-  for (var i = 0; i < files.length; i++) {
+  clearFileList(file_list);
+  keys = Object.keys(midiFiles);
+  for (var i = 0; i < keys.length; i++) {
     var node = document.createElement("div");
     node.className = "file-list-item";
-    node.innerHTML += files[0].name;
+    node.innerHTML += keys[i];
+    node.style.backgroundColor = colorLUT[i % colorLUT.length];
     file_list.appendChild(node);
   }
+}
+
+function clearSVGs() {
+  d3.selectAll("svg > *").remove();
 }
 
 /**
@@ -104,7 +124,12 @@ function buildFileList(files) {
  * @param {Object} obj - a parsed midi file as JSON
  */
 function midiLoadCallback(obj) {
-  noteHistogram(obj.track);
+  fileList = document.getElementById("input");
+  latestFile = fileList.files[fileList.files.length - 1];
+  midiFiles[latestFile.name] = obj;
+  buildFileList();
+  clearSVGs();
+  noteHistogram();
 }
 
 /**
@@ -119,14 +144,14 @@ function populateNoteFrequencyMap(track) {
       if (d.type == 9) {
         var found = false;
         for (var i = 0; i < mapping.length && !found; i++) {
-          if (mapping[i].note == d.data[0]) {
+          if (mapping[i].note == noteLUT[d.data[0]]) {
             mapping[i].count += 1;
             found = true;
           }
         }
         if (!found) {
           mapping.push({
-            "note": d.data[0],
+            "note": noteLUT[d.data[0]],
             "count": 1
           })
         }
