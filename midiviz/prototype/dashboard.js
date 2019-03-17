@@ -13,10 +13,11 @@ const noteLUT = [
 ];
 
 const colorLUT = [
-  "#a1dd70", "#c7004c"
+  "#7bde2a", "#4087d6", "#c7004c"
 ]
 
 var midiFiles = {};
+var hiddenMidiFiles = {}
 
 /**
  * Sets up the environment to begin working with MIDI files.
@@ -117,11 +118,11 @@ function buildFileList() {
     node.innerHTML += keys[i] +
        `<div class="icons">
           <div class="icons-left">
-            <span class="tipped" data-tippy-content="Toggle file"><i class="icon-toggle-on"></i></span>
+            <span class="tipped midi-toggle" data-file="${keys[i]}" data-tippy-content="Toggle file"><i class="icon-toggle-on"></i></span>
           </div>
           <div class="icons-right">
-            <span class="tipped" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
-            <span class="tipped" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
+            <span class="tipped midi-rename" data-file="${keys[i]}" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
+            <span class="tipped midi-remove" data-file="${keys[i]}" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
           </div>
         </div>`;
     node.style.backgroundColor = colorLUT[i % colorLUT.length];
@@ -218,4 +219,24 @@ function drawTitle(svg, width, height, padding, title) {
  */
 function applyTooltips() {
   tippy(".tipped", { arrow: true, animateFill: false, size: "small", maxWidth: 200 })
+}
+
+/**
+ * Toggle specified MIDI file from view.
+ *
+ * TODO: There should be some cap on this later.
+ */
+function toggleMIDIFile(midiFile) {
+}
+
+/**
+ * Rename specified MIDI file.
+ */
+function renameMIDIFile(midiFile) {
+}
+
+/**
+ * Delete specified MIDI file.
+ */
+function deleteMIDIFile(midiFile) {
 }
