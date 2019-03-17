@@ -19,7 +19,7 @@ const colorLUT = [
 var midiFiles = {};
 
 /**
- * Sets up the environment to begin playing with MIDI files.
+ * Sets up the environment to begin working with MIDI files.
  */
 function setup() {
   var source = document.getElementById('input');
@@ -35,6 +35,7 @@ function noteHistogram() {
   var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
   var height = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().height;
   var padding = 60;
+  // TODO: Separate this padding into a map? top/bottom/left/right. It appears inconsistently centered now.
 
   d3.select("#note-frequency")
     .attr("width", width)
@@ -94,7 +95,8 @@ function noteHistogram() {
 }
 
 /**
- * A helper function for clearing the fileList.
+ * Helper function for clearing file list.
+ * Unused at this time.
  */
 function clearFileList(fileList) {
   while (fileList.firstChild) {
@@ -103,7 +105,7 @@ function clearFileList(fileList) {
 }
 
 /**
- * A helpful method for building the file list menu.
+ * Set up file list pane from midiFiles object.
  */
 function buildFileList() {
   file_list = document.getElementById("input-file-list");
@@ -208,6 +210,12 @@ function drawTitle(svg, width, height, padding, title) {
     .text(title)
 }
 
+/**
+ * Activates tooltips using Tippy.js.
+ *
+ * Tooltips should have class "tipped" with the tooltip in attr "data-tippy-content".
+ * Needs to be done whenever new elements with tooltips are added.
+ */
 function applyTooltips() {
   tippy(".tipped", { arrow: true, animateFill: false, size: "small", maxWidth: 200 })
 }

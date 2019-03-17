@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Note Histogram - CSE 5544</title>
-    <link rel="stylesheet" href="dashboard.css">
+    <title>MIDI Comparison Tool</title>
     <link rel="stylesheet" href="lib/icons/css/fontello.css">
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
   <div class="container">
@@ -15,15 +15,18 @@
       </div>
       <div id="input-file-list"></div>
     </div>
+
     <div class="box master-graph-pane">
       <div class="welcome-message">
         Welcome to the MIDI Comparison Tool! To get started, add MIDI files using the pane on the left.
       </div>
       <svg id="notes-over-time"></svg>
     </div>
+
     <div class="box note-frequency-graph-pane">
       <svg id="note-frequency"></svg>
     </div>
+
     <div class="box velocity-over-time-graph-pane">
       <svg id="velocity-over-time"></svg>
     </div>
@@ -35,5 +38,6 @@
   <script src="lib/midi-parser.js"></script>
   <script src="dashboard.js"></script>
   <script>setup()</script>
+
 </body>
 </html>
