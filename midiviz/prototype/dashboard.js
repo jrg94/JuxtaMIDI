@@ -111,7 +111,7 @@ function clearFileList(fileList) {
 }
 
 /**
- * Set up file list pane from midiFiles object.
+ * Set up file list pane from midiFiles object, sets up appropriate triggers and icons.
  */
 function buildFileList() {
   file_list = document.getElementById("input-file-list");
@@ -130,12 +130,27 @@ function buildFileList() {
           </div>
           <div class="icons-right">
             <span class="tipped midi-rename" data-file="${keys[i]}" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
-            <span class="tipped midi-remove" data-file="${keys[i]}" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
+            <span class="tipped midi-delete" data-file="${keys[i]}" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
           </div>
         </div>`;
     node.style.backgroundColor = colorLUT[i % colorLUT.length];
     file_list.appendChild(node);
   }
+
+  d3.selectAll(".midi-toggle").on("click", function() {
+    var midiFile = d3.select(this).attr("data-file");
+    toggleMIDIFile(midiFile);
+  });
+
+  d3.selectAll(".midi-rename").on("click", function() {
+    var midiFile = d3.select(this).attr("data-file");
+    renameMIDIFile(midiFile);
+  });
+
+  d3.selectAll(".midi-remove").on("click", function() {
+    var midiFile = d3.select(this).attr("data-file");
+    deleteMIDIFile(midiFile);
+  });
 }
 
 function clearSVGs() {
@@ -239,7 +254,7 @@ function applyTooltips() {
 }
 
 /**
- * Toggle specified MIDI file from view.
+ * Toggle specified MIDI file from view. Returns the new state, true if on, false if off.
  *
  * TODO: There should be some cap on this later about how many files can be toggled.
  */
@@ -263,6 +278,7 @@ function toggleMIDIFile(midiFile) {
     delete midiFiles[midiFile];
   }
   setupGraphs();
+  return !toggled;
 }
 
 /**
