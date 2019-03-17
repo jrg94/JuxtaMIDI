@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Note Histogram - CSE 5544</title>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="https://gitcdn.link/repo/colxi/midi-parser-js/master/src/midi-parser.js"></script>
-    <script src="dashboard.js"></script>
     <link rel="stylesheet" href="dashboard.css">
-    <link rel="stylesheet" href="icons/css/fontello.css">
+    <link rel="stylesheet" href="lib/icons/css/fontello.css">
 </head>
 <body>
   <div class="container">
@@ -19,6 +16,9 @@
       <div id="input-file-list"></div>
     </div>
     <div class="box master-graph-pane">
+      <div class="welcome-message">
+        Welcome to the MIDI Comparison Tool! To get started, add MIDI files using the pane on the left.
+      </div>
       <svg id="notes-over-time"></svg>
     </div>
     <div class="box note-frequency-graph-pane">
@@ -28,6 +28,12 @@
       <svg id="velocity-over-time"></svg>
     </div>
   </div>
+
+  <script src="lib/popper.min.js"></script>
+  <script src="lib/tippy.min.js"></script>
+  <script src="lib/d3.v5.min.js"></script>
+  <script src="lib/midi-parser.js"></script>
+  <script src="dashboard.js"></script>
   <script>setup()</script>
 </body>
 </html>

@@ -78,16 +78,17 @@ function noteHistogram() {
     .selectAll("g")
     .data(mapping)
     .join("g")
-      .attr("transform", d => `translate(${xNoteScale(d.note)},0)`)
+    .attr("transform", d => `translate(${xNoteScale(d.note)},0)`)
     .selectAll("rect")
     .data(d => keys.map(key => {return {key: key, value: d.count}}))
     .join("rect")
-      .attr("class", "bar")
-      .attr("x", d => xTrackScale(d.key))
-      .attr("y", d => yScale(d.value))
-      .attr("width", xTrackScale.bandwidth())
-      .attr("height", d => height - yScale(d.value) - padding)
-      .attr("fill", d => colorScale(d.key));
+    .attr("class", "bar tipped")
+    .attr("x", d => xTrackScale(d.key))
+    .attr("y", d => yScale(d.value))
+    .attr("data-tippy-content", (d) => (d.key + "<br> ??: " + d.value))
+    .attr("width", xTrackScale.bandwidth())
+    .attr("height", d => height - yScale(d.value) - padding)
+    .attr("fill", d => colorScale(d.key));
 
   drawTitle(svg, width, height, padding, "Note Histogram");
 }
@@ -113,8 +114,13 @@ function buildFileList() {
     node.className = "file-list-item";
     node.innerHTML += keys[i] +
        `<div class="icons">
-          <div class="icons-left"><i class="icon-toggle-on"></i></div>
-          <div class="icons-right"><i class="icon-pencil"></i><i class="icon-trash-empty"></i></div>
+          <div class="icons-left">
+            <span class="tipped" data-tippy-content="Toggle file"><i class="icon-toggle-on"></i></span>
+          </div>
+          <div class="icons-right">
+            <span class="tipped" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
+            <span class="tipped" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
+          </div>
         </div>`;
     node.style.backgroundColor = colorLUT[i % colorLUT.length];
     file_list.appendChild(node);
@@ -138,6 +144,7 @@ function midiLoadCallback(obj) {
   buildFileList();
   clearSVGs();
   noteHistogram();
+  applyTooltips();
   // TODO: Implement other two charts
 }
 
@@ -199,4 +206,8 @@ function drawTitle(svg, width, height, padding, title) {
     .style("text-anchor", "middle")
     .style("font-size", "20px")
     .text(title)
+}
+
+function applyTooltips() {
+  tippy(".tipped", { arrow: true, animateFill: false, size: "small", maxWidth: 200 })
 }
