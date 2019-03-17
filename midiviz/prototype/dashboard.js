@@ -116,8 +116,8 @@ function clearFileList(fileList) {
  * Set up file list pane from midiFiles object, sets up appropriate triggers and icons.
  */
 function buildFileList() {
-  file_list = document.getElementById("input-file-list");
-  clearFileList(file_list);
+  var fileList = document.getElementById("input-file-list");
+  clearFileList(fileList);
   var keys = Object.keys(midiFiles);
   for (var i = 0; i < keys.length; i++) {
     var node = document.createElement("div");
@@ -136,7 +136,7 @@ function buildFileList() {
           </div>
         </div>`;
     node.style.backgroundColor = colorLUT[i % colorLUT.length];
-    file_list.appendChild(node);
+    fileList.appendChild(node);
   }
 
   d3.selectAll(".midi-toggle").on("click", function() {
@@ -318,5 +318,9 @@ function renameMIDIFile(midiFile) {
  * Delete specified MIDI file.
  */
 function deleteMIDIFile(midiFile) {
-  alert("TBD");
+  var element = d3.select(`.midi-file-name[data-file="${midiFile}"]`).node().parentNode;
+  element.parentNode.removeChild(element);
+  delete midiFiles[midiFile];
+  buildFileList();
+  setupGraphs();
 }
