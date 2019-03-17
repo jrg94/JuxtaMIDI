@@ -32,7 +32,26 @@ body {
   text-align: center;
   margin: 0 3px 10px 3px;
   font-size: .8em;
-  padding: 10px 2px;
+  padding: 10px 2px 0px 2px;
+}
+
+.icons {
+  height: 16px;
+  padding: 7px 3px 4px 3px;
+}
+
+.icons i:hover {
+  cursor: pointer;
+}
+
+.icons-left {
+  display: inline-block;
+  float: left;
+}
+
+.icons-right {
+  display: inline-block;
+  float: right;
 }
 
 #input-file-form {

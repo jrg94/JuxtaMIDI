@@ -111,7 +111,11 @@ function buildFileList() {
   for (var i = 0; i < keys.length; i++) {
     var node = document.createElement("div");
     node.className = "file-list-item";
-    node.innerHTML += keys[i];
+    node.innerHTML += keys[i] +
+       `<div class="icons">
+          <div class="icons-left"><i class="icon-toggle-on"></i></div>
+          <div class="icons-right"><i class="icon-pencil"></i><i class="icon-trash-empty"></i></div>
+        </div>`;
     node.style.backgroundColor = colorLUT[i % colorLUT.length];
     file_list.appendChild(node);
   }
