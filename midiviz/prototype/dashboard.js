@@ -16,6 +16,11 @@ const colorLUT = [
   "#7bde2a", "#4087d6", "#c7004c"
 ]
 
+// TODO: Graphs should pick color based on toggled midiFiles instead of defaulting to colorLUT order.
+// At the moment, colosr will be mismatched when toggling.
+// Need to rethink color logic, potentially. Should deleting a file maintain the general color scheme or reset them?
+// etc.
+
 var midiFiles = {};
 var hiddenMidiFiles = {}
 
