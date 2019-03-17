@@ -43,6 +43,9 @@ function velocityOverTime() {
   var height = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().height;
   var padding = 60;
 
+  var timestamps = getTimeStamps();
+  console.log(timestamps);
+
   d3.select("#velocity-over-time")
     .attr("width", width)
     .attr("height", height);
@@ -229,6 +232,31 @@ function setupGraphs() {
     velocityOverTime();
     applyTooltips();
   }
+}
+
+/**
+ * A helper function which generates a list of timestamps and velocities
+ */
+function getTimeStamps() {
+  var mapping = []
+  for (const [name, trackSet] of Object.entries(midiFiles)) {
+    var track = trackSet.track;
+    track.forEach(function(midiEvent) {
+      runningTime = 0;
+      midiEvent.event.forEach(function (d) {
+        runningTime += d.deltaTime;
+        if (d.type == 9) {
+          mapping.push({
+            name: name,
+            time: runningTime,
+            velocity: d.data[1],
+            note: noteLUT[d.data[0]]
+          });
+        }
+      });
+    });
+  }
+  return mapping;
 }
 
 /**
