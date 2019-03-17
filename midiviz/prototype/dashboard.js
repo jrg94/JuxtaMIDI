@@ -20,12 +20,15 @@ var midiFiles = {};
 var hiddenMidiFiles = {}
 
 /**
- * Sets up the environment to begin working with MIDI files.
+ * Sets up the initial environment.
  */
 function setup() {
+  // Setup file upload trigger
   var source = document.getElementById('input-file');
   MIDIParser.parse(source, midiLoadCallback);
 }
+
+setup();
 
 /**
  * Creates the note histogram given a track set.
