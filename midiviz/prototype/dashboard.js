@@ -36,6 +36,39 @@ function setup() {
 
 setup();
 
+function velocityOverTime() {
+  var svg = d3.select("#velocity-over-time");
+
+  var width = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().width;
+  var height = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().height;
+  var padding = 60;
+
+  d3.select("#velocity-over-time")
+    .attr("width", width)
+    .attr("height", height);
+
+  var xTimeScale = d3.scaleLinear()
+    .domain([0, 10])
+    .range([padding, width - padding * 2]);
+
+  var yVelocityScale = d3.scaleLinear()
+    .domain([0, 10])
+    .range([height - padding, padding]);
+
+  svg.append("g")
+    .attr("transform", "translate(0," + (height - padding) + ")")
+    .call(d3.axisBottom(xTimeScale))
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-45)");
+
+  svg.append("g")
+    .attr("transform", "translate(" + padding + ", 0)")
+    .call(d3.axisLeft(yVelocityScale));
+}
+
 /**
  * Creates the note histogram given a track set.
  *
@@ -177,6 +210,7 @@ function clearSVGs() {
  * @param {Object} obj - a parsed midi file as JSON
  */
 function midiLoadCallback(obj) {
+  console.log(midiFiles);
   fileList = document.getElementById("input-file");
   latestFile = fileList.files[fileList.files.length - 1];
   midiFiles[latestFile.name] = obj;
@@ -192,6 +226,7 @@ function setupGraphs() {
   clearSVGs();
   if (Object.keys(midiFiles).length > 0) {
     noteHistogram();
+    velocityOverTime();
     applyTooltips();
   }
 }
