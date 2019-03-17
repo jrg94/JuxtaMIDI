@@ -82,7 +82,8 @@ function noteHistogram() {
     .selectAll("rect")
     .data(d => keys.map(key => {return {key: key, value: d.count}}))
     .join("rect")
-      .attr("class", "bar")
+      .attr("class", "bar tipped")
+      .attr("data-tippy-content", "test")
       .attr("x", d => xTrackScale(d.key))
       .attr("y", d => yScale(d.value))
       .attr("width", xTrackScale.bandwidth())
@@ -114,11 +115,11 @@ function buildFileList() {
     node.innerHTML += keys[i] +
        `<div class="icons">
           <div class="icons-left">
-            <span class="hint--bottom hint--no-animate" aria-label="Toggle file"><i class="icon-toggle-on"></i></span>
+            <span class="tipped" data-tippy-content="Toggle file"><i class="icon-toggle-on"></i></span>
           </div>
           <div class="icons-right">
-            <span class="hint--bottom hint--no-animate" aria-label="Rename file"><i class="icon-pencil"></i></span>
-            <span class="hint--bottom hint--no-animate" aria-label="Delete file"><i class="icon-trash-empty"></i></span>
+            <span class="tipped" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
+            <span class="tipped" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
           </div>
         </div>`;
     node.style.backgroundColor = colorLUT[i % colorLUT.length];
@@ -143,6 +144,7 @@ function midiLoadCallback(obj) {
   buildFileList();
   clearSVGs();
   noteHistogram();
+  applyTooltips();
   // TODO: Implement other two charts
 }
 
@@ -204,4 +206,8 @@ function drawTitle(svg, width, height, padding, title) {
     .style("text-anchor", "middle")
     .style("font-size", "20px")
     .text(title)
+}
+
+function applyTooltips() {
+  tippy(".tipped", { arrow: true, animateFill: false })
 }
