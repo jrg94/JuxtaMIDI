@@ -26,6 +26,7 @@ function setup() {
   // Setup file upload trigger
   var source = document.getElementById('input-file');
   MIDIParser.parse(source, midiLoadCallback);
+  // TODO: Add more colors equal to the max number of MIDI files supported. Add check to make sure Add MIDI doesn't work once cap is met.
 }
 
 setup();
@@ -47,7 +48,8 @@ function noteHistogram() {
     .attr("width", width)
     .attr("height", height);
 
-  var mapping = populateNoteFrequencyMap(midiFiles);
+  var keys = Object.keys(midiFiles);
+  var mapping = populateNoteFrequencyMap();
   mapping.sort((a, b) => b.count - a.count);
 
   var xNoteScale = d3.scaleBand()
@@ -116,7 +118,7 @@ function clearFileList(fileList) {
 function buildFileList() {
   file_list = document.getElementById("input-file-list");
   clearFileList(file_list);
-  keys = Object.keys(midiFiles);
+  var keys = Object.keys(midiFiles);
   for (var i = 0; i < keys.length; i++) {
     var node = document.createElement("div");
     node.className = "file-list-item";
@@ -126,11 +128,11 @@ function buildFileList() {
        </span>
        <div class="icons">
           <div class="icons-left">
-            <span class="tipped midi-toggle" data-toggled="true" data-file="${keys[i]}" data-tippy-content="Toggle file"><i class="icon-toggle-on"></i></span>
+            <span class="tipped midi-toggle midi-btn" data-toggled="true" data-file="${keys[i]}" data-tippy-content="Toggle file"><i class="icon-toggle-on"></i></span>
           </div>
           <div class="icons-right">
-            <span class="tipped midi-rename" data-file="${keys[i]}" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
-            <span class="tipped midi-delete" data-file="${keys[i]}" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
+            <span class="tipped midi-rename midi-btn" data-file="${keys[i]}" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
+            <span class="tipped midi-delete midi-btn" data-file="${keys[i]}" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
           </div>
         </div>`;
     node.style.backgroundColor = colorLUT[i % colorLUT.length];
@@ -144,17 +146,23 @@ function buildFileList() {
 
   d3.selectAll(".midi-rename").on("click", function() {
     var midiFile = d3.select(this).attr("data-file");
-    renameMIDIFile(midiFile);
+    if (!renameMIDIFile(midiFile)) {
+      alert("Please pick a unique MIDI file name.");
+    }
   });
 
-  d3.selectAll(".midi-remove").on("click", function() {
+  d3.selectAll(".midi-delete").on("click", function() {
     var midiFile = d3.select(this).attr("data-file");
     deleteMIDIFile(midiFile);
   });
 }
 
 function clearSVGs() {
-  d3.selectAll("svg > *").remove();
+  d3.selectAll("svg")
+    .attr("height", null) // Reset width/height here, otherwise it carries over changes
+    .attr("width", null)
+    .selectAll("*")
+    .remove();
 }
 
 /**
@@ -173,7 +181,7 @@ function midiLoadCallback(obj) {
 }
 
 /**
- * Clear and set up graphs.
+ * Clear and draw all graphs.
  */
 function setupGraphs() {
   clearSVGs();
@@ -185,10 +193,8 @@ function setupGraphs() {
 
 /**
  * Populates a mapping based on note frequency.
- *
- * @param {Object} midiFiles - the set of all midi files
  */
-function populateNoteFrequencyMap(midiFiles) {
+function populateNoteFrequencyMap() {
   var mapping = []
   for (const [name, trackSet] of Object.entries(midiFiles)) {
     var track = trackSet.track;
@@ -281,14 +287,36 @@ function toggleMIDIFile(midiFile) {
   return !toggled;
 }
 
+// TODO: Potential issue, due to using selectors like [data-file=${midiFile}], we need to disallow double quotes from names.
+
 /**
  * Rename specified MIDI file.
+ *
+ * Returns true if successful (or no change), false if failed.
  */
 function renameMIDIFile(midiFile) {
+  var newMidiFile = prompt("Rename file?", midiFile);
+  if (newMidiFile == midiFile) {
+    return true;
+  } else if (newMidiFile in midiFiles) {
+    return false;
+  } else {
+    d3.select(`.midi-file-name[data-file="${midiFile}"]`)
+      .attr("data-file", newMidiFile)
+      .html(newMidiFile);
+    d3.selectAll(`.midi-btn[data-file="${midiFile}"]`)
+      .attr("data-file", newMidiFile);
+    midiFiles[newMidiFile] = {};
+    Object.assign(midiFiles[newMidiFile], midiFiles[midiFile]);
+    delete midiFiles[midiFile];
+    setupGraphs();
+    return true;
+  }
 }
 
 /**
  * Delete specified MIDI file.
  */
 function deleteMIDIFile(midiFile) {
+  alert("TBD");
 }
