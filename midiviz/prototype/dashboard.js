@@ -43,6 +43,7 @@ function velocityOverTime() {
   var height = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().height;
   var padding = 60;
 
+  var keys = Object.keys(midiFiles);
   var timestamps = getTimeStamps();
   timestamps.sort((a, b) => a.time - b.time)
   console.log(timestamps);
@@ -58,6 +59,9 @@ function velocityOverTime() {
   var yVelocityScale = d3.scaleLinear()
     .domain([d3.min(timestamps, d => d.velocity), d3.max(timestamps, d => d.velocity)])
     .range([height - padding, padding]);
+
+    var colorScale = d3.scaleOrdinal()
+      .range(colorLUT);
 
   svg.append("g")
     .attr("transform", "translate(0," + (height - padding) + ")")
@@ -77,13 +81,15 @@ function velocityOverTime() {
     .y(d => yVelocityScale(d.velocity)) // set the y values for the line generator
     .curve(d3.curveMonotoneX)
 
-  svg.append("path")
-    .datum(timestamps) // 10. Binds data to the line
-    .attr("class", "line") // Assign a class for styling
-    .attr("d", line);
+  var subsets = keys.map(key => timestamps.filter(d => d.name == key));
+  svg.append("g")
+    .selectAll("path")
+    .data(subsets)
+    .join("path")
+      .attr("fill", d => colorScale(d.name))
+      .attr("d", line);
 
   drawTitle(svg, width, height, padding, "Velocity Over Time");
-
 }
 
 /**
