@@ -113,8 +113,13 @@ function buildFileList() {
     node.className = "file-list-item";
     node.innerHTML += keys[i] +
        `<div class="icons">
-          <div class="icons-left"><i class="icon-toggle-on"></i></div>
-          <div class="icons-right"><i class="icon-pencil"></i><i class="icon-trash-empty"></i></div>
+          <div class="icons-left">
+            <span class="hint--bottom hint--no-animate" aria-label="Toggle file"><i class="icon-toggle-on"></i></span>
+          </div>
+          <div class="icons-right">
+            <span class="hint--bottom hint--no-animate" aria-label="Rename file"><i class="icon-pencil"></i></span>
+            <span class="hint--bottom hint--no-animate" aria-label="Delete file"><i class="icon-trash-empty"></i></span>
+          </div>
         </div>`;
     node.style.backgroundColor = colorLUT[i % colorLUT.length];
     file_list.appendChild(node);
