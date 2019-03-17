@@ -94,15 +94,15 @@ function noteHistogram() {
     .join("g")
     .attr("transform", d => `translate(${xNoteScale(d.note)},0)`)
     .selectAll("rect")
-    .data(d => keys.map(key => {return {key: key, value: d.count}}))
+    .data(d => keys.map(key => {return d}))
     .join("rect")
     .attr("class", "bar tipped")
-    .attr("x", d => xTrackScale(d.key))
-    .attr("y", d => yScale(d.value))
-    .attr("data-tippy-content", (d) => (d.key + "<br> ??: " + d.value))
+    .attr("x", d => xTrackScale(d.name))
+    .attr("y", d => yScale(d.count))
+    .attr("data-tippy-content", (d) => (d.name + " " + d.note + ": " + d.count))
     .attr("width", xTrackScale.bandwidth())
-    .attr("height", d => height - yScale(d.value) - padding)
-    .attr("fill", d => colorScale(d.key));
+    .attr("height", d => height - yScale(d.count) - padding)
+    .attr("fill", d => colorScale(d.name));
 
   drawTitle(svg, width, height, padding, "Note Histogram");
 }
