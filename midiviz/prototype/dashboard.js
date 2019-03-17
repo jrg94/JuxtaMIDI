@@ -44,6 +44,7 @@ function velocityOverTime() {
   var padding = 60;
 
   var timestamps = getTimeStamps();
+  timestamps.sort((a, b) => a.time - b.time)
   console.log(timestamps);
 
   d3.select("#velocity-over-time")
@@ -51,11 +52,11 @@ function velocityOverTime() {
     .attr("height", height);
 
   var xTimeScale = d3.scaleLinear()
-    .domain([0, 10])
+    .domain([0, d3.max(timestamps, d => d.time)])
     .range([padding, width - padding * 2]);
 
   var yVelocityScale = d3.scaleLinear()
-    .domain([0, 10])
+    .domain([d3.min(timestamps, d => d.velocity), d3.max(timestamps, d => d.velocity)])
     .range([height - padding, padding]);
 
   svg.append("g")
@@ -70,6 +71,19 @@ function velocityOverTime() {
   svg.append("g")
     .attr("transform", "translate(" + padding + ", 0)")
     .call(d3.axisLeft(yVelocityScale));
+
+  var line = d3.line()
+    .x(d => xTimeScale(d.time)) // set the x values for the line generator
+    .y(d => yVelocityScale(d.velocity)) // set the y values for the line generator
+    .curve(d3.curveMonotoneX)
+
+  svg.append("path")
+    .datum(timestamps) // 10. Binds data to the line
+    .attr("class", "line") // Assign a class for styling
+    .attr("d", line);
+
+  drawTitle(svg, width, height, padding, "Velocity Over Time");
+
 }
 
 /**
@@ -130,7 +144,9 @@ function noteHistogram() {
     .join("g")
     .attr("transform", d => `translate(${xNoteScale(d.note)},0)`)
     .selectAll("rect")
-    .data(d => keys.map(key => {return d}))
+    .data(d => keys.map(key => {
+      return d
+    }))
     .join("rect")
     .attr("class", "bar tipped")
     .attr("x", d => xTrackScale(d.name))
@@ -243,7 +259,7 @@ function getTimeStamps() {
     var track = trackSet.track;
     track.forEach(function(midiEvent) {
       runningTime = 0;
-      midiEvent.event.forEach(function (d) {
+      midiEvent.event.forEach(function(d) {
         runningTime += d.deltaTime;
         if (d.type == 9) {
           mapping.push({
@@ -324,7 +340,12 @@ function drawTitle(svg, width, height, padding, title) {
  * Needs to be done whenever new elements with tooltips are added.
  */
 function applyTooltips() {
-  tippy(".tipped", { arrow: true, animateFill: false, size: "small", maxWidth: 200 })
+  tippy(".tipped", {
+    arrow: true,
+    animateFill: false,
+    size: "small",
+    maxWidth: 200
+  })
 }
 
 /**
