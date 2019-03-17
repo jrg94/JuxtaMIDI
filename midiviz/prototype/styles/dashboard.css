@@ -90,6 +90,16 @@ body {
 .master-graph-pane {
   grid-column: 2 / 4;
   grid-row: 1;
+  display: grid;
+}
+
+.welcome-message {
+  align-self: center;
+  justify-self: center;
+}
+
+#notes-over-time {
+  display: none;
 }
 
 .note-frequency-graph-pane {
