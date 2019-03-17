@@ -23,12 +23,14 @@ var hiddenMidiFiles = {}
  * Sets up the environment to begin working with MIDI files.
  */
 function setup() {
-  var source = document.getElementById('input');
+  var source = document.getElementById('input-file');
   MIDIParser.parse(source, midiLoadCallback);
 }
 
 /**
  * Creates the note histogram given a track set.
+ *
+ * TODO: Note histogram seems incorrect for 2nd set? [!!]
  */
 function noteHistogram() {
   var svg = d3.select("#note-frequency");
@@ -115,10 +117,13 @@ function buildFileList() {
   for (var i = 0; i < keys.length; i++) {
     var node = document.createElement("div");
     node.className = "file-list-item";
-    node.innerHTML += keys[i] +
-       `<div class="icons">
+    node.innerHTML +=
+      `<span class="midi-file-name" data-file="${keys[i]}">
+         ${keys[i]}
+       </span>
+       <div class="icons">
           <div class="icons-left">
-            <span class="tipped midi-toggle" data-file="${keys[i]}" data-tippy-content="Toggle file"><i class="icon-toggle-on"></i></span>
+            <span class="tipped midi-toggle" data-toggled="true" data-file="${keys[i]}" data-tippy-content="Toggle file"><i class="icon-toggle-on"></i></span>
           </div>
           <div class="icons-right">
             <span class="tipped midi-rename" data-file="${keys[i]}" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
@@ -141,14 +146,23 @@ function clearSVGs() {
  * @param {Object} obj - a parsed midi file as JSON
  */
 function midiLoadCallback(obj) {
-  fileList = document.getElementById("input");
+  fileList = document.getElementById("input-file");
   latestFile = fileList.files[fileList.files.length - 1];
   midiFiles[latestFile.name] = obj;
   buildFileList();
-  clearSVGs();
-  noteHistogram();
-  applyTooltips();
+  setupGraphs();
   // TODO: Implement other two charts
+}
+
+/**
+ * Clear and set up graphs.
+ */
+function setupGraphs() {
+  clearSVGs();
+  if (Object.keys(midiFiles).length > 0) {
+    noteHistogram();
+    applyTooltips();
+  }
 }
 
 /**
@@ -224,7 +238,7 @@ function applyTooltips() {
 /**
  * Toggle specified MIDI file from view.
  *
- * TODO: There should be some cap on this later.
+ * TODO: There should be some cap on this later about how many files can be toggled.
  */
 function toggleMIDIFile(midiFile) {
 }

@@ -59,7 +59,7 @@ body {
   text-align: center;
 }
 
-#input {
+#input-file {
   width: 0.1px;
   height: 0.1px;
   opacity: 0;
@@ -68,7 +68,7 @@ body {
   z-index: -1;
 }
 
-#input+label {
+#input-file+label {
   cursor: pointer;
   font-size: 1em;
   color: white;
@@ -80,8 +80,8 @@ body {
   padding: 7px 0;
 }
 
-#input:focus+label,
-#input+label:hover {
+#input-file:focus+label,
+#input-file+label:hover {
   background-color: #3273dc;
 }
 
