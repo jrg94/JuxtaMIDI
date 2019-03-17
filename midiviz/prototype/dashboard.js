@@ -46,7 +46,6 @@ function velocityOverTime() {
   var keys = Object.keys(midiFiles);
   var timestamps = getTimeStamps();
   timestamps.sort((a, b) => a.time - b.time)
-  console.log(timestamps);
 
   d3.select("#velocity-over-time")
     .attr("width", width)
@@ -87,6 +86,7 @@ function velocityOverTime() {
     .data(subsets)
     .join("path")
       .attr("fill", d => colorScale(d.name))
+      .style("mix-blend-mode", "multiply")
       .attr("d", line);
 
   drawTitle(svg, width, height, padding, "Velocity Over Time");
@@ -235,7 +235,6 @@ function clearSVGs() {
  * @param {Object} obj - a parsed midi file as JSON
  */
 function midiLoadCallback(obj) {
-  console.log(midiFiles);
   fileList = document.getElementById("input-file");
   latestFile = fileList.files[fileList.files.length - 1];
   midiFiles[latestFile.name] = obj;
@@ -268,17 +267,30 @@ function getTimeStamps() {
       midiEvent.event.forEach(function(d) {
         runningTime += d.deltaTime;
         if (d.type == 9) {
-          mapping.push({
-            name: name,
-            time: runningTime,
-            velocity: d.data[1],
-            note: noteLUT[d.data[0]]
-          });
+          var existingTimestamp = findWithAttribute(mapping, "time", runningTime);
+          if (existingTimestamp) {
+            existingTimestamp.velocity += d.data[1];
+          } else {
+            mapping.push({
+              name: name,
+              time: runningTime,
+              velocity: d.data[1],
+              note: noteLUT[d.data[0]]
+            });
+          }
         }
       });
     });
   }
   return mapping;
+}
+
+function findWithAttribute(list, attr, find) {
+  for (var i = 0; i < list.length; i++) {
+    if (list[i][attr] == find) {
+      return list[i];
+    }
+  }
 }
 
 /**
