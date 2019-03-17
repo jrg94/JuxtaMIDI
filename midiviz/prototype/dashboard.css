@@ -35,6 +35,10 @@ body {
   padding: 10px 2px 0px 2px;
 }
 
+.midi-file-name {
+  overflow-wrap: break-word;
+}
+
 .icons {
   height: 16px;
   padding: 7px 3px 4px 3px;
