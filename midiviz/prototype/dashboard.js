@@ -13,7 +13,7 @@ const noteLUT = [
 ];
 
 const colorLUT = [
-  "#dc3912", "#8A2BE2"
+  "#a1dd70", "#c7004c"
 ]
 
 var midiFiles = {};
@@ -34,7 +34,7 @@ function noteHistogram() {
 
   var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
   var height = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().height;
-  var padding = 50;
+  var padding = 60;
 
   d3.select("#note-frequency")
     .attr("width", width)
@@ -111,7 +111,11 @@ function buildFileList() {
   for (var i = 0; i < keys.length; i++) {
     var node = document.createElement("div");
     node.className = "file-list-item";
-    node.innerHTML += keys[i];
+    node.innerHTML += keys[i] +
+       `<div class="icons">
+          <div class="icons-left"><i class="icon-toggle-on"></i></div>
+          <div class="icons-right"><i class="icon-pencil"></i><i class="icon-trash-empty"></i></div>
+        </div>`;
     node.style.backgroundColor = colorLUT[i % colorLUT.length];
     file_list.appendChild(node);
   }
@@ -194,6 +198,5 @@ function drawTitle(svg, width, height, padding, title) {
     .attr("dx", ((width / 2) - padding / 2))
     .style("text-anchor", "middle")
     .style("font-size", "20px")
-    .style("text-decoration", "underline")
     .text(title)
 }
