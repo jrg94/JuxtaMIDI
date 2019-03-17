@@ -78,17 +78,17 @@ function noteHistogram() {
     .selectAll("g")
     .data(mapping)
     .join("g")
-      .attr("transform", d => `translate(${xNoteScale(d.note)},0)`)
+    .attr("transform", d => `translate(${xNoteScale(d.note)},0)`)
     .selectAll("rect")
     .data(d => keys.map(key => {return {key: key, value: d.count}}))
     .join("rect")
-      .attr("class", "bar tipped")
-      .attr("data-tippy-content", "test")
-      .attr("x", d => xTrackScale(d.key))
-      .attr("y", d => yScale(d.value))
-      .attr("width", xTrackScale.bandwidth())
-      .attr("height", d => height - yScale(d.value) - padding)
-      .attr("fill", d => colorScale(d.key));
+    .attr("class", "bar tipped")
+    .attr("x", d => xTrackScale(d.key))
+    .attr("y", d => yScale(d.value))
+    .attr("data-tippy-content", (d) => (d.key + "<br> ??: " + d.value))
+    .attr("width", xTrackScale.bandwidth())
+    .attr("height", d => height - yScale(d.value) - padding)
+    .attr("fill", d => colorScale(d.key));
 
   drawTitle(svg, width, height, padding, "Note Histogram");
 }
@@ -209,5 +209,5 @@ function drawTitle(svg, width, height, padding, title) {
 }
 
 function applyTooltips() {
-  tippy(".tipped", { arrow: true, animateFill: false })
+  tippy(".tipped", { arrow: true, animateFill: false, size: "small" })
 }
