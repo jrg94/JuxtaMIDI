@@ -244,6 +244,25 @@ function applyTooltips() {
  * TODO: There should be some cap on this later about how many files can be toggled.
  */
 function toggleMIDIFile(midiFile) {
+  var toggleSpan = d3.select(`span.midi-toggle[data-file="${midiFile}"]`);
+  var toggleSpanIcon = toggleSpan.select("i");
+  var toggled = toggleSpan.attr("data-toggled");
+  if (toggled == "false") { // off -> on
+    toggleSpan.attr("data-toggled", "true");
+    toggleSpanIcon.classed("icon-toggle-on", true);
+    toggleSpanIcon.classed("icon-toggle-off", false);
+    midiFiles[midiFile] = {};
+    Object.assign(midiFiles[midiFile], hiddenMidiFiles[midiFile])
+    delete hiddenMidiFiles[midiFile];
+  } else {
+    toggleSpan.attr("data-toggled", "false");
+    toggleSpanIcon.classed("icon-toggle-on", false);
+    toggleSpanIcon.classed("icon-toggle-off", true);
+    hiddenMidiFiles[midiFile] = {};
+    Object.assign(hiddenMidiFiles[midiFile], midiFiles[midiFile]);
+    delete midiFiles[midiFile];
+  }
+  setupGraphs();
 }
 
 /**
