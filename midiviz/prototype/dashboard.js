@@ -209,5 +209,5 @@ function drawTitle(svg, width, height, padding, title) {
 }
 
 function applyTooltips() {
-  tippy(".tipped", { arrow: true, animateFill: false, size: "small" })
+  tippy(".tipped", { arrow: true, animateFill: false, size: "small", maxWidth: 200 })
 }
