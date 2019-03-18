@@ -12,14 +12,8 @@ const noteLUT = [
   "C9", "C#9", "D9", "D#9", "E9", "F9", "F#9", "G9"
 ];
 
-const colorLUT = [
-  "#7bde2a", "#4087d6", "#c7004c"
-]
-
-// TODO: Graphs should pick color based on toggled midiFiles instead of defaulting to colorLUT order.
-// At the moment, colosr will be mismatched when toggling.
-// Need to rethink color logic, potentially. Should deleting a file maintain the general color scheme or reset them?
-// etc.
+var colors = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928"];
+var usedColors = [];
 
 var midiFiles = {};
 var hiddenMidiFiles = {}
@@ -31,7 +25,6 @@ function setup() {
   // Setup file upload trigger
   var source = document.getElementById('input-file');
   MIDIParser.parse(source, midiLoadCallback);
-  // TODO: Add more colors equal to the max number of MIDI files supported. Add check to make sure Add MIDI doesn't work once cap is met.
 }
 
 setup();
@@ -44,7 +37,7 @@ function velocityOverTime() {
   var padding = 60;
 
   var keys = Object.keys(midiFiles);
-  var timestamps = getTimeStamps();
+  var timestamps = getTimestamps();
   timestamps.sort((a, b) => a.time - b.time)
 
   d3.select("#velocity-over-time")
@@ -58,9 +51,6 @@ function velocityOverTime() {
   var yVelocityScale = d3.scaleLinear()
     .domain([d3.min(timestamps, d => d.velocity), d3.max(timestamps, d => d.velocity)])
     .range([height - padding, padding]);
-
-    var colorScale = d3.scaleOrdinal()
-      .range(colorLUT);
 
   svg.append("g")
     .attr("transform", "translate(0," + (height - padding) + ")")
@@ -76,18 +66,22 @@ function velocityOverTime() {
     .call(d3.axisLeft(yVelocityScale));
 
   var line = d3.line()
-    .x(d => xTimeScale(d.time)) // set the x values for the line generator
-    .y(d => yVelocityScale(d.velocity)) // set the y values for the line generator
+    .x(d => xTimeScale(d.time))
+    .y(d => yVelocityScale(d.velocity))
     .curve(d3.curveMonotoneX)
 
+  console.log(midiFiles);
+  console.log(timestamps);
   var subsets = keys.map(key => timestamps.filter(d => d.name == key));
+  console.log(subsets);
+
   svg.append("g")
     .selectAll("path")
     .data(subsets)
     .join("path")
-      .attr("fill", d => colorScale(d.name))
-      .style("mix-blend-mode", "multiply")
-      .attr("d", line);
+    .attr("fill", d => { return d[0].color; })
+    .style("mix-blend-mode", "multiply")
+    .attr("d", line);
 
   drawTitle(svg, width, height, padding, "Velocity Over Time");
 }
@@ -95,7 +89,6 @@ function velocityOverTime() {
 /**
  * Creates the note histogram given a track set.
  *
- * TODO: Note histogram seems incorrect for 2nd set? [!!]
  */
 function noteHistogram() {
   var svg = d3.select("#note-frequency");
@@ -128,9 +121,6 @@ function noteHistogram() {
     .domain([0, d3.max(mapping, d => d.count)])
     .range([height - padding, padding]);
 
-  var colorScale = d3.scaleOrdinal()
-    .range(colorLUT);
-
   svg.append("g")
     .attr("transform", "translate(0," + (height - padding) + ")")
     .call(d3.axisBottom(xNoteScale))
@@ -160,7 +150,7 @@ function noteHistogram() {
     .attr("data-tippy-content", (d) => (d.name + " " + d.note + ": " + d.count))
     .attr("width", xTrackScale.bandwidth())
     .attr("height", d => height - yScale(d.count) - padding)
-    .attr("fill", d => colorScale(d.name));
+    .attr("fill", d => d.color);
 
   drawTitle(svg, width, height, padding, "Note Histogram");
 }
@@ -182,23 +172,23 @@ function buildFileList() {
   var fileList = document.getElementById("input-file-list");
   clearFileList(fileList);
   var keys = Object.keys(midiFiles);
-  for (var i = 0; i < keys.length; i++) {
+  for (const [name, midiFile] of Object.entries(midiFiles)) {
     var node = document.createElement("div");
     node.className = "file-list-item";
     node.innerHTML +=
-      `<span class="midi-file-name" data-file="${keys[i]}">
-         ${keys[i]}
+      `<span class="midi-file-name" data-file="${name}">
+         ${name}
        </span>
        <div class="icons">
           <div class="icons-left">
-            <span class="tipped midi-toggle midi-btn" data-toggled="true" data-file="${keys[i]}" data-tippy-content="Toggle file"><i class="icon-toggle-on"></i></span>
+            <span class="tipped midi-toggle midi-btn" data-toggled="true" data-file="${name}" data-tippy-content="Toggle file"><i class="icon-toggle-on"></i></span>
           </div>
           <div class="icons-right">
-            <span class="tipped midi-rename midi-btn" data-file="${keys[i]}" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
-            <span class="tipped midi-delete midi-btn" data-file="${keys[i]}" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
+            <span class="tipped midi-rename midi-btn" data-file="${name}" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
+            <span class="tipped midi-delete midi-btn" data-file="${name}" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
           </div>
         </div>`;
-    node.style.backgroundColor = colorLUT[i % colorLUT.length];
+    node.style.backgroundColor = midiFile.color;
     fileList.appendChild(node);
   }
 
@@ -235,12 +225,18 @@ function clearSVGs() {
  * @param {Object} obj - a parsed midi file as JSON
  */
 function midiLoadCallback(obj) {
-  fileList = document.getElementById("input-file");
-  latestFile = fileList.files[fileList.files.length - 1];
-  midiFiles[latestFile.name] = obj;
-  buildFileList();
-  setupGraphs();
-  // TODO: Implement other two charts
+  if (colors.length > 0) {
+    var fileList = document.getElementById("input-file");
+    var latestFile = fileList.files[fileList.files.length - 1];
+    var midiColor = colors.splice(0, 1)[0];
+    midiFiles[latestFile.name] = obj;
+    midiFiles[latestFile.name].color = midiColor;
+    usedColors.push(midiColor);
+    buildFileList();
+    setupGraphs();
+  } else {
+    alert("Max MIDI files supported is " + usedColors.length);
+  }
 }
 
 /**
@@ -258,10 +254,10 @@ function setupGraphs() {
 /**
  * A helper function which generates a list of timestamps and velocities
  */
-function getTimeStamps() {
+function getTimestamps() {
   var mapping = []
-  for (const [name, trackSet] of Object.entries(midiFiles)) {
-    var track = trackSet.track;
+  for (const [name, midiFile] of Object.entries(midiFiles)) {
+    var track = midiFile.track;
     track.forEach(function(midiEvent) {
       runningTime = 0;
       midiEvent.event.forEach(function(d) {
@@ -275,7 +271,8 @@ function getTimeStamps() {
               name: name,
               time: runningTime,
               velocity: d.data[1],
-              note: noteLUT[d.data[0]]
+              note: noteLUT[d.data[0]],
+              color: midiFile.color
             });
           }
         }
@@ -297,13 +294,13 @@ function findWithAttribute(list, attr, find) {
  * Populates a mapping based on note frequency.
  */
 function populateNoteFrequencyMap() {
-  var mapping = []
-  for (const [name, trackSet] of Object.entries(midiFiles)) {
-    var track = trackSet.track;
+  var mapping = [];
+  for (const [name, midiFile] of Object.entries(midiFiles)) {
+    var track = midiFile.track;
     track.forEach(function(midiEvent) {
       midiEvent.event.forEach(function(d) {
         if (d.type == 9) {
-          populateMapping(mapping, "note", "count", noteLUT[d.data[0]], name);
+          populateMapping(mapping, "note", "count", noteLUT[d.data[0]], name, midiFile.color);
         }
       });
     });
@@ -314,8 +311,10 @@ function populateNoteFrequencyMap() {
 /**
  * A helper function which populates a mapping given some key string,
  * value string, and value to find for comparison.
+ *
+ * TODO: This color attribute here is a little unclean code since the method is generic.
  */
-function populateMapping(mapping, key, value, find, name) {
+function populateMapping(mapping, key, value, find, name, color) {
   var found = false;
   for (var i = 0; i < mapping.length && !found; i++) {
     if (mapping[i]["name"] == name && mapping[i][key] == find) {
@@ -325,7 +324,8 @@ function populateMapping(mapping, key, value, find, name) {
   }
   if (!found) {
     mapping.push({
-      ["name"]: name,
+      name: name,
+      color: color,
       [key]: find,
       [value]: 1
     })
@@ -413,9 +413,12 @@ function renameMIDIFile(midiFile) {
       .html(newMidiFile);
     d3.selectAll(`.midi-btn[data-file="${midiFile}"]`)
       .attr("data-file", newMidiFile);
+
+    // TODO: Fix rename on untoggled items.
     midiFiles[newMidiFile] = {};
     Object.assign(midiFiles[newMidiFile], midiFiles[midiFile]);
     delete midiFiles[midiFile];
+
     setupGraphs();
     return true;
   }
@@ -427,7 +430,13 @@ function renameMIDIFile(midiFile) {
 function deleteMIDIFile(midiFile) {
   var element = d3.select(`.midi-file-name[data-file="${midiFile}"]`).node().parentNode;
   element.parentNode.removeChild(element);
+
+  var removedMidiColor = midiFiles[midiFile].color;
+  colors.unshift(removedMidiColor);
+  usedColors = usedColors.filter(color => color !== removedMidiColor)
+
   delete midiFiles[midiFile];
+
   buildFileList();
   setupGraphs();
 }
