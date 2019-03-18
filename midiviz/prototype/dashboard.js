@@ -413,9 +413,17 @@ function renameMIDIFile(midiFile) {
       .html(newMidiFile);
     d3.selectAll(`.midi-btn[data-file="${midiFile}"]`)
       .attr("data-file", newMidiFile);
-    midiFiles[newMidiFile] = {};
-    Object.assign(midiFiles[newMidiFile], midiFiles[midiFile]);
-    delete midiFiles[midiFile];
+
+    if (midiFile in midiFiles) {
+      midiFiles[newMidiFile] = {};
+      Object.assign(midiFiles[newMidiFile], midiFiles[midiFile]);
+      delete midiFiles[midiFile];
+    } else {
+      hiddenMidiFiles[newMidiFile] = {};
+      Object.assign(hiddenMidiFiles[newMidiFile], hiddenMidiFiles[midiFile]);
+      delete hiddenMidiFiles[midiFile];
+    }
+    
     setupGraphs();
     return true;
   }
