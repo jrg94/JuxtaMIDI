@@ -36,6 +36,62 @@ function setup() {
 
 setup();
 
+function velocityOverTime() {
+  var svg = d3.select("#velocity-over-time");
+
+  var width = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().width;
+  var height = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().height;
+  var padding = 60;
+
+  var keys = Object.keys(midiFiles);
+  var timestamps = getTimeStamps();
+  timestamps.sort((a, b) => a.time - b.time)
+
+  d3.select("#velocity-over-time")
+    .attr("width", width)
+    .attr("height", height);
+
+  var xTimeScale = d3.scaleLinear()
+    .domain([0, d3.max(timestamps, d => d.time)])
+    .range([padding, width - padding * 2]);
+
+  var yVelocityScale = d3.scaleLinear()
+    .domain([d3.min(timestamps, d => d.velocity), d3.max(timestamps, d => d.velocity)])
+    .range([height - padding, padding]);
+
+    var colorScale = d3.scaleOrdinal()
+      .range(colorLUT);
+
+  svg.append("g")
+    .attr("transform", "translate(0," + (height - padding) + ")")
+    .call(d3.axisBottom(xTimeScale))
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-45)");
+
+  svg.append("g")
+    .attr("transform", "translate(" + padding + ", 0)")
+    .call(d3.axisLeft(yVelocityScale));
+
+  var line = d3.line()
+    .x(d => xTimeScale(d.time)) // set the x values for the line generator
+    .y(d => yVelocityScale(d.velocity)) // set the y values for the line generator
+    .curve(d3.curveMonotoneX)
+
+  var subsets = keys.map(key => timestamps.filter(d => d.name == key));
+  svg.append("g")
+    .selectAll("path")
+    .data(subsets)
+    .join("path")
+      .attr("fill", d => colorScale(d.name))
+      .style("mix-blend-mode", "multiply")
+      .attr("d", line);
+
+  drawTitle(svg, width, height, padding, "Velocity Over Time");
+}
+
 /**
  * Creates the note histogram given a track set.
  *
@@ -94,7 +150,9 @@ function noteHistogram() {
     .join("g")
     .attr("transform", d => `translate(${xNoteScale(d.note)},0)`)
     .selectAll("rect")
-    .data(d => keys.map(key => {return d}))
+    .data(d => keys.map(key => {
+      return d
+    }))
     .join("rect")
     .attr("class", "bar tipped")
     .attr("x", d => xTrackScale(d.name))
@@ -192,7 +250,46 @@ function setupGraphs() {
   clearSVGs();
   if (Object.keys(midiFiles).length > 0) {
     noteHistogram();
+    velocityOverTime();
     applyTooltips();
+  }
+}
+
+/**
+ * A helper function which generates a list of timestamps and velocities
+ */
+function getTimeStamps() {
+  var mapping = []
+  for (const [name, trackSet] of Object.entries(midiFiles)) {
+    var track = trackSet.track;
+    track.forEach(function(midiEvent) {
+      runningTime = 0;
+      midiEvent.event.forEach(function(d) {
+        runningTime += d.deltaTime;
+        if (d.type == 9) {
+          var existingTimestamp = findWithAttribute(mapping, "time", runningTime);
+          if (existingTimestamp) {
+            existingTimestamp.velocity += d.data[1];
+          } else {
+            mapping.push({
+              name: name,
+              time: runningTime,
+              velocity: d.data[1],
+              note: noteLUT[d.data[0]]
+            });
+          }
+        }
+      });
+    });
+  }
+  return mapping;
+}
+
+function findWithAttribute(list, attr, find) {
+  for (var i = 0; i < list.length; i++) {
+    if (list[i][attr] == find) {
+      return list[i];
+    }
   }
 }
 
@@ -261,7 +358,12 @@ function drawTitle(svg, width, height, padding, title) {
  * Needs to be done whenever new elements with tooltips are added.
  */
 function applyTooltips() {
-  tippy(".tipped", { arrow: true, animateFill: false, size: "small", maxWidth: 200 })
+  tippy(".tipped", {
+    arrow: true,
+    animateFill: false,
+    size: "small",
+    maxWidth: 200
+  })
 }
 
 /**
