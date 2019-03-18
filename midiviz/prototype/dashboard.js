@@ -70,10 +70,7 @@ function velocityOverTime() {
     .y(d => yVelocityScale(d.velocity))
     .curve(d3.curveMonotoneX)
 
-  console.log(midiFiles);
-  console.log(timestamps);
   var subsets = keys.map(key => timestamps.filter(d => d.name == key));
-  console.log(subsets);
 
   svg.append("g")
     .selectAll("path")
@@ -225,17 +222,21 @@ function clearSVGs() {
  * @param {Object} obj - a parsed midi file as JSON
  */
 function midiLoadCallback(obj) {
-  if (colors.length > 0) {
+  if (colors.length == 0) {
+    alert("Max MIDI files supported is " + usedColors.length);
+  } else {
     var fileList = document.getElementById("input-file");
     var latestFile = fileList.files[fileList.files.length - 1];
-    var midiColor = colors.splice(0, 1)[0];
-    midiFiles[latestFile.name] = obj;
-    midiFiles[latestFile.name].color = midiColor;
-    usedColors.push(midiColor);
-    buildFileList();
-    setupGraphs();
-  } else {
-    alert("Max MIDI files supported is " + usedColors.length);
+    if (latestFile.name in midiFiles) {
+      alert("MIDI file with name " + latestFile.name + " is already loaded!");
+    } else {
+      var midiColor = colors.splice(0, 1)[0];
+      midiFiles[latestFile.name] = obj;
+      midiFiles[latestFile.name].color = midiColor;
+      usedColors.push(midiColor);
+      buildFileList();
+      setupGraphs();
+    }
   }
 }
 
