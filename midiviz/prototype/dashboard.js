@@ -284,6 +284,7 @@ function graphFrequency() {
     .attr("data-tippy-content", (d) => `${d.name}<br>${d.note}: ${d.count}`)
     .attr("width", xTrackScale.bandwidth())
     .attr("height", d => height - yScale(d.count) - padding)
+    .attr("opacity", d => d.match ? 0.2 : 1.0)
     .attr("fill", d => d.color);
 
   drawTitle(svg, width, height, padding, "Note Frequency");
