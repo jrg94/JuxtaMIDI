@@ -41,6 +41,7 @@ function graphNotes() {
 
   svg.style("display", "inline");
 
+  var keys = Object.keys(midiFiles);
   var width = d3.select(".master-graph-pane").node().getBoundingClientRect().width;
   var height = d3.select(".master-graph-pane").node().getBoundingClientRect().height;
   var padding = 60;
@@ -50,16 +51,21 @@ function graphNotes() {
     .attr("height", height);
 
   let mapping = getNotesMapping();
-  mapping.sort((a, b) => {noteLUT.indexOf(a.name) > noteLUT.indexOf(b.name)})
+  mapping.sort((a, b) => {noteLUT.indexOf(a.note) > noteLUT.indexOf(b.note)})
 
   var xTimeScale = d3.scaleLinear()
     .domain([0, d3.max(mapping, d => d.time + d.duration)])
     .range([padding, width - padding * 2]);
 
+  var yNoteScale = d3.scaleBand()
+    .domain(mapping.map(d => d.note))
+    .range([height - padding, padding])
+    .padding(.1);
+
   const trackNames = [...new Set(mapping.map(d => d.name))];
   var yTrackScale = d3.scaleBand()
     .domain(trackNames)
-    .range([height - padding, padding])
+    .rangeRound([0, yNoteScale.bandwidth()])
     .padding(0.05);
 
   svg.append("g")
@@ -73,24 +79,39 @@ function graphNotes() {
 
   svg.append("g")
     .attr("transform", "translate(" + padding + ", 0)")
-    .call(d3.axisLeft(yTrackScale));
+    .call(d3.axisLeft(yNoteScale));
 
   drawTitle(svg, width, height, padding, "Notes Played");
+
+  svg.append("g")
+    .selectAll("g")
+    .data(mapping)
+    .join("g")
+    .attr("transform", d => `translate(0,${yNoteScale(d.note)})`)
+    .selectAll("rect")
+    .data(d => keys.map(key => {
+      return d
+    }))
+    .join("rect")
+    .attr("class", "bar tipped")
+    .attr("x", d => xTimeScale(d.time))
+    .attr("y", d => yTrackScale(d.name))
+    .attr("data-tippy-content", (d) => `${d.name}<br>note: ${d.note}<br>start: ${d.time}<br>velocity: ${d.velocity}<br>duration: ${d.duration}`)
+    .attr("width", d => xTimeScale(d.duration))
+    .attr("height", yTrackScale.bandwidth())
+    .attr("fill", d => d.color);
 }
 
 /**
  * Populates mapping for purposes of master note over time graph.
  *
  * e.g.
- *[{time: 0, name: "C5", duration: 54},
- * {time: 1, name: "C4", duration: 23},
- * {time: 42, name: "E3", duration: 10}];
  */
 function getNotesMapping() {
-  return
-  [{time: 0, name: "C5", duration: 54},
-   {time: 1, name: "C4", duration: 23},
-   {time: 42, name: "E3", duration: 10}];
+  return [{time: 0, name: "1.mid", note: "C5", velocity: 50, duration: 54, color: "green"},
+   {time: 1, name: "1.mid", note: "C4", velocity: 62, duration: 23, color: "red"},
+   {time: 1, name: "2.mid", note: "C4", velocity: 62, duration: 23, color: "red"},
+   {time: 42, name: "2.mid", note: "E3", velocity: 12, duration: 10, color: "blue"}];
 }
 
 /**
