@@ -51,7 +51,7 @@ function graphNotes() {
     .attr("height", height);
 
   let mapping = getNotesMapping();
-  mapping.sort((a, b) => noteLUT.indexOf(a.note) > noteLUT.indexOf(b.note))
+  mapping.sort((a, b) => noteLUT.indexOf(b.note) - noteLUT.indexOf(a.note))
 
   var xTimeScale = d3.scaleLinear()
     .domain([0, d3.max(mapping, d => d.time + d.duration)])
@@ -113,7 +113,6 @@ function graphNotes() {
 function getNotesMapping() {
   var mapping = []
   for (const [name, midiFile] of Object.entries(midiFiles)) {
-    console.log([name, midiFile]);
     var track = midiFile.track;
     track.forEach(function(midiEvent) {
       var runningTime = 0;
@@ -156,7 +155,6 @@ function getNotesMapping() {
       }
     });
   }
-  console.log(mapping);
   return mapping;
 }
 
