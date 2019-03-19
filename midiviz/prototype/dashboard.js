@@ -29,7 +29,16 @@ function setup() {
 
 setup();
 
-function velocityOverTime() {
+/**
+ * Graphs master note graph, showing progression of notes played over time.
+ */
+function graphNotes() {
+}
+
+/**
+ * Graphs velocity over time graph.
+ */
+function graphVelocity() {
   var svg = d3.select("#velocity-over-time");
 
   var width = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().width;
@@ -89,7 +98,7 @@ function velocityOverTime() {
  * Creates the note histogram given a track set.
  *
  */
-function noteHistogram() {
+function graphFrequency() {
   var svg = d3.select("#note-frequency");
 
   var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
@@ -248,8 +257,9 @@ function midiLoadCallback(obj) {
 function setupGraphs() {
   clearSVGs();
   if (Object.keys(midiFiles).length > 0) {
-    noteHistogram();
-    velocityOverTime();
+    graphNotes();
+    graphFrequency();
+    graphVelocity();
     applyTooltips();
   }
 }
