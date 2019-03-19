@@ -472,7 +472,6 @@ function detectNoteMismatch(mapping) {
     notes.forEach(item => item.match = match);
     notes.forEach(item => item.fileCount = files.length);
   });
-  console.log(mapping);
 }
 
 /**
