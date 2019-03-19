@@ -230,9 +230,9 @@ function clearSVGs() {
  * The midi load callback function. Loads the midi file, logs it,
  * and plots it on a histogram.
  *
- * @param {Object} obj - a parsed midi file as JSON
+ * @param {Object} midiFile - a parsed midi file as JSON
  */
-function midiLoadCallback(obj) {
+function midiLoadCallback(midiFile) {
   if (colors.length == 0) {
     alert("Max MIDI files supported is " + usedColors.length);
   } else {
@@ -242,7 +242,7 @@ function midiLoadCallback(obj) {
       alert("MIDI file with name " + latestFile.name + " is already loaded!");
     } else {
       var midiColor = colors.splice(0, 1)[0];
-      midiFiles[latestFile.name] = obj;
+      midiFiles[latestFile.name] = midiFile;
       midiFiles[latestFile.name].color = midiColor;
       usedColors.push(midiColor);
       buildFileList();
