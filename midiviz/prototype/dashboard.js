@@ -76,7 +76,9 @@ function velocityOverTime() {
     .selectAll("path")
     .data(subsets)
     .join("path")
-    .attr("fill", d => { return d[0].color; })
+    .attr("fill", d => (d.length > 0 && "color" in d[0]) ? d[0].color : "black" )
+    // temp fix: "black" graph should never appear, in theory, since it implies no notes in file
+    // but it's here to avoid errors in case there is -- logic can be investigated and improved.
     .style("mix-blend-mode", "multiply")
     .attr("d", line);
 
@@ -264,7 +266,7 @@ function getTimestamps() {
       midiEvent.event.forEach(function(d) {
         runningTime += d.deltaTime;
         if (d.type == 9) {
-          var existingTimestamp = findWithAttribute(mapping, "time", runningTime);
+          var existingTimestamp = findWithAttributes(mapping, "name", name, "time", runningTime);
           if (existingTimestamp) {
             existingTimestamp.velocity += d.data[1];
           } else {
@@ -283,9 +285,12 @@ function getTimestamps() {
   return mapping;
 }
 
-function findWithAttribute(list, attr, find) {
+/**
+ * TODO: This function and naming is not clean code - but we're revising the velocity-time graph altogether post-prototype.
+ */
+function findWithAttributes(list, attr, find, attr2, find2) {
   for (var i = 0; i < list.length; i++) {
-    if (list[i][attr] == find) {
+    if (list[i][attr] == find && list[i][attr2] == find2) {
       return list[i];
     }
   }
