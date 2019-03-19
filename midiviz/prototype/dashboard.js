@@ -454,7 +454,22 @@ function populateNoteFrequencyMap() {
       });
     });
   }
+  detectNoteMismatch(mapping);
   return mapping;
+}
+
+/**
+ * A helper function for detecting note mismatches over a list of
+ * note data points.
+ */
+function detectNoteMismatch(mapping) {
+  const master = mapping.filter(item => item.name == mapping[0].name);
+  master.forEach(function(d) {
+    const notes = mapping.filter(item => item.note == d.note);
+    const match = notes.every(item => item.count == notes[0].count);
+    notes.forEach(item => item.match = match);
+  });
+  console.log(mapping);
 }
 
 /**
