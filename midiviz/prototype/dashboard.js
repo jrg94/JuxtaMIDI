@@ -51,7 +51,7 @@ function graphNotes() {
     .attr("height", height);
 
   let mapping = getNotesMapping();
-  mapping.sort((a, b) => {noteLUT.indexOf(a.note) > noteLUT.indexOf(b.note)})
+  mapping.sort((a, b) => noteLUT.indexOf(a.note) > noteLUT.indexOf(b.note))
 
   var xTimeScale = d3.scaleLinear()
     .domain([0, d3.max(mapping, d => d.time + d.duration)])
@@ -97,8 +97,9 @@ function graphNotes() {
     .attr("x", d => xTimeScale(d.time))
     .attr("y", d => yTrackScale(d.name))
     .attr("data-tippy-content", (d) => `${d.name}<br>note: ${d.note}<br>start: ${d.time}<br>velocity: ${d.velocity}<br>duration: ${d.duration}`)
-    .attr("width", d => xTimeScale(d.duration))
+    .attr("width", d => xTimeScale(d.duration) - padding)
     .attr("height", yTrackScale.bandwidth())
+    //.attr("stroke", "black") // TODO: Might want stroke here for distinguishing overlap? Not sure.
     .attr("fill", d => d.color);
 }
 
@@ -106,12 +107,57 @@ function graphNotes() {
  * Populates mapping for purposes of master note over time graph.
  *
  * e.g.
+ * [{time: 0, name: "1.mid", note: "C5", velocity: 50, duration: 54, color: "green"},
+ *  ...]
  */
 function getNotesMapping() {
-  return [{time: 0, name: "1.mid", note: "C5", velocity: 50, duration: 54, color: "green"},
-   {time: 1, name: "1.mid", note: "C4", velocity: 62, duration: 23, color: "red"},
-   {time: 1, name: "2.mid", note: "C4", velocity: 62, duration: 23, color: "red"},
-   {time: 42, name: "2.mid", note: "E3", velocity: 12, duration: 10, color: "blue"}];
+  var mapping = []
+  for (const [name, midiFile] of Object.entries(midiFiles)) {
+    console.log([name, midiFile]);
+    var track = midiFile.track;
+    track.forEach(function(midiEvent) {
+      var runningTime = 0;
+      for (var i = 0; i < midiEvent.event.length; i++) {
+        var currentEvent = midiEvent.event[i];
+        runningTime += currentEvent.deltaTime;
+
+        if (currentEvent.type == 9 && currentEvent.data[1] > 0) { // Note is "noteOn" event
+          var currentNote = currentEvent.data[0];
+          var runningTimeSinceCurrent = 0;
+
+          // Find corresponding "noteOff"/"noteOff" event
+          // There are two ways to end a note, have a type=8 (noteOff) event, or a type=9 (noteOn) with 0 volume
+
+          // Low-pri TODO: This algorithm is slow, worst-case O(n^2) where n is notes, if all notes are long
+          // Using a map instead should be guaranteed 1 run through. But in practicee this is quick.
+          for (var j = i + 1; j < midiEvent.event.length; j++) {
+            var nextEvent = midiEvent.event[j];
+            runningTimeSinceCurrent += nextEvent.deltaTime;
+            if ("data" in nextEvent && nextEvent.data.length > 0) {
+              var nextNote = nextEvent.data[0];
+              if (runningTimeSinceCurrent > 10000) {
+                // Arbitrarily adding this here for better data..
+                break;
+              }
+              if ((nextEvent.type == 8 || nextEvent.type == 9) && nextNote == currentNote && currentEvent.channel == nextEvent.channel) {
+                mapping.push({
+                  name: name,
+                  time: runningTime,
+                  duration: runningTimeSinceCurrent,
+                  velocity: currentEvent.data[1],
+                  note: noteLUT[nextNote],
+                  color: midiFile.color
+                });
+                break;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  console.log(mapping);
+  return mapping;
 }
 
 /**
@@ -234,7 +280,7 @@ function graphFrequency() {
     .attr("class", "bar tipped")
     .attr("x", d => xTrackScale(d.name))
     .attr("y", d => yScale(d.count))
-    .attr("data-tippy-content", (d) => (d.name + " " + d.note + ": " + d.count))
+    .attr("data-tippy-content", (d) => `${d.name}<br>${d.note}: ${d.count}`)
     .attr("width", xTrackScale.bandwidth())
     .attr("height", d => height - yScale(d.count) - padding)
     .attr("fill", d => d.color);
