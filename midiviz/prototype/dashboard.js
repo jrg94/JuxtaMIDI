@@ -462,6 +462,8 @@ function populateNoteFrequencyMap() {
 /**
  * A helper function for detecting note mismatches over a list of
  * note data points.
+ *
+ * @param mapping - a list of processed midi objects
  */
 function detectNoteMismatch(mapping) {
   const master = mapping.filter(item => item.name == mapping[0].name);
