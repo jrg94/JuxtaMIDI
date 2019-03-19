@@ -42,7 +42,10 @@ function graphNotes() {
   svg.style("display", "inline");
 
   var keys = Object.keys(midiFiles);
-  var width = d3.select(".master-graph-pane").node().getBoundingClientRect().width;
+
+  // TODO: Adjust width here based on parameters (# of notes, length of song, screen size)?
+  // Adjust title formula accordingly. Currently at * 2 for both
+  var width = d3.select(".master-graph-pane").node().getBoundingClientRect().width * 2;
   var height = d3.select(".master-graph-pane").node().getBoundingClientRect().height;
   var padding = 60;
 
@@ -81,7 +84,7 @@ function graphNotes() {
     .attr("transform", "translate(" + padding + ", 0)")
     .call(d3.axisLeft(yNoteScale));
 
-  drawTitle(svg, width, height, padding, "Notes Played");
+  drawTitle(svg, width / 2, height / 2, padding, "Notes Played");
 
   svg.append("g")
     .selectAll("g")

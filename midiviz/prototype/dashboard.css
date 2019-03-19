@@ -95,6 +95,7 @@ body {
   grid-column: 2 / 4;
   grid-row: 1;
   display: grid;
+  overflow-y: scroll;
 }
 
 .welcome-message {
