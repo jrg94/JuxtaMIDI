@@ -305,24 +305,12 @@ function clearFileList(fileList) {
 function buildFileList() {
   var fileList = document.getElementById("input-file-list");
   clearFileList(fileList);
+
   for (const [name, midiFile] of Object.entries(midiFiles)) {
-    var node = document.createElement("div");
-    node.className = "file-list-item";
-    node.innerHTML +=
-      `<span class="midi-file-name" data-file="${name}">
-         ${name}
-       </span>
-       <div class="icons">
-          <div class="icons-left">
-            <span class="tipped midi-toggle midi-btn" data-toggled="true" data-file="${name}" data-tippy-content="Toggle file"><i class="icon-toggle-on"></i></span>
-          </div>
-          <div class="icons-right">
-            <span class="tipped midi-rename midi-btn" data-file="${name}" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
-            <span class="tipped midi-delete midi-btn" data-file="${name}" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
-          </div>
-        </div>`;
-    node.style.backgroundColor = midiFile.color;
-    fileList.appendChild(node);
+    addEntryToFileList(fileList, midiFile, name, true)
+  }
+  for (const [name, midiFile] of Object.entries(hiddenMidiFiles)) {
+    addEntryToFileList(fileList, midiFile, name, false)
   }
 
   d3.selectAll(".midi-toggle").on("click", function() {
@@ -341,6 +329,26 @@ function buildFileList() {
     var midiFile = d3.select(this).attr("data-file");
     deleteMIDIFile(midiFile);
   });
+}
+
+function addEntryToFileList(fileList, midiFile, name, toggled) {
+  var node = document.createElement("div");
+  node.className = "file-list-item";
+  node.innerHTML +=
+    `<span class="midi-file-name" data-file="${name}">
+       ${name}
+     </span>
+     <div class="icons">
+        <div class="icons-left">
+          <span class="tipped midi-toggle midi-btn" data-toggled="${(toggled) ? "true" : "false"}" data-file="${name}" data-tippy-content="Toggle file"><i class="icon-toggle-${(toggled) ? "on" : "off"}"></i></span>
+        </div>
+        <div class="icons-right">
+          <span class="tipped midi-rename midi-btn" data-file="${name}" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
+          <span class="tipped midi-delete midi-btn" data-file="${name}" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
+        </div>
+      </div>`;
+  node.style.backgroundColor = midiFile.color;
+  fileList.appendChild(node);
 }
 
 function clearSVGs() {
