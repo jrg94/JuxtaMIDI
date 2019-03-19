@@ -363,7 +363,7 @@ function drawTitle(svg, width, height, padding, title) {
     .attr("dy", padding / 2)
     .attr("dx", ((width / 2) - padding / 2))
     .style("text-anchor", "middle")
-    .style("font-size", "20px")
+    .style("font-size", "18px")
     .text(title)
 }
 
