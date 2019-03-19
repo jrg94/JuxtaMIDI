@@ -49,10 +49,8 @@ function graphNotes() {
     .attr("width", width)
     .attr("height", height);
 
-  let mapping =
-  [{time: 0, name: "C5", duration: 54},
-   {time: 1, name: "C4", duration: 23},
-   {time: 42, name: "E3", duration: 10}];
+  let mapping = getNotesMapping();
+  mapping.sort((a, b) => {noteLUT.indexOf(a.name) > noteLUT.indexOf(b.name)})
 
   var xTimeScale = d3.scaleLinear()
     .domain([0, d3.max(mapping, d => d.time + d.duration)])
@@ -78,6 +76,21 @@ function graphNotes() {
     .call(d3.axisLeft(yTrackScale));
 
   drawTitle(svg, width, height, padding, "Notes Played");
+}
+
+/**
+ * Populates mapping for purposes of master note over time graph.
+ *
+ * e.g.
+ *[{time: 0, name: "C5", duration: 54},
+ * {time: 1, name: "C4", duration: 23},
+ * {time: 42, name: "E3", duration: 10}];
+ */
+function getNotesMapping() {
+  return
+  [{time: 0, name: "C5", duration: 54},
+   {time: 1, name: "C4", duration: 23},
+   {time: 42, name: "E3", duration: 10}];
 }
 
 /**
