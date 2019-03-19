@@ -408,7 +408,7 @@ function getTimestamps() {
       runningTime = 0;
       midiEvent.event.forEach(function(d) {
         runningTime += d.deltaTime;
-        if (d.type == 9) {
+        if (d.type == 9 && d.data[1] > 0) {
           var existingTimestamp = findWithAttributes(mapping, "name", name, "time", runningTime);
           if (existingTimestamp) {
             existingTimestamp.velocity += d.data[1];
@@ -448,7 +448,7 @@ function populateNoteFrequencyMap() {
     var track = midiFile.track;
     track.forEach(function(midiEvent) {
       midiEvent.event.forEach(function(d) {
-        if (d.type == 9) {
+        if (d.type == 9 && d.data[1] > 0) {
           populateMapping(mapping, "note", "count", noteLUT[d.data[0]], name, midiFile.color);
         }
       });
