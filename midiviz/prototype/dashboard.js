@@ -31,8 +31,53 @@ setup();
 
 /**
  * Graphs master note graph, showing progression of notes played over time.
+ *
+ * TODO: Function name is ambiguous, given that we're always graphing notes. Better naming could help here.
  */
 function graphNotes() {
+  d3.select(".welcome-message").remove();
+
+  var svg = d3.select("#notes-over-time");
+
+  svg.style("display", "inline");
+
+  var width = d3.select(".master-graph-pane").node().getBoundingClientRect().width;
+  var height = d3.select(".master-graph-pane").node().getBoundingClientRect().height;
+  var padding = 60;
+
+  d3.select("#notes-over-time")
+    .attr("width", width)
+    .attr("height", height);
+
+  let mapping =
+  [{time: 0, name: "C5", duration: 54},
+   {time: 1, name: "C4", duration: 23},
+   {time: 42, name: "E3", duration: 10}];
+
+  var xTimeScale = d3.scaleLinear()
+    .domain([0, d3.max(mapping, d => d.time + d.duration)])
+    .range([padding, width - padding * 2]);
+
+  const trackNames = [...new Set(mapping.map(d => d.name))];
+  var yTrackScale = d3.scaleBand()
+    .domain(trackNames)
+    .range([height - padding, padding])
+    .padding(0.05);
+
+  svg.append("g")
+    .attr("transform", "translate(0," + (height - padding) + ")")
+    .call(d3.axisBottom(xTimeScale))
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-45)");
+
+  svg.append("g")
+    .attr("transform", "translate(" + padding + ", 0)")
+    .call(d3.axisLeft(yTrackScale));
+
+  drawTitle(svg, width, height, padding, "Notes Played");
 }
 
 /**
@@ -179,7 +224,6 @@ function clearFileList(fileList) {
 function buildFileList() {
   var fileList = document.getElementById("input-file-list");
   clearFileList(fileList);
-  var keys = Object.keys(midiFiles);
   for (const [name, midiFile] of Object.entries(midiFiles)) {
     var node = document.createElement("div");
     node.className = "file-list-item";
