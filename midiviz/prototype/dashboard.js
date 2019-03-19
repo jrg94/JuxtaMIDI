@@ -80,7 +80,7 @@ function velocityOverTime() {
     .style("mix-blend-mode", "multiply")
     .attr("d", line);
 
-  drawTitle(svg, width, height, padding, "Velocity Over Time");
+  drawTitle(svg, width, height, padding, "Note Velocity");
 }
 
 /**
@@ -149,7 +149,7 @@ function noteHistogram() {
     .attr("height", d => height - yScale(d.count) - padding)
     .attr("fill", d => d.color);
 
-  drawTitle(svg, width, height, padding, "Note Histogram");
+  drawTitle(svg, width, height, padding, "Note Frequency");
 }
 
 /**
