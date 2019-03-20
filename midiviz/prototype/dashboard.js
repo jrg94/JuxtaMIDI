@@ -284,6 +284,7 @@ function graphFrequency() {
     .attr("data-tippy-content", (d) => `${d.name}<br>${d.note}: ${d.count}`)
     .attr("width", xTrackScale.bandwidth())
     .attr("height", d => height - yScale(d.count) - padding)
+    .attr("opacity", d => d.match && d.fileCount > 1 ? 0.2 : 1.0)
     .attr("fill", d => d.color);
 
   drawTitle(svg, width, height, padding, "Note Frequency");
@@ -454,7 +455,25 @@ function populateNoteFrequencyMap() {
       });
     });
   }
+  detectNoteMismatch(mapping);
   return mapping;
+}
+
+/**
+ * A helper function for detecting note mismatches over a list of
+ * note data points.
+ *
+ * @param mapping - a list of processed midi objects
+ */
+function detectNoteMismatch(mapping) {
+  const master = mapping.filter(item => item.name == mapping[0].name);
+  const files = [...new Set(mapping.map(item => item.name))];
+  master.forEach(function(d) {
+    const notes = mapping.filter(item => item.note == d.note);
+    const match = notes.every(item => item.count == notes[0].count);
+    notes.forEach(item => item.match = match);
+    notes.forEach(item => item.fileCount = files.length);
+  });
 }
 
 /**
