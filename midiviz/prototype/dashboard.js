@@ -19,6 +19,9 @@ var midiFiles = {};
 var hiddenMidiFiles = {};
 var mappings = {}
 
+// Current MIDI file loaded in player.
+var playerMidiFile;
+
 /**
  * Sets up the initial environment.
  */
@@ -597,6 +600,10 @@ function renameMIDIFile(midiFile) {
       delete hiddenMidiFiles[midiFile];
     }
 
+    if (playerMidiFile === midiFile) {
+      playerMidiFile = newMidiFile;
+    }
+
     setupGraphs();
     return true;
   }
@@ -614,6 +621,8 @@ function deleteMIDIFile(midiFile) {
   usedColors = usedColors.filter(color => color !== removedMidiColor)
 
   delete midiFiles[midiFile];
+  pauseMIDIFile(midiFile);
+  playerMidiFile = false;
 
   if (midiFiles.length == 0) {
     disablePanes();
@@ -638,6 +647,10 @@ function playPauseMIDIFile(midiFile) {
     Player.pause();
     playSpanIcon.classed("icon-play", true);
     playSpanIcon.classed("icon-pause", false)
+  } else if (playerMidiFile === midiFile) {
+    Player.play();
+    playSpanIcon.classed("icon-play", false);
+    playSpanIcon.classed("icon-pause", true);
   } else {
     var AudioContext = window.AudioContext || window.webkitAudioContext || false;
     var ac = new AudioContext || new webkitAudioContext;
@@ -655,14 +668,25 @@ function playPauseMIDIFile(midiFile) {
           });
           Player.loadArrayBuffer(reader.result);
           Player.play();
+          playerMidiFile = midiFile;
+          playSpanIcon.classed("icon-play", false);
+          playSpanIcon.classed("icon-pause", true);
         }, false);
+      } else {
+        alert("Error playing MIDI file :'('");
       }
     });
-    playSpanIcon.classed("icon-play", false);
-    playSpanIcon.classed("icon-pause", true)
   }
 }
 
+/**
+ * Given MIDI file, pause it if it is beeing played.
+ */
+function pauseMIDIFile(midiFile) {
+  if (playerMidiFile === midiFile) {
+    Player.pause();
+  }
+}
 
 const PANE_ALL = 0;
 const PANE_NOTES = ".master-graph-pane";
