@@ -25,6 +25,7 @@ function setup() {
   // Setup file upload trigger
   var source = document.getElementById('input-file');
   MIDIParser.parse(source, midiLoadCallback);
+  setupPaneButtons();
 }
 
 setup();
@@ -50,6 +51,7 @@ function graphNotes() {
   var padding = 60;
 
   d3.select("#notes-over-time")
+    .html("")
     .attr("width", width)
     .attr("height", height);
 
@@ -176,6 +178,7 @@ function graphVelocity() {
   timestamps.sort((a, b) => a.time - b.time)
 
   d3.select("#velocity-over-time")
+    .html("")
     .attr("width", width)
     .attr("height", height);
 
@@ -233,6 +236,7 @@ function graphFrequency() {
   // TODO: Separate this padding into a map? top/bottom/left/right. It appears inconsistently centered now.
 
   d3.select("#note-frequency")
+    .html("")
     .attr("width", width)
     .attr("height", height);
 
@@ -380,7 +384,7 @@ function midiLoadCallback(midiFile) {
       midiFiles[latestFile.name].color = midiColor;
       usedColors.push(midiColor);
       buildFileList();
-      setupGraphs();
+      switchToPane(PANE_ALL);
     }
   }
 }
@@ -558,7 +562,11 @@ function toggleMIDIFile(midiFile) {
     Object.assign(hiddenMidiFiles[midiFile], midiFiles[midiFile]);
     delete midiFiles[midiFile];
   }
-  setupGraphs();
+  if (midiFiles.length == 0) {
+    disablePanes();
+  } else {
+    enablePanes();
+  }
   return !toggled;
 }
 
@@ -610,6 +618,78 @@ function deleteMIDIFile(midiFile) {
 
   delete midiFiles[midiFile];
 
-  buildFileList();
-  setupGraphs();
+  if (midiFiles.length == 0) {
+    disablePanes();
+  } else {
+    buildFileList();
+    enablePanes();
+    setupGraphs();
+  }
+}
+
+const PANE_ALL = 0;
+const PANE_NOTES = ".master-graph-pane";
+const PANE_FREQUENCY = ".note-frequency-graph-pane";
+const PANE_VELOCITY = ".velocity-over-time-graph-pane";
+
+/**
+ * Activates all panes (if disabled), and then switches to desired pane.
+ * Use PANE consts above.
+ *
+ * TODO: All this re-rendering is a little expensive and slow :'(.
+ * TODO: Also, some of this logic and graphing functions are messy and can be cleaned up.
+ */
+function switchToPane(pane) {
+  d3.selectAll(".graph-view-buttons span").classed("disabled-view-button", false);
+  d3.selectAll(".graph-view-buttons span").classed("selected-view-button", false);
+  if (pane == PANE_ALL) {
+    d3.select("#view-all").classed("selected-view-button", true);
+    d3.selectAll(".graph-pane").classed("selected-view", false);
+    d3.selectAll(".graph-pane").classed("graph-disabled", false);
+    d3.selectAll(".graph-pane").classed("single-graph-activated", false);
+    setupGraphs();
+  } else {
+    d3.selectAll(".graph-pane").classed("graph-disabled", true);
+    d3.select(pane).classed("graph-disabled", false);
+    d3.select(pane).classed("selected-view", true);
+    switch(pane) {
+      case PANE_NOTES:
+        d3.select("#view-notes").classed("selected-view-button", true);
+        graphNotes();
+        break;
+      case PANE_FREQUENCY:
+        d3.select("#view-frequency").classed("selected-view-button", true);
+        graphFrequency();
+        break;
+      case PANE_VELOCITY:
+        d3.select("#view-velocity").classed("selected-view-button", true);
+        graphVelocity();
+        break;
+      default:
+    }
+    applyTooltips();
+  }
+}
+
+function disablePanes() {
+  d3.selectAll(".graph-view-buttons span").classed("disabled-view", true);
+}
+
+function enablePanes() {
+  d3.selectAll(".graph-view-buttons span").classed("disabled-view", false);
+}
+
+function setupPaneButtons() {
+  d3.select("#view-all").on("click", function() {
+    switchToPane(PANE_ALL);
+  });
+  d3.select("#view-notes").on("click", function() {
+    switchToPane(PANE_NOTES);
+  });
+  d3.select("#view-frequency").on("click", function() {
+    switchToPane(PANE_FREQUENCY);
+  });
+  d3.select("#view-velocity").on("click", function() {
+    switchToPane(PANE_VELOCITY);
+  });
 }
