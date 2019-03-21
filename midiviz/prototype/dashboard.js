@@ -90,7 +90,7 @@ function graphNotes() {
     .attr("transform", "translate(" + padding + ", 0)")
     .call(d3.axisLeft(yNoteScale));
 
-  drawTitle(svg, width / 2, height / 2, padding, "Notes Played");
+  drawTitle(svg, width / 2, height, padding, "Notes Played");
 
   svg.append("g")
     .selectAll("g")
@@ -170,7 +170,7 @@ function getNotesMapping() {
 function graphVelocity() {
   var svg = d3.select("#velocity-over-time");
 
-  var width = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().width;
+  var width = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().width * 2;
   var height = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().height;
   var padding = 60;
 
@@ -220,7 +220,7 @@ function graphVelocity() {
     .style("mix-blend-mode", "multiply")
     .attr("d", line);
 
-  drawTitle(svg, width, height, padding, "Note Velocity");
+  drawTitle(svg, width / 2, height, padding, "Note Velocity");
 }
 
 /**

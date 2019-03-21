@@ -105,6 +105,9 @@ div.graph-disabled {
   grid-column: 2 / 4;
   grid-row: 1;
   display: grid;
+}
+
+.graph-pane {
   overflow-y: scroll;
 }
 
