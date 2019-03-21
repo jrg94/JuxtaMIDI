@@ -557,7 +557,7 @@ function toggleMIDIFile(midiFile) {
   } else {
     enablePanes();
   }
-  setMappings();
+  setupGraphs();
   return !toggled;
 }
 
