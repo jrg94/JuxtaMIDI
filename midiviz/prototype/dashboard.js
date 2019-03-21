@@ -16,7 +16,8 @@ var colors = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", 
 var usedColors = [];
 
 var midiFiles = {};
-var hiddenMidiFiles = {}
+var hiddenMidiFiles = {};
+var mappings = {}
 
 /**
  * Sets up the initial environment.
@@ -29,6 +30,12 @@ function setup() {
 }
 
 setup();
+
+function setMappings() {
+  mappings.frequency = getFrequencyMapping();
+  mappings.notes = getNotesMapping();
+  mappings.velocity = getVelocityMapping();
+}
 
 /**
  * Graphs master note graph, showing progression of notes played over time.
@@ -55,7 +62,7 @@ function graphNotes() {
     .attr("width", width)
     .attr("height", height);
 
-  let mapping = getNotesMapping();
+  let mapping = mappings.notes;
   mapping.sort((a, b) => noteLUT.indexOf(b.note) - noteLUT.indexOf(a.note))
 
   var xTimeScale = d3.scaleLinear()
@@ -165,6 +172,7 @@ function getNotesMapping() {
 
 /**
  * Graphs velocity over time graph.
+ * TODO: Bug fix: when 2 bars are different due to one being 0 and another being >0, the opacity is 0.2 instead of 1.0.
  */
 function graphVelocity() {
   var svg = d3.select("#velocity-over-time");
@@ -174,7 +182,7 @@ function graphVelocity() {
   var padding = 60;
 
   var keys = Object.keys(midiFiles);
-  var timestamps = getTimestamps();
+  var timestamps = mappings.velocity;
   timestamps.sort((a, b) => a.time - b.time)
 
   d3.select("#velocity-over-time")
@@ -241,7 +249,7 @@ function graphFrequency() {
     .attr("height", height);
 
   var keys = Object.keys(midiFiles);
-  var mapping = populateNoteFrequencyMap();
+  var mapping = mappings.frequency;
   mapping.sort((a, b) => b.count - a.count);
 
   var xNoteScale = d3.scaleBand()
@@ -384,6 +392,7 @@ function midiLoadCallback(midiFile) {
       midiFiles[latestFile.name].color = midiColor;
       usedColors.push(midiColor);
       buildFileList();
+      setMappings();
       switchToPane(PANE_ALL);
     }
   }
@@ -395,6 +404,7 @@ function midiLoadCallback(midiFile) {
 function setupGraphs() {
   clearSVGs();
   if (Object.keys(midiFiles).length > 0) {
+    setMappings();
     graphNotes();
     graphFrequency();
     graphVelocity();
@@ -405,7 +415,7 @@ function setupGraphs() {
 /**
  * A helper function which generates a list of timestamps and velocities
  */
-function getTimestamps() {
+function getVelocityMapping() {
   var mapping = []
   for (const [name, midiFile] of Object.entries(midiFiles)) {
     var track = midiFile.track;
@@ -447,7 +457,7 @@ function findWithAttributes(list, attr, find, attr2, find2) {
 /**
  * Populates a mapping based on note frequency.
  */
-function populateNoteFrequencyMap() {
+function getFrequencyMapping() {
   var mapping = [];
   for (const [name, midiFile] of Object.entries(midiFiles)) {
     var track = midiFile.track;
@@ -567,6 +577,7 @@ function toggleMIDIFile(midiFile) {
   } else {
     enablePanes();
   }
+  setMappings();
   return !toggled;
 }
 
@@ -647,7 +658,10 @@ function switchToPane(pane) {
     d3.selectAll(".graph-pane").classed("selected-view", false);
     d3.selectAll(".graph-pane").classed("graph-disabled", false);
     d3.selectAll(".graph-pane").classed("single-graph-activated", false);
-    setupGraphs();
+    clearSVGs();
+    graphNotes();
+    graphFrequency();
+    graphVelocity();
   } else {
     d3.selectAll(".graph-pane").classed("graph-disabled", true);
     d3.select(pane).classed("graph-disabled", false);
@@ -667,16 +681,16 @@ function switchToPane(pane) {
         break;
       default:
     }
-    applyTooltips();
   }
+  applyTooltips();
 }
 
 function disablePanes() {
-  d3.selectAll(".graph-view-buttons span").classed("disabled-view", true);
+  d3.selectAll(".graph-view-buttons span").classed("disabled-view-button", true);
 }
 
 function enablePanes() {
-  d3.selectAll(".graph-view-buttons span").classed("disabled-view", false);
+  d3.selectAll(".graph-view-buttons span").classed("disabled-view-button", false);
 }
 
 function setupPaneButtons() {
