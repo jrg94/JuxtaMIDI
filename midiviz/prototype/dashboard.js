@@ -16,7 +16,8 @@ var colors = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", 
 var usedColors = [];
 
 var midiFiles = {};
-var hiddenMidiFiles = {}
+var hiddenMidiFiles = {};
+var mappings = {}
 
 /**
  * Sets up the initial environment.
@@ -25,35 +26,40 @@ function setup() {
   // Setup file upload trigger
   var source = document.getElementById('input-file');
   MIDIParser.parse(source, midiLoadCallback);
+  setupPaneButtons();
 }
 
 setup();
 
+function setMappings() {
+  mappings.frequency = getFrequencyMapping();
+  mappings.notes = getNotesMapping();
+  mappings.velocity = getVelocityMapping();
+}
+
 /**
  * Graphs master note graph, showing progression of notes played over time.
- *
- * TODO: Function name is ambiguous, given that we're always graphing notes. Better naming could help here.
  */
 function graphNotes() {
   d3.select(".welcome-message").remove();
 
   var svg = d3.select("#notes-over-time");
-
   svg.style("display", "inline");
 
   var keys = Object.keys(midiFiles);
 
-  // TODO: Adjust width here based on parameters (# of notes, length of song, screen size)?
+  // TODO: Adjust width here based on parameters? (# of notes, length of song, screen size)?
   // Adjust title formula accordingly. Currently at * 2 for both
   var width = d3.select(".master-graph-pane").node().getBoundingClientRect().width * 2;
   var height = d3.select(".master-graph-pane").node().getBoundingClientRect().height;
   var padding = 60;
 
   d3.select("#notes-over-time")
+    .html("")
     .attr("width", width)
     .attr("height", height);
 
-  let mapping = getNotesMapping();
+  let mapping = mappings.notes;
   mapping.sort((a, b) => noteLUT.indexOf(b.note) - noteLUT.indexOf(a.note))
 
   var xTimeScale = d3.scaleLinear()
@@ -137,10 +143,6 @@ function getNotesMapping() {
             runningTimeSinceCurrent += nextEvent.deltaTime;
             if ("data" in nextEvent && nextEvent.data.length > 0) {
               var nextNote = nextEvent.data[0];
-              if (runningTimeSinceCurrent > 10000) {
-                // Arbitrarily adding this here for better data..
-                break;
-              }
               if ((nextEvent.type == 8 || nextEvent.type == 9) && nextNote == currentNote && currentEvent.channel == nextEvent.channel) {
                 mapping.push({
                   name: name,
@@ -163,6 +165,7 @@ function getNotesMapping() {
 
 /**
  * Graphs velocity over time graph.
+ * TODO: Bug fix: when 2 bars are different due to one being 0 and another being >0, the opacity is 0.2 instead of 1.0.
  */
 function graphVelocity() {
   var svg = d3.select("#velocity-over-time");
@@ -172,10 +175,11 @@ function graphVelocity() {
   var padding = 60;
 
   var keys = Object.keys(midiFiles);
-  var timestamps = getTimestamps();
+  var timestamps = mappings.velocity;
   timestamps.sort((a, b) => a.time - b.time)
 
   d3.select("#velocity-over-time")
+    .html("")
     .attr("width", width)
     .attr("height", height);
 
@@ -212,8 +216,7 @@ function graphVelocity() {
     .data(subsets)
     .join("path")
     .attr("fill", d => (d.length > 0 && "color" in d[0]) ? d[0].color : "black" )
-    // temp fix: "black" graph should never appear, in theory, since it implies no notes in file
-    // but it's here to avoid errors in case there is -- logic can be investigated and improved.
+    // "black" graph should never appear, in theory, since it implies no notes in file
     .style("mix-blend-mode", "multiply")
     .attr("d", line);
 
@@ -221,8 +224,46 @@ function graphVelocity() {
 }
 
 /**
- * Creates the note histogram given a track set.
+ * Generate a mapping of timestmaps and velocities.
  *
+ * [{name: "3.mid", time: 10, velocity: 201, note: "F#4", color: "#a6cee3"}, ...]
+ */
+function getVelocityMapping() {
+  var mapping = []
+  for (const [name, midiFile] of Object.entries(midiFiles)) {
+    var track = midiFile.track;
+    track.forEach(function(midiEvent) {
+      runningTime = 0;
+      midiEvent.event.forEach(function(d) {
+        runningTime += d.deltaTime;
+        if (d.type == 9 && d.data[1] > 0) {
+          var existingTimestamp;
+          for (timestamp of mapping) {
+            if (timestamp["name"] == name && timestamp["time"] == runningTime) {
+              existingTimestamp = timestamp;
+              break;
+            }
+          }
+          if (existingTimestamp) {
+            existingTimestamp.velocity += d.data[1];
+          } else {
+            mapping.push({
+              name: name,
+              time: runningTime,
+              velocity: d.data[1],
+              note: noteLUT[d.data[0]],
+              color: midiFile.color
+            });
+          }
+        }
+      });
+    });
+  }
+  return mapping;
+}
+
+/**
+ * Creates the note frequency graph.
  */
 function graphFrequency() {
   var svg = d3.select("#note-frequency");
@@ -233,11 +274,12 @@ function graphFrequency() {
   // TODO: Separate this padding into a map? top/bottom/left/right. It appears inconsistently centered now.
 
   d3.select("#note-frequency")
+    .html("")
     .attr("width", width)
     .attr("height", height);
 
   var keys = Object.keys(midiFiles);
-  var mapping = populateNoteFrequencyMap();
+  var mapping = mappings.frequency;
   mapping.sort((a, b) => b.count - a.count);
 
   var xNoteScale = d3.scaleBand()
@@ -291,6 +333,40 @@ function graphFrequency() {
 }
 
 /**
+ * Populates a mapping based on note frequency.
+ */
+function getFrequencyMapping() {
+  var mapping = [];
+  for (const [name, midiFile] of Object.entries(midiFiles)) {
+    var track = midiFile.track;
+    track.forEach(function(midiEvent) {
+      midiEvent.event.forEach(function(d) {
+        if (d.type == 9 && d.data[1] > 0) {
+          var find = noteLUT[d.data[0]];
+          var found = false;
+          for (var i = 0; i < mapping.length && !found; i++) {
+            if (mapping[i]["name"] == name && mapping[i]["note"] == find) {
+              mapping[i]["count"] += 1;
+              found = true;
+            }
+          }
+          if (!found) {
+            mapping.push({
+              name: name,
+              color: midiFile.color,
+              note: find,
+              count: 1
+            })
+          }
+        }
+      });
+    });
+  }
+  detectNoteMismatch(mapping);
+  return mapping;
+}
+
+/**
  * Helper function for clearing file list.
  * Unused at this time.
  */
@@ -314,22 +390,7 @@ function buildFileList() {
     addEntryToFileList(fileList, midiFile, name, false)
   }
 
-  d3.selectAll(".midi-toggle").on("click", function() {
-    var midiFile = d3.select(this).attr("data-file");
-    toggleMIDIFile(midiFile);
-  });
-
-  d3.selectAll(".midi-rename").on("click", function() {
-    var midiFile = d3.select(this).attr("data-file");
-    if (!renameMIDIFile(midiFile)) {
-      alert("Please pick a unique MIDI file name.");
-    }
-  });
-
-  d3.selectAll(".midi-delete").on("click", function() {
-    var midiFile = d3.select(this).attr("data-file");
-    deleteMIDIFile(midiFile);
-  });
+  setupMidiButtons();
 }
 
 function addEntryToFileList(fileList, midiFile, name, toggled) {
@@ -350,6 +411,28 @@ function addEntryToFileList(fileList, midiFile, name, toggled) {
       </div>`;
   node.style.backgroundColor = midiFile.color;
   fileList.appendChild(node);
+}
+
+/**
+ * Set up midi buttons in the file pane (toggle, rename, delete).
+ */
+function setupMidiButtons() {
+  d3.selectAll(".midi-toggle").on("click", function() {
+    var midiFile = d3.select(this).attr("data-file");
+    toggleMIDIFile(midiFile);
+  });
+
+  d3.selectAll(".midi-rename").on("click", function() {
+    var midiFile = d3.select(this).attr("data-file");
+    if (!renameMIDIFile(midiFile)) {
+      alert("Please pick a unique MIDI file name.");
+    }
+  });
+
+  d3.selectAll(".midi-delete").on("click", function() {
+    var midiFile = d3.select(this).attr("data-file");
+    deleteMIDIFile(midiFile);
+  });
 }
 
 function clearSVGs() {
@@ -380,7 +463,8 @@ function midiLoadCallback(midiFile) {
       midiFiles[latestFile.name].color = midiColor;
       usedColors.push(midiColor);
       buildFileList();
-      setupGraphs();
+      setMappings();
+      switchToPane(PANE_ALL);
     }
   }
 }
@@ -391,72 +475,12 @@ function midiLoadCallback(midiFile) {
 function setupGraphs() {
   clearSVGs();
   if (Object.keys(midiFiles).length > 0) {
+    setMappings();
     graphNotes();
     graphFrequency();
     graphVelocity();
     applyTooltips();
   }
-}
-
-/**
- * A helper function which generates a list of timestamps and velocities
- */
-function getTimestamps() {
-  var mapping = []
-  for (const [name, midiFile] of Object.entries(midiFiles)) {
-    var track = midiFile.track;
-    track.forEach(function(midiEvent) {
-      runningTime = 0;
-      midiEvent.event.forEach(function(d) {
-        runningTime += d.deltaTime;
-        if (d.type == 9 && d.data[1] > 0) {
-          var existingTimestamp = findWithAttributes(mapping, "name", name, "time", runningTime);
-          if (existingTimestamp) {
-            existingTimestamp.velocity += d.data[1];
-          } else {
-            mapping.push({
-              name: name,
-              time: runningTime,
-              velocity: d.data[1],
-              note: noteLUT[d.data[0]],
-              color: midiFile.color
-            });
-          }
-        }
-      });
-    });
-  }
-  return mapping;
-}
-
-/**
- * TODO: This function and naming is not clean code - but we're revising the velocity-time graph altogether post-prototype.
- */
-function findWithAttributes(list, attr, find, attr2, find2) {
-  for (var i = 0; i < list.length; i++) {
-    if (list[i][attr] == find && list[i][attr2] == find2) {
-      return list[i];
-    }
-  }
-}
-
-/**
- * Populates a mapping based on note frequency.
- */
-function populateNoteFrequencyMap() {
-  var mapping = [];
-  for (const [name, midiFile] of Object.entries(midiFiles)) {
-    var track = midiFile.track;
-    track.forEach(function(midiEvent) {
-      midiEvent.event.forEach(function(d) {
-        if (d.type == 9 && d.data[1] > 0) {
-          populateMapping(mapping, "note", "count", noteLUT[d.data[0]], name, midiFile.color);
-        }
-      });
-    });
-  }
-  detectNoteMismatch(mapping);
-  return mapping;
 }
 
 /**
@@ -477,37 +501,7 @@ function detectNoteMismatch(mapping) {
 }
 
 /**
- * A helper function which populates a mapping given some key string,
- * value string, and value to find for comparison.
- *
- * TODO: This color attribute here is a little unclean code since the method is generic.
- */
-function populateMapping(mapping, key, value, find, name, color) {
-  var found = false;
-  for (var i = 0; i < mapping.length && !found; i++) {
-    if (mapping[i]["name"] == name && mapping[i][key] == find) {
-      mapping[i][value] += 1;
-      found = true;
-    }
-  }
-  if (!found) {
-    mapping.push({
-      name: name,
-      color: color,
-      [key]: find,
-      [value]: 1
-    })
-  }
-}
-
-/**
  * Draws a title on the master SVG
- *
- * @param {Object} svg - the svg reference
- * @param {number} width - the width of the svg
- * @param {number} height - the height of the svg
- * @param {number} padding - the padding of the svg
- * @param {string} title - the title to be drawn
  */
 function drawTitle(svg, width, height, padding, title) {
   svg.append("text")
@@ -537,7 +531,7 @@ function applyTooltips() {
 /**
  * Toggle specified MIDI file from view. Returns the new state, true if on, false if off.
  *
- * TODO: There should be some cap on this later about how many files can be toggled.
+ * TODO: There could be some cap on this later about how many files can be toggled?
  */
 function toggleMIDIFile(midiFile) {
   var toggleSpan = d3.select(`span.midi-toggle[data-file="${midiFile}"]`);
@@ -558,16 +552,20 @@ function toggleMIDIFile(midiFile) {
     Object.assign(hiddenMidiFiles[midiFile], midiFiles[midiFile]);
     delete midiFiles[midiFile];
   }
+  if (midiFiles.length == 0) {
+    disablePanes();
+  } else {
+    enablePanes();
+  }
   setupGraphs();
   return !toggled;
 }
 
-// TODO: Potential issue, due to using selectors like [data-file=${midiFile}], we need to disallow double quotes from names.
-
 /**
  * Rename specified MIDI file.
- *
  * Returns true if successful (or no change), false if failed.
+ *
+ * TODO: Issue, due to using selectors like [data-file=${midiFile}], we need to disallow double quotes from names.
  */
 function renameMIDIFile(midiFile) {
   var newMidiFile = prompt("Rename file?", midiFile);
@@ -598,7 +596,7 @@ function renameMIDIFile(midiFile) {
 }
 
 /**
- * Delete specified MIDI file.
+ * Delete specified MIDI file, adjusting view panes and graphs as necessary.
  */
 function deleteMIDIFile(midiFile) {
   var element = d3.select(`.midi-file-name[data-file="${midiFile}"]`).node().parentNode;
@@ -610,6 +608,80 @@ function deleteMIDIFile(midiFile) {
 
   delete midiFiles[midiFile];
 
-  buildFileList();
-  setupGraphs();
+  if (midiFiles.length == 0) {
+    disablePanes();
+  } else {
+    buildFileList();
+    enablePanes();
+    setupGraphs();
+  }
+}
+
+const PANE_ALL = 0;
+const PANE_NOTES = ".master-graph-pane";
+const PANE_FREQUENCY = ".note-frequency-graph-pane";
+const PANE_VELOCITY = ".velocity-over-time-graph-pane";
+
+function setupPaneButtons() {
+  d3.select("#view-all").on("click", function() {
+    switchToPane(PANE_ALL);
+  });
+  d3.select("#view-notes").on("click", function() {
+    switchToPane(PANE_NOTES);
+  });
+  d3.select("#view-frequency").on("click", function() {
+    switchToPane(PANE_FREQUENCY);
+  });
+  d3.select("#view-velocity").on("click", function() {
+    switchToPane(PANE_VELOCITY);
+  });
+}
+
+/**
+ * Activates all panes (if disabled), and then switches to desired pane.
+ * Use PANE consts above.
+ *
+ * TODO: Some of this logic and graphing functions are messy and can be cleaned up.
+ */
+function switchToPane(pane) {
+  d3.selectAll(".graph-view-buttons span").classed("disabled-view-button", false);
+  d3.selectAll(".graph-view-buttons span").classed("selected-view-button", false);
+  if (pane == PANE_ALL) {
+    d3.select("#view-all").classed("selected-view-button", true);
+    d3.selectAll(".graph-pane").classed("selected-view", false);
+    d3.selectAll(".graph-pane").classed("graph-disabled", false);
+    d3.selectAll(".graph-pane").classed("single-graph-activated", false);
+    clearSVGs();
+    graphNotes();
+    graphFrequency();
+    graphVelocity();
+  } else {
+    d3.selectAll(".graph-pane").classed("graph-disabled", true);
+    d3.select(pane).classed("graph-disabled", false);
+    d3.select(pane).classed("selected-view", true);
+    switch(pane) {
+      case PANE_NOTES:
+        d3.select("#view-notes").classed("selected-view-button", true);
+        graphNotes();
+        break;
+      case PANE_FREQUENCY:
+        d3.select("#view-frequency").classed("selected-view-button", true);
+        graphFrequency();
+        break;
+      case PANE_VELOCITY:
+        d3.select("#view-velocity").classed("selected-view-button", true);
+        graphVelocity();
+        break;
+      default:
+    }
+  }
+  applyTooltips();
+}
+
+function disablePanes() {
+  d3.selectAll(".graph-view-buttons span").classed("disabled-view-button", true);
+}
+
+function enablePanes() {
+  d3.selectAll(".graph-view-buttons span").classed("disabled-view-button", false);
 }
