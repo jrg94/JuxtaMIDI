@@ -403,6 +403,7 @@ function addEntryToFileList(fileList, midiFile, name, toggled) {
      <div class="icons">
         <div class="icons-left">
           <span class="tipped midi-toggle midi-btn" data-toggled="${(toggled) ? "true" : "false"}" data-file="${name}" data-tippy-content="Toggle file"><i class="icon-toggle-${(toggled) ? "on" : "off"}"></i></span>
+          <span class="tipped midi-play midi-btn" data-file="${name}" data-tippy-content="Play file"><i class="icon-play"></i></span>
         </div>
         <div class="icons-right">
           <span class="tipped midi-rename midi-btn" data-file="${name}" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
@@ -433,6 +434,11 @@ function setupMidiButtons() {
     var midiFile = d3.select(this).attr("data-file");
     deleteMIDIFile(midiFile);
   });
+
+  d3.selectAll(".midi-play").on("click", function() {
+    var midiFile = d3.select(this).attr("data-file");
+    playPauseMIDIFile(midiFile);
+  });
 }
 
 function clearSVGs() {
@@ -460,6 +466,7 @@ function midiLoadCallback(midiFile) {
     } else {
       var midiColor = colors.splice(0, 1)[0];
       midiFiles[latestFile.name] = midiFile;
+      midiFiles[latestFile.name].file = latestFile;
       midiFiles[latestFile.name].color = midiColor;
       usedColors.push(midiColor);
       buildFileList();
@@ -616,6 +623,46 @@ function deleteMIDIFile(midiFile) {
     setupGraphs();
   }
 }
+
+var Player;
+
+/**
+ * Given MIDI file, play it.
+ * TODO: Allow pause, add cursor to graph, and
+ */
+function playPauseMIDIFile(midiFile) {
+  var playSpan = d3.select(`span.midi-play[data-file="${midiFile}"]`);
+  var playSpanIcon = playSpan.select("i");
+  var pause = playSpanIcon.classed("icon-pause");
+  if (pause) {
+    Player.pause();
+    playSpanIcon.classed("icon-play", true);
+    playSpanIcon.classed("icon-pause", false)
+  } else {
+    var AudioContext = window.AudioContext || window.webkitAudioContext || false;
+    var ac = new AudioContext || new webkitAudioContext;
+    // TODO: Replace this link with the local version
+    Soundfont.instrument(ac, 'https://raw.githubusercontent.com/gleitz/midi-js-soundfonts/gh-pages/MusyngKite/acoustic_grand_piano-mp3.js').then(function(instrument) {
+      var reader = new FileReader();
+      var file = (midiFile in midiFiles) ? midiFiles[midiFile].file : hiddenMidiFiles[midiFile].file;
+      if (file) {
+        reader.readAsArrayBuffer(file);
+        reader.addEventListener("load", function () {
+          Player = new MidiPlayer.Player(function(event) {
+            if (event.name == 'Note on') {
+              instrument.play(event.noteName, ac.currentTime, {gain:event.velocity/100});
+            }
+          });
+          Player.loadArrayBuffer(reader.result);
+          Player.play();
+        }, false);
+      }
+    });
+    playSpanIcon.classed("icon-play", false);
+    playSpanIcon.classed("icon-pause", true)
+  }
+}
+
 
 const PANE_ALL = 0;
 const PANE_NOTES = ".master-graph-pane";
