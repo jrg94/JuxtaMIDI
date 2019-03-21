@@ -464,7 +464,22 @@ function getFrequencyMapping() {
     track.forEach(function(midiEvent) {
       midiEvent.event.forEach(function(d) {
         if (d.type == 9 && d.data[1] > 0) {
-          populateMapping(mapping, "note", "count", noteLUT[d.data[0]], name, midiFile.color);
+          var find = noteLUT[d.data[0]];
+          var found = false;
+          for (var i = 0; i < mapping.length && !found; i++) {
+            if (mapping[i]["name"] == name && mapping[i]["note"] == find) {
+              mapping[i]["count"] += 1;
+              found = true;
+            }
+          }
+          if (!found) {
+            mapping.push({
+              name: name,
+              color: midiFile.color,
+              note: find,
+              count: 1
+            })
+          }
         }
       });
     });
@@ -488,30 +503,6 @@ function detectNoteMismatch(mapping) {
     notes.forEach(item => item.match = match);
     notes.forEach(item => item.fileCount = files.length);
   });
-}
-
-/**
- * A helper function which populates a mapping given some key string,
- * value string, and value to find for comparison.
- *
- * TODO: This color attribute here is a little unclean code since the method is generic.
- */
-function populateMapping(mapping, key, value, find, name, color) {
-  var found = false;
-  for (var i = 0; i < mapping.length && !found; i++) {
-    if (mapping[i]["name"] == name && mapping[i][key] == find) {
-      mapping[i][value] += 1;
-      found = true;
-    }
-  }
-  if (!found) {
-    mapping.push({
-      name: name,
-      color: color,
-      [key]: find,
-      [value]: 1
-    })
-  }
 }
 
 /**
@@ -647,8 +638,7 @@ const PANE_VELOCITY = ".velocity-over-time-graph-pane";
  * Activates all panes (if disabled), and then switches to desired pane.
  * Use PANE consts above.
  *
- * TODO: All this re-rendering is a little expensive and slow :'(.
- * TODO: Also, some of this logic and graphing functions are messy and can be cleaned up.
+ * TODO: Some of this logic and graphing functions are messy and can be cleaned up.
  */
 function switchToPane(pane) {
   d3.selectAll(".graph-view-buttons span").classed("disabled-view-button", false);
