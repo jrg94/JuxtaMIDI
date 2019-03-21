@@ -406,7 +406,7 @@ function addEntryToFileList(fileList, midiFile, name, toggled) {
         </div>
         <div class="icons-right">
           <span class="tipped midi-rename midi-btn" data-file="${name}" data-tippy-content="Rename file"><i class="icon-pencil"></i></span>
-          <span class="tipped midi-delete midi-btn" data-file="${name}" data-tippy-content="Delete file"><i class="icon-trash-empty"></i></span>
+          <span class="tipped midi-delete midi-btn" data-file="${name}" data-tippy-content="Delete file"><i class="icon-trash"></i></span>
         </div>
       </div>`;
   node.style.backgroundColor = midiFile.color;
