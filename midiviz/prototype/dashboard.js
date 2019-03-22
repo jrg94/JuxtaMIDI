@@ -213,6 +213,7 @@ function graphVelocity() {
     .x(d => xTimeScale(d.time))
     .y0(d => yVelocityScale(d.loVelocity))
     .y1(d => yVelocityScale(d.hiVelocity))
+    .curve(d3.curveCardinal);
 
   svg.append("g")
     .selectAll("path")
