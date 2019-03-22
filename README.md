@@ -8,6 +8,7 @@ Welcome to the homepage of our Data Visualization term project.
 - [Project Proposal Release Page][1]
 - [Prototype Dashboard][3]
 - [Production Dashboard][4]
+- [Project Prototype Release Page][5] 
 
 ## Tools
 
@@ -23,3 +24,4 @@ TODO:
 [2]: proposal/proposal.pdf
 [3]: prototype/dashboard.html
 [4]: src/dashboard.html
+[5]: https://github.com/jrg94/data-viz-term-project/releases/tag/v1.1.0
