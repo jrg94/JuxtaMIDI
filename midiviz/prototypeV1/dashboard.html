@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MIDI Comparison Tool</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="lib/icons/css/fontello.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="container">
+    <div class="box input-file-pane">
+      <div id="input-file-form">
+        <input type="file" id="input-file">
+        <label for="input-file">Add MIDI</label>
+      </div>
+      <div id="input-file-list"></div>
+    </div>
+
+    <div class="box graph-pane master-graph-pane">
+      <div class="welcome-message">
+        Welcome to the MIDI Comparison Tool! To get started, add MIDI files using the pane on the left.
+      </div>
+      <svg id="notes-over-time"></svg>
+    </div>
+
+    <div class="box graph-pane note-frequency-graph-pane">
+      <svg id="note-frequency"></svg>
+    </div>
+
+    <div class="box graph-pane velocity-over-time-graph-pane">
+      <svg id="velocity-over-time"></svg>
+    </div>
+
+    <div class="box graph-view-buttons">
+      <span id="view-all" class="disabled-view-button">All</span>
+      <span id="view-notes" class="disabled-view-button">Notes</span>
+      <span id="view-frequency" class="disabled-view-button">Frequency</span>
+      <span id="view-velocity" class="disabled-view-button">Velocity</span>
+    </div>
+  </div>
+
+  <script src="lib/popper.min.js"></script>
+  <script src="lib/tippy.min.js"></script>
+  <script src="lib/d3.v5.min.js"></script>
+  <script src="lib/midi-parser.js"></script>
+  <script src="lib/midiplayer.min.js"></script>
+  <script src="lib/soundfont-player.min.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
