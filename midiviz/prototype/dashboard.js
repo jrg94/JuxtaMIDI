@@ -19,9 +19,6 @@ var midiFiles = {};
 var hiddenMidiFiles = {};
 var mappings = {}
 
-// Current MIDI file loaded in player.
-var playerMidiFile;
-
 /**
  * Sets up the initial environment.
  */
@@ -191,7 +188,7 @@ function graphVelocity() {
     .range([padding, width - padding * 2]);
 
   var yVelocityScale = d3.scaleLinear()
-    .domain([d3.min(timestamps, d => d.loVelocity - 15), d3.max(timestamps, d => d.hiVelocity + 15)])
+    .domain([d3.min(timestamps, d => d.velocity), d3.max(timestamps, d => d.velocity)])
     .range([height - padding, padding]);
 
   svg.append("g")
@@ -207,37 +204,21 @@ function graphVelocity() {
     .attr("transform", "translate(" + padding + ", 0)")
     .call(d3.axisLeft(yVelocityScale));
 
-  var subsets = keys.map(key => timestamps.filter(d => d.name == key));
-
-  var area = d3.area()
+  var line = d3.line()
     .x(d => xTimeScale(d.time))
-    .y0(d => yVelocityScale(d.loVelocity))
-    .y1(d => yVelocityScale(d.hiVelocity))
-    .curve(d3.curveCardinal);
+    .y(d => yVelocityScale(d.velocity))
+    .curve(d3.curveMonotoneX)
+
+  var subsets = keys.map(key => timestamps.filter(d => d.name == key));
 
   svg.append("g")
     .selectAll("path")
     .data(subsets)
     .join("path")
-    .attr("stroke", d => (d.length > 0 && "color" in d[0]) ? d[0].color : "black" )
-    .attr("fill", d => d[0].color + "33")
-    .attr("d", area);
-
-  for (velocity of ["loVelocity", "hiVelocity"]) {
-    // These dots are invisible but are used for tooltips
-    svg.append("g")
-      .selectAll(".dot")
-      .data(timestamps)
-      .enter()
-      .append("circle")
-      .attr("class", "tipped")
-      .attr("fill", "transparent")
-      .attr("stroke", "transparent")
-      .attr("cx", d => xTimeScale(d.time))
-      .attr("cy", d => yVelocityScale(d[velocity]))
-      .attr("r", 3)
-      .attr("data-tippy-content", d => `${d.name}<br>time: ${d.time}<br>loVelocity: ${d.loVelocity}<br>hiVelocity: ${d.hiVelocity}`);
-  }
+    .attr("fill", d => (d.length > 0 && "color" in d[0]) ? d[0].color : "black" )
+    // "black" graph should never appear, in theory, since it implies no notes in file
+    .style("mix-blend-mode", "multiply")
+    .attr("d", line);
 
   drawTitle(svg, width / 2, height, padding, "Note Velocity");
 }
@@ -264,14 +245,13 @@ function getVelocityMapping() {
             }
           }
           if (existingTimestamp) {
-            existingTimestamp.loVelocity = Math.min(d.data[1], existingTimestamp.loVelocity);
-            existingTimestamp.hiVelocity = Math.max(d.data[1], existingTimestamp.hiVelocity);
+            existingTimestamp.velocity += d.data[1];
           } else {
             mapping.push({
               name: name,
               time: runningTime,
-              loVelocity: d.data[1],
-              hiVelocity: d.data[1],
+              velocity: d.data[1],
+              note: noteLUT[d.data[0]],
               color: midiFile.color
             });
           }
@@ -551,8 +531,7 @@ function applyTooltips() {
     arrow: true,
     animateFill: false,
     size: "small",
-    maxWidth: 200,
-    interactiveBorder: 8
+    maxWidth: 200
   })
 }
 
@@ -618,10 +597,6 @@ function renameMIDIFile(midiFile) {
       delete hiddenMidiFiles[midiFile];
     }
 
-    if (playerMidiFile === midiFile) {
-      playerMidiFile = newMidiFile;
-    }
-
     setupGraphs();
     return true;
   }
@@ -639,8 +614,6 @@ function deleteMIDIFile(midiFile) {
   usedColors = usedColors.filter(color => color !== removedMidiColor)
 
   delete midiFiles[midiFile];
-  pauseMIDIFile(midiFile);
-  playerMidiFile = false;
 
   if (midiFiles.length == 0) {
     disablePanes();
@@ -665,10 +638,6 @@ function playPauseMIDIFile(midiFile) {
     Player.pause();
     playSpanIcon.classed("icon-play", true);
     playSpanIcon.classed("icon-pause", false)
-  } else if (playerMidiFile === midiFile) {
-    Player.play();
-    playSpanIcon.classed("icon-play", false);
-    playSpanIcon.classed("icon-pause", true);
   } else {
     var AudioContext = window.AudioContext || window.webkitAudioContext || false;
     var ac = new AudioContext || new webkitAudioContext;
@@ -686,25 +655,14 @@ function playPauseMIDIFile(midiFile) {
           });
           Player.loadArrayBuffer(reader.result);
           Player.play();
-          playerMidiFile = midiFile;
-          playSpanIcon.classed("icon-play", false);
-          playSpanIcon.classed("icon-pause", true);
         }, false);
-      } else {
-        alert("Error playing MIDI file :'('");
       }
     });
+    playSpanIcon.classed("icon-play", false);
+    playSpanIcon.classed("icon-pause", true)
   }
 }
 
-/**
- * Given MIDI file, pause it if it is beeing played.
- */
-function pauseMIDIFile(midiFile) {
-  if (playerMidiFile === midiFile) {
-    Player.pause();
-  }
-}
 
 const PANE_ALL = 0;
 const PANE_NOTES = ".master-graph-pane";
