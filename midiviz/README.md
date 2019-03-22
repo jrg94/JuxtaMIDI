@@ -4,8 +4,10 @@ Welcome to the midiviz project! Below, you can find links to the current
 prototypes:
 
 - [Prototype Dashboard][1]
+- [Production Dashboard][2]
 
 [1]: prototype/dashboard.html
+[2]: src/dashboard.html
 
 ### Tools
 
