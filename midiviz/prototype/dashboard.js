@@ -236,7 +236,7 @@ function graphVelocity() {
       .attr("cx", d => xTimeScale(d.time))
       .attr("cy", d => yVelocityScale(d[velocity]))
       .attr("r", 3)
-      .attr("data-tippy-content", d => `${d.name}<br>time: ${d.time}<br>loVelocity: ${d.loVelocity}<br>hiVelocity: ${d.hiVelocity}`);
+      .attr("data-tippy-content", d => `${d.name}<br>time: ${d.time}<br>hi velocity: ${d.hiVelocity}<br>lo velocity: ${d.loVelocity}`);
   }
 
   drawTitle(svg, width / 2, height, padding, "Note Velocity");
