@@ -23,5 +23,5 @@ TODO:
 [1]: https://github.com/jrg94/data-viz-term-project/releases/tag/v1.0.0
 [2]: proposal/proposal.pdf
 [3]: prototype/dashboard.html
-[4]: src/dashboard.html
+[4]: midiviz/dashboard.html
 [5]: https://github.com/jrg94/data-viz-term-project/releases/tag/v1.1.0
