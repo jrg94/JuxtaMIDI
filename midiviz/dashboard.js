@@ -440,24 +440,24 @@ function addEntryToFileList(fileList, midiFile, name, toggled) {
 function setupMidiButtons() {
   d3.selectAll(".midi-toggle").on("click", function() {
     var midiFile = d3.select(this).attr("data-file");
-    toggleMIDIFile(midiFile);
+    toggleMidiFile(midiFile);
   });
 
   d3.selectAll(".midi-rename").on("click", function() {
     var midiFile = d3.select(this).attr("data-file");
-    if (!renameMIDIFile(midiFile)) {
+    if (!renameMidiFile(midiFile)) {
       alert("Please pick a unique MIDI file name.");
     }
   });
 
   d3.selectAll(".midi-delete").on("click", function() {
     var midiFile = d3.select(this).attr("data-file");
-    deleteMIDIFile(midiFile);
+    deleteMidiFile(midiFile);
   });
 
   d3.selectAll(".midi-play").on("click", function() {
     var midiFile = d3.select(this).attr("data-file");
-    playPauseMIDIFile(midiFile);
+    playPauseMidiFile(midiFile);
   });
 }
 
@@ -561,7 +561,7 @@ function applyTooltips() {
  *
  * TODO: There could be some cap on this later about how many files can be toggled?
  */
-function toggleMIDIFile(midiFile) {
+function toggleMidiFile(midiFile) {
   var toggleSpan = d3.select(`span.midi-toggle[data-file="${midiFile}"]`);
   var toggleSpanIcon = toggleSpan.select("i");
   var toggled = toggleSpan.attr("data-toggled");
@@ -595,7 +595,7 @@ function toggleMIDIFile(midiFile) {
  *
  * TODO: Issue, due to using selectors like [data-file=${midiFile}], we need to disallow double quotes from names.
  */
-function renameMIDIFile(midiFile) {
+function renameMidiFile(midiFile) {
   var newMidiFile = prompt("Rename file?", midiFile);
   if (newMidiFile == midiFile) {
     return true;
@@ -630,7 +630,7 @@ function renameMIDIFile(midiFile) {
 /**
  * Delete specified MIDI file, adjusting view panes and graphs as necessary.
  */
-function deleteMIDIFile(midiFile) {
+function deleteMidiFile(midiFile) {
   var element = d3.select(`.midi-file-name[data-file="${midiFile}"]`).node().parentNode;
   element.parentNode.removeChild(element);
 
@@ -639,7 +639,7 @@ function deleteMIDIFile(midiFile) {
   usedColors = usedColors.filter(color => color !== removedMidiColor)
 
   delete midiFiles[midiFile];
-  pauseMIDIFile(midiFile);
+  pauseMidiFile(midiFile);
   playerMidiFile = false;
 
   if (midiFiles.length == 0) {
@@ -657,7 +657,7 @@ var Player;
  * Given MIDI file, play it.
  * TODO: Allow pause, add cursor to graph, and
  */
-function playPauseMIDIFile(midiFile) {
+function playPauseMidiFile(midiFile) {
   var playSpan = d3.select(`span.midi-play[data-file="${midiFile}"]`);
   var playSpanIcon = playSpan.select("i");
   var pause = playSpanIcon.classed("icon-pause");
@@ -670,6 +670,7 @@ function playPauseMIDIFile(midiFile) {
     playSpanIcon.classed("icon-play", false);
     playSpanIcon.classed("icon-pause", true);
   } else {
+    pauseMidiFile(playerMidiFile);
     var AudioContext = window.AudioContext || window.webkitAudioContext || false;
     var ac = new AudioContext || new webkitAudioContext;
     // TODO: Replace this link with the local version
@@ -728,8 +729,8 @@ function applyTrackMarker(currentTick) {
 /**
  * Given MIDI file, pause it if it is beeing played.
  */
-function pauseMIDIFile(midiFile) {
-  if (playerMidiFile === midiFile) {
+function pauseMidiFile(midiFile) {
+  if (playerMidiFile === midiFile && typeof midiFile != 'undefined' && typeof Player != 'undefined') {
     Player.pause();
   }
 }
