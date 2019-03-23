@@ -732,6 +732,10 @@ function applyTrackMarker(currentTick) {
 function pauseMidiFile(midiFile) {
   if (playerMidiFile === midiFile && typeof midiFile != 'undefined' && typeof Player != 'undefined') {
     Player.pause();
+    var playSpan = d3.select(`span.midi-play[data-file="${midiFile}"]`);
+    var playSpanIcon = playSpan.select("i");
+    playSpanIcon.classed("icon-play", true);
+    playSpanIcon.classed("icon-pause", false);
   }
 }
 
