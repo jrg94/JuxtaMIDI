@@ -684,6 +684,7 @@ function playPauseMIDIFile(midiFile) {
               instrument.play(event.noteName, ac.currentTime, {gain:event.velocity/100});
             }
           });
+          Player.on('playing', applyTrackMarker);
           Player.loadArrayBuffer(reader.result);
           Player.play();
           playerMidiFile = midiFile;
@@ -695,6 +696,28 @@ function playPauseMIDIFile(midiFile) {
       }
     });
   }
+}
+
+function applyTrackMarker(currentTick) {
+  var svg = d3.select("#notes-over-time");
+
+  var width = d3.select(".master-graph-pane").node().getBoundingClientRect().width * 2;
+  var height = d3.select(".master-graph-pane").node().getBoundingClientRect().height;
+  var padding = 60;
+
+  let mapping = mappings.notes;
+  mapping.sort((a, b) => noteLUT.indexOf(b.note) - noteLUT.indexOf(a.note))
+
+  var xTimeScale = d3.scaleLinear()
+    .domain([0, d3.max(mapping, d => d.time + d.duration)])
+    .range([padding, width - padding * 2]);
+
+  svg.selectAll("circle").remove();
+
+  svg.append("circle")
+    .attr("cx", xTimeScale(currentTick.tick))
+    .attr("cy", height - padding)
+    .attr("r", 5);
 }
 
 /**
