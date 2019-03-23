@@ -698,6 +698,11 @@ function playPauseMIDIFile(midiFile) {
   }
 }
 
+/**
+ * Adds a marker to master graph to signify the time of the current song playing.
+ *
+ * @param {Object} currentTick - the current tick in the song
+ */
 function applyTrackMarker(currentTick) {
   var svg = d3.select("#notes-over-time");
 
