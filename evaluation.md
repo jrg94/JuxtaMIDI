@@ -26,7 +26,12 @@ list contains all feedback:
 
 ## Changes to Address Feedback
 
-To address some of the feedback from above, we decided to implement the
+To address some of the feedback from above, we decided to look into the
 following changes:
 
-- Added time marker to show where we are in the song
+- Adding a time marker to show where we are in the song
+- Changing velocity plot to show range of values for each track
+- Reordering the color array so additional tracks have drastically different colors
+
+Whether or not they all get implemented before the deadline is a separate
+issue, but these look like a nice step in the right direction.
