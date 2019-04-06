@@ -237,26 +237,36 @@ class MidiFilePane {
    * @param {Object} currentTick - the current tick in the song
    */
   applyTrackMarker(currentTick) {
-    var svg = d3.select("#notes-over-time");
+    for (var graph of ["#notes-over-time", "#velocity-over-time"]) {
+      var svg = d3.select(graph);
+      var width = svg.attr("width");
+      var height = svg.attr("height");
+      var padding = 60;
 
-    var width = d3.select(".master-graph-pane").node().getBoundingClientRect().width * 2;
-    var height = d3.select(".master-graph-pane").node().getBoundingClientRect().height;
-    var padding = 60;
+      var mapping, maxTime;
+      switch (graph) {
+        case "#notes-over-time":
+          mapping = this.dashboard.mappings.notes;
+          maxTime = mapping[mapping.length - 1].time + mapping[mapping.length - 1].duration;
+          break;
+        case "#velocity-over-time":
+          mapping = this.dashboard.mappings.velocity;
+          maxTime = mapping[mapping.length - 1].time;
+          break;
+      }
+      var xTimeScale = d3.scaleLinear()
+        .domain([0, maxTime])
+        .range([padding, width - padding * 2]);
 
-    let mapping = this.dashboard.mappings.notes;
+      svg.selectAll("circle")
+        .remove();
 
-    mapping.sort((a, b) => Constants.NOTE_MAPPING.indexOf(b.note) - Constants.NOTE_MAPPING.indexOf(a.note))
-
-    var xTimeScale = d3.scaleLinear()
-      .domain([0, d3.max(mapping, d => d.time + d.duration)])
-      .range([padding, width - padding * 2]);
-
-    svg.selectAll("circle").remove();
-
-    svg.append("circle")
-      .attr("cx", xTimeScale(currentTick.tick))
-      .attr("cy", height - padding)
-      .attr("r", 5);
+      svg.append("circle")
+        .attr("fill", this.dashboard.midiFiles[this.dashboard.midiPlayerFile].color)
+        .attr("cx", xTimeScale(currentTick.tick))
+        .attr("cy", height - padding)
+        .attr("r", 5);
+    }
   }
 
   /**
