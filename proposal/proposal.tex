@@ -154,14 +154,14 @@ mistakes in MIDI practice recordings?
 Naturally, this question raises several underlying questions such as:
 
 \begin{itemize}
-\item What are practice areas and quantifiable data (pitch, tempo, etc.) that 
+\item What are practice areas and quantifiable data (pitch, tempo, etc.) that
 we can gleam from MIDI recordings?
 \item What are the most effective ways of visualizing those practice areas?
-\item What are our options in analyzing MIDI files to visualize MIDI events 
+\item What are our options in analyzing MIDI files to visualize MIDI events
 in a useful manner for musicians?
-\item How useful is comparing MIDI recordings via velocity, sustain, and note 
+\item How useful is comparing MIDI recordings via velocity, sustain, and note
 frequency over time graphs
-\item Can we algorithmically generate useful automated feedback from analysis 
+\item Can we algorithmically generate useful automated feedback from analysis
 of these MIDI recordings and graphs
 \end{itemize}
 
@@ -175,8 +175,8 @@ file pane and the graph pane.
 
 The file pane will contain a list of active MIDI files which are each given a
 color for encoding purposes. That means the dashboard will be able to support
-about 20 simultaneous MIDI files due to the limits of color perception. This 
-should be more than enough considering the practicality of comparing that many 
+about 20 simultaneous MIDI files due to the limits of color perception. This
+should be more than enough considering the practicality of comparing that many
 recordings.
 
 Each file in the file pane will be able to be selected for viewing purposes
@@ -241,13 +241,63 @@ Each of these tasks can probably be broken down into smaller tasks as they all
 need to be designed, prototyped, and tested.
 
 As for verifying that our design is good, we'll be testing it on musicians
-of varying abilities. They will first play a song to generate a MIDI file, 
+of varying abilities. They will first play a song to generate a MIDI file,
 then we will ask them to indicate any mistakes they felt they made. Finally,
-we will compare their personal insight to the tool. 
+we will compare their personal insight to the tool.
 
 To take the research a step further, we would need to also gather insight from
 professional reviewers to see how their thoughts vary from the results in the
 tool.
+
+\section{Evaluation}
+
+For the evaluation, we shared the tool with one of our advisors.
+Unfortunately, they hadn't gotten around to the tool in time
+thanks to vis paper deadlines. As a result, we decided to review
+the tool ourselves. In addition, evaluation details below are
+based on prototype presentation feedback.
+
+\subsection{Types of Feedback}
+
+In general, feedback was positive. However, there were a few things
+that needed improvement in the original prototype. The following
+list contains all feedback:
+
+\begin{itemize}
+  \item Colors
+  \begin{itemize}
+    \item Too closely related (light blue and dark blue)
+    \item Yet, calming
+  \end{itemize}
+  \item Velocity plot
+  \begin{itemize}
+    \item Difficult to see differences in curves
+    \item Plot may not be capturing appropriate data (summing velocities)
+    \item Look into normalization
+  \end{itemize}
+  \item Target audience
+  \begin{itemize}
+    \item Musicians don't care about time steps - they want beats and measures
+  \end{itemize}
+  \item Interactivity
+  \begin{itemize}
+    \item Playback should animate graphs
+  \end{itemize}
+\end{itemize}
+
+\subsection{Changes to Address Feedback}
+
+To address some of the feedback from above, we decided to look into the
+following changes:
+
+\begin{itemize}
+  \item Adding a time marker to show where we are in the song
+  \item Changing velocity plot to show range of values for each track
+  \item Reordering the color array so additional tracks have drastically different colors
+\end{itemize}
+
+Whether or not they all get implemented before the deadline is a separate
+issue, but these look like a nice step in the right direction.
 
 \section{Conclusion}
 
