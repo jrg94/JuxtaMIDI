@@ -75,7 +75,7 @@
 \vgtcpapertype{proposal}
 
 %% Paper title.
-\title{Using Data Visualization to Pinpoint Mistakes in MIDI Practice Recordings}
+\title{JuxtaMIDI: Using Data Visualization to Pinpoint Mistakes in MIDI Practice Recordings}
 
 %% This is how authors are specified in the journal style
 
@@ -238,7 +238,7 @@ tool.
 
 \subsection{Implementation}
 
-\section{Environments}
+\subsection{Environments}
 
 To complete this project, we require the following software:
 
@@ -328,37 +328,54 @@ playing abilities to generate the following list of comments:
 \begin{itemize}
   \item Inherent limitations:
   \begin{itemize}
-    \item Online, generated MIDI files are often lacking when compared to an actual song:
+    \item Online, generated MIDI files are often lacking when compared to an
+    actual song:
     \begin{itemize}
       \item Song may have a constant velocity for every note.
       \item Key signatures, tempo, and sustain may be missing.
     \end{itemize}
     \item Recorded MIDI files have some of these issues and more:
     \begin{itemize}
-      \item Velocity is obtained, but this is not exactly reflective of playing on an acoustic piano, which is what would be typically used in performance. Keyboards, especially cheaper ones, are simply less expressive than acoustic pianos.
-      \item If the user is off-time by even a beat, the whole song gets offset. If the user corrects their time and becomes on-time, this issue is resolved. This means the user needs to be playing to a metronome and correct any time lost, which adds additional requirements on their playing.
+      \item Velocity is obtained, but this is not exactly reflective of playing
+      on an acoustic piano, which is what would be typically used in performance.
+      Keyboards, especially cheaper ones, are simply less expressive than acoustic
+      pianos.
+      \item If the user is off-time by even a beat, the whole song gets offset.
+      If the user corrects their time and becomes on-time, this issue is resolved.
+      This means the user needs to be playing to a metronome and correct any time
+      lost, which adds additional requirements on their playing.
     \end{itemize}
     \item Preprocessing:
     \begin{itemize}
-      \item Key signatures and tempo need to be manually added if needed for tool (it isn’t in the current stage).
-      \item The MIDI file also needs to be edited to remove any wait in the beginning.
+      \item Key signatures and tempo need to be manually added if needed for tool
+      (it isn’t in the current stage).
+      \item The MIDI file also needs to be edited to remove any wait in the
+      beginning.
     \end{itemize}
   \end{itemize}
   \item Benefits:
   \begin{itemize}
-    \item Where this tool thrives is helping identify insights that can’t be simply heard or seen in a recording.
+    \item Where this tool thrives is helping identify insights that can’t be
+    simply heard or seen in a recording.
     \item Users can upload and play their recordings.
-    \item The velocity curve is probably the most novel item, since other tools (like GarageBand) provide the features of the Master Note graph.
+    \item The velocity curve is probably the most novel item, since other tools
+    (like GarageBand) provide the features of the Master Note graph.
     \begin{itemize}
-      \item Users can follow the sheet music and quickly see how they played different sections, e.g. if they played one forte section louder than another, or if they mistakenly played one forte section as piano.
+      \item Users can follow the sheet music and quickly see how they played
+      different sections, e.g. if they played one forte section louder than
+      another, or if they mistakenly played one forte section as piano.
     \end{itemize}
   \end{itemize}
   \item Potential:
   \begin{itemize}
-    \item This tool would greatly benefit from adding measure count. Since sheet music often comes with measure numbers, users could cross-reference their playing with the measure number.
-    \item Exploring and solving the tempo offset issue would make this tool much more useful.
+    \item This tool would greatly benefit from adding measure count. Since sheet
+    music often comes with measure numbers, users could cross-reference their
+    playing with the measure number.
+    \item Exploring and solving the tempo offset issue would make this tool much
+    more useful.
     \item Some additional outlier detection or analysis would also help.
-    \item Since musicians are used to sheet music, having a sheet music overlay with different colored notes per track would be immensely helpful.
+    \item Since musicians are used to sheet music, having a sheet music overlay
+    with different colored notes per track would be immensely helpful.
     \begin{itemize}
       \item This would require key signature, tempo, and a really good sheet music generator
     \end{itemize}
@@ -370,7 +387,7 @@ playing abilities to generate the following list of comments:
 To address some of the feedback, we decided to look into the
 following changes:
 
-\begin{enumerate}}
+\begin{enumerate}
   \item Adding a time marker to show where the user is in the song
   \item Changing velocity plot to be more expressive
   \item Reordering the color array so additional tracks have drastically different colors
