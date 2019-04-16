@@ -11,10 +11,11 @@ cache:
     - /tmp/texlive
     - $HOME/.texlive
 
-before_script: cd $TRAVIS_BUILD_DIR/proposal/
-
 script:
+  - cd $TRAVIS_BUILD_DIR/docs/proposal/
   - pdflatex --shell-escape ./proposal.tex
+  - cd $TRAVIS_BUILD_DIR/docs/report/
+  - pdflatex --shell-escape ./report.tex
 
 deploy:
   provider: releases
