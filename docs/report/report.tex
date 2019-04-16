@@ -292,8 +292,14 @@ note and time. Finally, the size encodes note duration.
 
 When looking at this graph, it is helpful to imagine a piano along the y-axis.
 Lower pitches are near the top of the graph while higher pitches are closer to the
-bottom of the graph. Meanwhile, the x-axis gives us the time range of each note
-from time it begins to the time it ends.
+bottom of the graph. Meanwhile, the x-axis gives us the duration of each note
+from the time it begins to the time it ends. Time is given as generic time units
+which gain meaning given a tempo. Finally, each note has a tooltip which gives
+information like note, start time, duration, and velocity.
+
+To generate these features, we use a combination of open-source libraries, but
+the primary tool is D3 which allows us to create graphs from Scalar Vector
+Graphics (SVG).
 
 \subsection{Environments}
 
