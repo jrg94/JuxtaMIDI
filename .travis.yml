@@ -24,8 +24,8 @@ deploy:
   api_key:
     secure: ${GITHUB_TOKEN}
   file:
-    - ./docs/proposal/proposal.pdf
-    - ./docs/report/report.pdf
+    - $TRAVIS_BUILD_DIR/docs/proposal/proposal.pdf
+    - $TRAVIS_BUILD_DIR/docs/report/report.pdf
   skip_cleanup: true
   on:
     tags: true
