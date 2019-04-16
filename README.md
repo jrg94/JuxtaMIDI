@@ -3,22 +3,20 @@ JuxtaMIDI -- a tool to compare and contrast MIDI recordings.
 
 ## Project Links
 
-- [Proposal PDF][2]
-- [Proposal Release Page][1]
-- [Proposal Source Code][14]
-
-
-- [Prototype Dashboard][3]
-- [Prototype Release Page][5]
-- [Prototype Source Code][15]
-
-
-- [Production Dashboard][4]
-- [Production Source Code][17]
-
-
-- [Final Report PDF][6]
-- [Final Report Source Code][16]
+- Proposal
+  - [PDF][2]
+  - [Release Page][1]
+  - [Source Code][14]
+- Prototype
+  - [Dashboard][3]
+  - [Release Page][5]
+  - [Source Code][15]
+- Production
+  - [Dashboard][4]
+  - [Source Code][17]
+- Final Report
+  - [PDF][6]
+  - [Source Code][16]
 
 ## Tools
 
