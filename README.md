@@ -4,12 +4,22 @@ Welcome to the homepage of our Data Visualization (CSE5544) term project: JuxtaM
 
 ## Project Links
 
-- [Project Proposal PDF][2]
-- [Project Proposal Release Page][1]
+- [Proposal PDF][2]
+- [Proposal Release Page][1]
+- [Proposal Source Code][14]
+
+
 - [Prototype Dashboard][3]
+- [Prototype Release Page][5]
+- [Prototype Source Code][15]
+
+
 - [Production Dashboard][4]
-- [Project Prototype Release Page][5]
-- [Final Report][6]
+- [Production Source Code][17]
+
+
+- [Final Report PDF][6]
+- [Final Report Source Code][16]
 
 ## Tools
 
@@ -33,3 +43,7 @@ Welcome to the homepage of our Data Visualization (CSE5544) term project: JuxtaM
 [11]: https://atomiks.github.io/tippyjs/
 [12]: https://github.com/grimmdude/MidiPlayerJS
 [13]: https://github.com/danigb/soundfont-player
+[14]: https://github.com/jrg94/JuxtaMIDI/tree/master/docs/proposal
+[15]: https://github.com/jrg94/JuxtaMIDI/tree/master/prototype
+[16]: https://github.com/jrg94/JuxtaMIDI/tree/master/docs/report
+[17]: https://github.com/jrg94/JuxtaMIDI/tree/master/midiviz
