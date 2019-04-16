@@ -282,6 +282,19 @@ purposes in each graph. To aid in encoding, we color the background of the
 file element, so it matches any data associated with the file in the various
 graph panes.
 
+\subsection{Notes Over Time Pane}
+
+In the top pane, we render the notes over time graph. Each note is encoded in
+three visual channels: color, position, size. The color gives us the track
+mapping, so it should match whatever color the file was assigned in the MIDI
+selection pane. Meanwhile, the position encodes two pieces of information:
+note and time. Finally, the size encodes note duration.
+
+When looking at this graph, it is helpful to imagine a piano along the y-axis.
+Lower pitches are near the top of the graph while higher pitches are closer to the
+bottom of the graph. Meanwhile, the x-axis gives us the time range of each note
+from time it begins to the time it ends.
+
 \subsection{Environments}
 
 To complete this project, we required the following software:
