@@ -1,6 +1,5 @@
-# JuxtaMIDI - Pinpointing Mistakes in MIDI Practice Recordings
-
-Welcome to the homepage of our Data Visualization (CSE5544) term project: JuxtaMIDI -- a tool to compare and contrast MIDI recordings.
+Welcome to the homepage of our Data Visualization (CSE5544) term project:
+JuxtaMIDI -- a tool to compare and contrast MIDI recordings.
 
 ## Project Links
 
