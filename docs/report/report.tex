@@ -244,6 +244,8 @@ personal insight to the tool.
 Ultimately, JustaMIDI ended up being a web-based tool built entirely as a
 static website using just JavaScript, CSS, and HTML.
 
+\subsubsection{Dashboard Overview}
+
 In terms of general design, we went with a dashboard approach using CSS grids.
 In other words, we divided the space into four columns by percentage of screen
 width from left to right: 9\%, 43\%, 43\%, and 3\%. Likewise, we divided
@@ -255,6 +257,30 @@ first column. Likewise, the pane selection interface was given the entire
 last column. Meanwhile, the note graph was given the center two columns of
 the top row while the remaining graphs split the bottom row of the same
 columns.
+
+\subsubsection{MIDI Selection Interface}
+
+As mentioned, the entire first column was dedicated to the MIDI selection
+interface. This interface consisted of a single MIDI upload button and any
+number of MIDI file items.
+
+The upload button works just like any file upload interface. When a file is
+uploaded, a callback function is executed. In this case, we parse the midi file,
+and pass that data to the respective graphs panes to be rendered. At the same
+time, we generate a MIDI file list item which allows us to interact with the
+loaded file in various ways such as:
+
+\begin{itemize}
+  \item Changing its name
+  \item Toggling it on/off
+  \item Deleting it
+  \item Playing/pausing it
+\end{itemize}
+
+In addition, it is at this point that we assign the file a color for encoding
+purposes in each graph. To aid in encoding, we color the background of the
+file element, so it matches any data associated with the file in the various
+graph panes.
 
 \subsection{Environments}
 
