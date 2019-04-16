@@ -187,10 +187,10 @@ pane.
 Meanwhile, the graph pane will contain several graphs:
 
 \begin{itemize}
-\item Notes versus Time (master graph)
-\item Notes versus Frequency
-\item Velocity versus Time
-\item Sustain versus Time
+  \item Notes versus Time (master graph)
+  \item Notes versus Frequency
+  \item Velocity versus Time
+  \item Sustain versus Time
 \end{itemize}
 
 As a stretch goal, each graph will be connected with the master graph for
@@ -210,12 +210,12 @@ music comparison.
 To complete this project, we require the following software:
 
 \begin{itemize}
-\item JavaScript: a web-based programming language
-\item D3.js: a data visualization library
-\item MIDI.js: a MIDI processing library
-\item GarageBand: a MIDI editing tool
-\item GitHub: a version control and project management tool
-\item Travis CI: a continuous integration tool for testing
+  \item JavaScript: a web-based programming language
+  \item D3.js: a data visualization library
+  \item MIDI.js: a MIDI processing library
+  \item GarageBand: a MIDI editing tool
+  \item GitHub: a version control and project management tool
+  \item Travis CI: a continuous integration tool for testing
 \end{itemize}
 
 With this software, we should be able to build and test the entire system.
@@ -226,15 +226,15 @@ In order to verify the success of this project, we will be tracking several
 tasks in GitHub. Namely, we will be designing and implementing the following:
 
 \begin{itemize}
-\item MIDI File Upload
-\item MIDI File Pane
-\item Notes versus Time Graph
-\item Notes versus Frequency Graph
-\item Velocity versus Time Graph
-\item Sustain versus Time Graph
-\item Mistake Analysis for Tooltips
-\item Realtime Recording
-\item Sheet Music Rendering and Comparison
+  \item MIDI File Upload
+  \item MIDI File Pane
+  \item Notes versus Time Graph
+  \item Notes versus Frequency Graph
+  \item Velocity versus Time Graph
+  \item Sustain versus Time Graph
+  \item Mistake Analysis for Tooltips
+  \item Realtime Recording
+  \item Sheet Music Rendering and Comparison
 \end{itemize}
 
 Each of these tasks can probably be broken down into smaller tasks as they all
@@ -261,11 +261,35 @@ deadlines. As a result, we decided to review the tool ourselves.
 
 \subsection{Initial Prototype}
 
+The initial prototype aimed to accomplish several of the major tasks mentioned
+previously. In particular, the following tasks were implemented:
+
+\begin{itemize}
+  \item MIDI File Upload
+  \item MIDI File Pane
+  \item Notes versus Time Graph
+  \item Notes versus Frequency Graph
+  \item Velocity versus Time Graph
+\end{itemize}
+
+In addition, we added a few extra interactivity features during our own
+iterative process:
+
+\begin{itemize}
+  \item MIDI File Color Mapping
+  \item MIDI File Playback
+  \item MIDI File Renaming
+  \item MIDI File Toggling
+\end{itemize}
+
+With the prototype read to go, we began the evaluation process by presenting
+it to the class.
+
 \subsection{Prototype Feedback}
 
 In general, feedback was positive. However, there were a few things
 that needed improvement in the original prototype. The following
-list contains all feedback:
+list contains the feedback from our peers:
 
 \begin{itemize}
   \item Colors
@@ -294,14 +318,14 @@ list contains all feedback:
 To address some of the feedback from above, we decided to look into the
 following changes:
 
-\begin{itemize}
+\begin{enumerate}}
   \item Adding a time marker to show where we are in the song
   \item Changing velocity plot to be more expressive
   \item Reordering the color array so additional tracks have drastically different colors
   \item Add option for user to specify tempo, changing time to measure
-\end{itemize}
+\end{enumerate}
 
-So far, we’ve completed \#1 and \#2 for the updated prototype.
+For the final implementation, we completed \#1 and \#2 for the updated prototype.
 
 \subsection{Additional Feedback and Evaluation}
 
@@ -346,6 +370,10 @@ As an intermediate piano player, author Stephen’s thoughts on the tool were as
     \end{itemize}
   \end{itemize}
 \end{itemize}
+
+\section{Production Implementation}
+
+\section{Discussion}
 
 \section{Conclusion}
 
