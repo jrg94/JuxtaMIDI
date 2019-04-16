@@ -1,6 +1,6 @@
 # JuxtaMIDI - Pinpointing Mistakes in MIDI Practice Recordings
 
-Welcome to the homepage of our Data Visualization (CSE5544) term project: JuxtaMIDI -- a tool to compare and contrast MIDI recordings. 
+Welcome to the homepage of our Data Visualization (CSE5544) term project: JuxtaMIDI -- a tool to compare and contrast MIDI recordings.
 
 ## Project Links
 
@@ -8,7 +8,7 @@ Welcome to the homepage of our Data Visualization (CSE5544) term project: JuxtaM
 - [Project Proposal Release Page][1]
 - [Prototype Dashboard][3]
 - [Production Dashboard][4]
-- [Project Prototype Release Page][5] 
+- [Project Prototype Release Page][5]
 
 ## Tools
 
@@ -20,7 +20,7 @@ Welcome to the homepage of our Data Visualization (CSE5544) term project: JuxtaM
 - [Soundfont-plalyer.js](https://github.com/danigb/soundfont-player) - MIDI soundfont player
 
 [1]: https://github.com/jrg94/data-viz-term-project/releases/tag/v1.0.0
-[2]: proposal/proposal.pdf
+[2]: docs/proposal.pdf
 [3]: prototype/dashboard.html
 [4]: midiviz/dashboard.html
 [5]: https://github.com/jrg94/data-viz-term-project/releases/tag/v1.1.0
