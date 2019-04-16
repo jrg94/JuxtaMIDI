@@ -140,10 +140,10 @@ a lot of feedback. Without access to an instructor, musicians may find it diffic
 to self-assess their abilities. They could all benefit from some sort of tool
 to help pinpoint their mistakes.
 
-In this project, we intend to build a data visualization dashboard which can
-be used to compare practice MIDI files with professional MIDI files. The goal
-is to isolate areas in the practice file which are most unlike the professional
-file for the sake of improvement.
+In this project, we built a data visualization dashboard which can be used to
+compare practice MIDI files with professional MIDI files. The goal is to isolate
+areas in the practice file which are most unlike the professional file for the
+sake of improvement.
 
 \section{Related Work}
 
@@ -154,44 +154,44 @@ out our implementation.
 
 \subsection{Research Questions}
 
-As mentioned previously, the major research question we will be looking to
-address is the following: how can we leverage data visualization to pinpoint
-mistakes in MIDI practice recordings?
+As mentioned previously, the major research question we looked to address is the
+following: how can we leverage data visualization to pinpoint mistakes in MIDI
+practice recordings?
 
 Naturally, this question raises several underlying questions such as:
 
 \begin{itemize}
-\item What are practice areas and quantifiable data (pitch, tempo, etc.) that
-we can gleam from MIDI recordings?
-\item What are the most effective ways of visualizing those practice areas?
-\item What are our options in analyzing MIDI files to visualize MIDI events
-in a useful manner for musicians?
-\item How useful is comparing MIDI recordings via velocity, sustain, and note
-frequency over time graphs
-\item Can we algorithmically generate useful automated feedback from analysis
-of these MIDI recordings and graphs
+  \item What are practice areas and quantifiable data (pitch, tempo, etc.) that
+  we can gleam from MIDI recordings?
+  \item What are the most effective ways of visualizing those practice areas?
+  \item What are our options in analyzing MIDI files to visualize MIDI events
+  in a useful manner for musicians?
+  \item How useful is comparing MIDI recordings via velocity, sustain, and note
+  frequency over time graphs
+  \item Can we algorithmically generate useful automated feedback from analysis
+  of these MIDI recordings and graphs
 \end{itemize}
 
-In an effort to pinpoint mistakes, we will need to find the best ways to
-represent our musical data, so the user will see value in the tool.
+In an effort to pinpoint mistakes, we wanted to find the best ways to
+represent our musical data, so the user would see value in the tool.
 
 \subsection{Design Goals}
 
-At a high level, we intend to construct a dashboard split into two panes: the
+At a high level, our goal was to construct a dashboard split into two panes: the
 file pane and the graph pane.
 
-The file pane will contain a list of active MIDI files which are each given a
-color for encoding purposes. That means the dashboard will be able to support
+The file pane should contain a list of active MIDI files which are each given a
+color for encoding purposes. That means the dashboard should be able to support
 about 20 simultaneous MIDI files due to the limits of color perception. This
 should be more than enough considering the practicality of comparing that many
 recordings.
 
-Each file in the file pane will be able to be selected for viewing purposes
-in the graph pane. When unselected, the file's background color will be neutral.
-When selected, the file's background color will mirror its color in the graph
+Each file in the file pane should be able to be selected for viewing purposes
+in the graph pane. When unselected, the file's background color should be neutral.
+When selected, the file's background color should mirror its color in the graph
 pane.
 
-Meanwhile, the graph pane will contain several graphs:
+Meanwhile, the graph pane should contain several graphs:
 
 \begin{itemize}
   \item Notes versus Time (master graph)
@@ -200,22 +200,22 @@ Meanwhile, the graph pane will contain several graphs:
   \item Sustain versus Time
 \end{itemize}
 
-As a stretch goal, each graph will be connected with the master graph for
+As a stretch goal, each graph should be connected with the master graph for
 filtering purposes. When a section of time is selected in the master graph,
-all other graphs will be updated to reflect the new subsection of data. This
-will allow a user to hone in on specific mistakes.
+all other graphs should be updated to reflect the new subsection of data. This
+would allow a user to hone in on specific mistakes.
 
-In addition, graphs will contain tooltips which will highlight areas with
-the highest amount of mistakes. These tooltips will include high level notes
+In addition, graphs should contain tooltips which will highlight areas with
+the highest amount of mistakes. These tooltips should include high level notes
 to assist the user in understanding the data.
 
-Finally, the dashboard can be extended to include realtime recording and sheet
+Finally, the dashboard should be extended to include realtime recording and sheet
 music comparison.
 
 \subsection{Tasks and Metrics}
 
-In order to verify the success of this project, we will be tracking several
-tasks in GitHub. Namely, we will be designing and implementing the following:
+In order to verify the success of the project, we tracked several tasks in
+GitHub:
 
 \begin{itemize}
   \item MIDI File Upload
@@ -229,17 +229,15 @@ tasks in GitHub. Namely, we will be designing and implementing the following:
   \item Sheet Music Rendering and Comparison
 \end{itemize}
 
-Each of these tasks can probably be broken down into smaller tasks as they all
-need to be designed, prototyped, and tested.
+Each of these tasks were broken down into smaller tasks as they all need to be
+designed, prototyped, and tested.
 
-As for verifying that our design is good, we'll be testing it on musicians
-of varying abilities. They will first play a song to generate a MIDI file,
-then we will ask them to indicate any mistakes they felt they made. Finally,
-we will compare their personal insight to the tool.
-
-To take the research a step further, we would need to also gather insight from
-professional reviewers to see how their thoughts vary from the results in the
-tool.
+As for verifying that our design is good, we tested it on users of varying musical
+abilities. For less experienced individuals, we had them watch us interact with
+the tool through a demonstration where we collected feedback. For experienced
+musicians, we had them play a song to generate a MIDI file, then we asked them
+to indicate any mistakes they felt they made. Finally, we compared their
+personal insight to the tool.
 
 \subsection{Implementation}
 
