@@ -247,7 +247,14 @@ static website using just JavaScript, CSS, and HTML.
 In terms of general design, we went with a dashboard approach using CSS grids.
 In other words, we divided the space into four columns by percentage of screen
 width from left to right: 9\%, 43\%, 43\%, and 3\%. Likewise, we divided
-the space into two rows by screen height from top to bottom: 60\% and auto. 
+the space into two rows by screen height from top to bottom: 60\% and auto.
+
+Each dashboard element was then assigned some range of grid points that they
+could occupy. For example, the MIDI selection interface was given the entire
+first column. Likewise, the pane selection interface was given the entire
+last column. Meanwhile, the note graph was given the center two columns of
+the top row while the remaining graphs split the bottom row of the same
+columns.
 
 \subsection{Environments}
 
