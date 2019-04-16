@@ -14,7 +14,9 @@ cache:
 script:
   - cd $TRAVIS_BUILD_DIR/docs/proposal/
   - pdflatex --shell-escape ./proposal.tex
+  - pdflatex --shell-escape ./proposal.tex
   - cd $TRAVIS_BUILD_DIR/docs/report/
+  - pdflatex --shell-escape ./report.tex
   - pdflatex --shell-escape ./report.tex
 
 deploy:
@@ -22,7 +24,8 @@ deploy:
   api_key:
     secure: ${GITHUB_TOKEN}
   file:
-    - ./proposal.pdf
+    - ./docs/proposal/proposal.pdf
+    - ./docs/report/report.pdf
   skip_cleanup: true
   on:
     tags: true
