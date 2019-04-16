@@ -322,11 +322,20 @@ As an intermediate piano player, author Stephen’s thoughts on the tool were as
       \item Velocity is obtained, but this is not exactly reflective of playing on an acoustic piano, which is what would be typically used in performance. Keyboards, especially cheaper ones, are simply less expressive than acoustic pianos.
       \item If the user is off-time by even a beat, the whole song gets offset. If the user corrects their time and becomes on-time, this issue is resolved. This means the user needs to be playing to a metronome and correct any time lost, which adds additional requirements on their playing.
     \end{itemize}
+    \item Preprocessing:
+    \begin{itemize}
+      \item Key signatures and tempo need to be manually added if needed for tool (it isn’t in the current stage).
+      \item The MIDI file also needs to be edited to remove any wait in the beginning.
+    \end{itemize}
   \end{itemize}
-  \item Preprocessing:
+  \item Benefits:
   \begin{itemize}
-    \item Key signatures and tempo need to be manually added if needed for tool (it isn’t in the current stage).
-    \item The MIDI file also needs to be edited to remove any wait in the beginning.
+    \item Where this tool thrives is helping identify insights that can’t be simply heard or seen in a recording.
+    \item Users can upload and play their recordings.
+    \item The velocity curve is probably the most novel item, since other tools (like GarageBand) provide the features of the Master Note graph.
+    \being{itemize}
+      \item Users can follow the sheet music and quickly see how they played different sections, e.g. if they played one forte section louder than another, or if they mistakenly played one forte section as piano.
+    \end{itemize}
   \end{itemize}
 \end{itemize}
 
