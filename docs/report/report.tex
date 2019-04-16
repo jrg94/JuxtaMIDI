@@ -307,6 +307,24 @@ So far, we’ve completed #1 and #2 for the updated prototype.
 
 \subsection{Additional Feedback & Evaluation}
 
+As an intermediate piano player, author Stephen’s thoughts on the tool were as follows:
+
+\begin{itemize}
+  \item Inherent limitations:
+  \begin{itemize}
+    \item Online, generated MIDI files are often lacking when compared to an actual song:
+    \begin{itemize}
+      \item Song may have a constant velocity for every note.
+      \item Key signatures, tempo, and sustain may be missing.
+    \end{itemize}
+    \item Recorded MIDI files have some of these issues and more:
+    \begin{itemize}
+      \item Velocity is obtained, but this is not exactly reflective of playing on an acoustic piano, which is what would be typically used in performance. Keyboards, especially cheaper ones, are simply less expressive than acoustic pianos.
+      \item If the user is off-time by even a beat, the whole song gets offset. If the user corrects their time and becomes on-time, this issue is resolved. This means the user needs to be playing to a metronome and correct any time lost, which adds additional requirements on their playing.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
 \section{Conclusion}
 
 It may seem odd to want to think of music in a visual way, but we feel our
