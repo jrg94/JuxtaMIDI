@@ -125,7 +125,7 @@ in music data? For the sake of scope, we have chosen to focus on MIDI recordings
 \begin{document}
 
 %% the only exception to this rule is the \firstsection command
-\firstsection{Introduction}
+\firstsection{Introduction and Motivation}
 
 \maketitle
 
@@ -145,7 +145,9 @@ be used to compare practice MIDI files with professional MIDI files. The goal
 is to isolate areas in the practice file which are most unlike the professional
 file for the sake of improvement.
 
-\section{Research Questions}
+\section{Related Work}
+
+\subsection{Research Questions}
 
 As mentioned previously, the major research question we will be looking to
 address is the following: how can we leverage data visualization to pinpoint
@@ -168,7 +170,7 @@ of these MIDI recordings and graphs
 In an effort to pinpoint mistakes, we will need to find the best ways to
 represent our musical data, so the user will see value in the tool.
 
-\section{Design Goals}
+\subsection{Design Goals}
 
 At a high level, we intend to construct a dashboard split into two panes: the
 file pane and the graph pane.
@@ -205,22 +207,7 @@ to assist the user in understanding the data.
 Finally, the dashboard can be extended to include realtime recording and sheet
 music comparison.
 
-\section{Hardware and Software Requirements}
-
-To complete this project, we require the following software:
-
-\begin{itemize}
-  \item JavaScript: a web-based programming language
-  \item D3.js: a data visualization library
-  \item MIDI.js: a MIDI processing library
-  \item GarageBand: a MIDI editing tool
-  \item GitHub: a version control and project management tool
-  \item Travis CI: a continuous integration tool for testing
-\end{itemize}
-
-With this software, we should be able to build and test the entire system.
-
-\section{Tasks and Metrics}
+\subsection{Tasks and Metrics}
 
 In order to verify the success of this project, we will be tracking several
 tasks in GitHub. Namely, we will be designing and implementing the following:
@@ -249,7 +236,26 @@ To take the research a step further, we would need to also gather insight from
 professional reviewers to see how their thoughts vary from the results in the
 tool.
 
-\section{Evaluation}
+\subsection{Implementation}
+
+\section{Environments}
+
+To complete this project, we require the following software:
+
+\begin{itemize}
+  \item JavaScript: a web-based programming language
+  \item D3.js: a data visualization library
+  \item MIDI.js: a MIDI processing library
+  \item GarageBand: a MIDI editing tool
+  \item GitHub: a version control and project management tool
+  \item Travis CI: a continuous integration tool for testing
+\end{itemize}
+
+With this software, we should be able to build and test the entire system.
+
+\section{Design Method}
+
+\section{Results and Analysis}
 
 Evaluation was done in two phases, an initial prototype on March 7, 2019 and an
 updated prototype on April 6, 2019. Feedback was gathered from both phases to
@@ -365,15 +371,18 @@ To address some of the feedback, we decided to look into the
 following changes:
 
 \begin{enumerate}}
-  \item Adding a time marker to show where we are in the song
+  \item Adding a time marker to show where the user is in the song
   \item Changing velocity plot to be more expressive
   \item Reordering the color array so additional tracks have drastically different colors
-  \item Add option for user to specify tempo, changing time to measure
+  \item Adding option for user to specify tempo, changing time to measure
 \end{enumerate}
 
 For the final implementation, we completed \#1 and \#2 for the updated prototype.
 
-\section{Production Implementation}
+\subsection{Production Implementation}
+
+Ultimately, the final production dashboard was extended to include a marker
+to illustrate playback. The marker is colored based on which track was playing.
 
 \section{Discussion}
 
