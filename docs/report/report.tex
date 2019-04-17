@@ -401,6 +401,33 @@ Now that we have had the chance to discuss the background and related work,
 let's talk about our design choices and how we believe they effectively
 accomplish our tasks.
 
+\subsection{Data Abstraction}
+
+For our project, we were working with MIDI files which are event-based music
+files. In other words, we were not dealing with audio signals. Instead, we took
+a file format which stores music information like tracks, notes, velocities, and
+durations, and made sense of it visually.
+
+Despite the fact that the MIDI file format already abstracts music signals,
+there still is a case to make to further abstract the data. For example,
+MIDI files are entirely in binary which means that they are not easy to read
+as a user. As a result, we used a utility to parse the MIDI file into a
+JavaScript object.
+
+While the object itself was a bit easier to work with, the data still wasn't
+meaningful to our end user. For example, the resulting JavaScript object
+contained a lot of nested information about tracks and events but almost no
+clear information on how that data maps to musical notes, rhythms, and dynamics.
+To make matters worse, MIDI files store events using numeric codes, so the
+data is not easy to read. For example, how are we supposed to know what
+the following means:
+
+\begin{itemize}
+  \item Type: 9
+  \item Note: 47
+  \item Velocity: (47, 0)
+\end{itemize}
+
 \section{Results and Analysis}
 
 Evaluation was done in two phases, an initial prototype on March 7, 2019 and an
