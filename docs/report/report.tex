@@ -318,6 +318,55 @@ maximum note frequency over all active tracks. Meanwhile, the x-axis
 contains a direct mapping of all unique notes over all active tracks. We then
 sort that axis by the note frequency of the primary track.
 
+\subsubsection{Note Velocity Pane}
+
+While the other two plots were relatively straightforward, we had a lot of
+trouble deciding on the note velocity plot. Ideally, what we would like to be
+able to capture in this plot is dynamics. In other words, how can we show
+the ebb and flow of volume over time to the user. As it turns out, it is harder
+than it seems.
+
+Initially, we tried summing the velocity of all the notes at each time step and
+plotting the results. Unfortunately, the resulting curve was pretty eratic. In
+fact, we noticed we few bizarre artifacts in the results like a downward
+slope over time which didn't make a lot of sense for a nearly constant
+volume song. Fortunately, someone pointed out that summing the velocities at
+each time step is bad practice because we aren't guaranteed to have the same
+number of key presses at any given time. In other words, the maximum volume
+is entirely dependent on the maximum number of keys played simultaneously.
+
+To accomodate for this problem, we decided to try plotting the velocity range
+over time. The result contains two lines for each track where the space in
+between is colored based on the file color. As expected, the x-axis is in the
+same units as the notes over time plot, and the y-axis is raw velocity.
+
+\subsubsection{Plot Filtering Pane}
+
+Finally, we added a plot filtering pane which gives us control over which pane
+we can see at any given time. There are four options:
+
+\begin{itemize}
+  \item All panes as described in the dashboard overview
+  \item The notes over time pane alone
+  \item The note frequency pane alone
+  \item The note velocity over time pane alone
+\end{itemize}
+
+When a pane is selected alone, we fill the entire center two columns with that
+pane. For example, selecting the note frequency pane makes the other two graph
+panes disappear while the note frequency pane is expanded to fill the space.
+
+\subsubsection{Interactivity}
+
+Most of the interactivity elements are in the MIDI selection pane. However, we
+haven't discussed exactly how that interactivity works up to this point. To
+reiterate, there are four main ways to interact with each file: toggling,
+renaming, deleting, and playing.
+
+When we toggle a file, that state of that file changes based on its previous
+state. In other words, if we were originally showing a file in all three graphs,
+toggling it would remove it from the graphs.
+
 \subsection{Environments}
 
 To complete this project, we required the following software:
