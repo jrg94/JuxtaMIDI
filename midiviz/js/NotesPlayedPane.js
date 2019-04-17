@@ -42,18 +42,8 @@ class NotesPlayedPane {
       .rangeRound([0, yNoteScale.bandwidth()])
       .padding(0.05);
 
-    svg.append("g")
-      .attr("transform", "translate(0," + (height - padding) + ")")
-      .call(d3.axisBottom(xTimeScale))
-      .selectAll("text")
-      .style("text-anchor", "end")
-      .attr("dx", "-.8em")
-      .attr("dy", ".15em")
-      .attr("transform", "rotate(-45)");
-
-    svg.append("g")
-      .attr("transform", "translate(" + padding + ", 0)")
-      .call(d3.axisLeft(yNoteScale));
+    drawXAxis(svg, xTimeScale, padding, height, width / 2, "Time (index)");
+    drawYAxis(svg, yNoteScale, padding, height, "Notes")
 
     drawTitle(svg, width / 2, height, padding, "Notes Played");
 

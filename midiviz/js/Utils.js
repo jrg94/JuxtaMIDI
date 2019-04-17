@@ -38,3 +38,54 @@ function drawTitle(svg, width, height, padding, title) {
     .style("font-size", "18px")
     .text(title)
 }
+
+/**
+ * Draws the x-axis.
+ *
+ * @param xScale - a D3 scale object
+ * @param padding - the padding
+ * @param height - the height of the SVG
+ * @param width - the width of the SVG
+ * @param label - the x-axis label
+ */
+function drawXAxis(svg, xScale, padding, height, width, label) {
+  // Draw x-axis
+  svg.append("g")
+    .attr("transform", "translate(0," + (height - padding) + ")")
+    .call(d3.axisBottom(xScale))
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-25)");
+
+  // Draw x-axis title
+  svg.append("text")
+    .attr("transform", "translate(" + ((width / 2) - padding / 2) + " ," + (height - 10) + ")")
+    .style("text-anchor", "middle")
+    .text(label);
+}
+
+/**
+ * Draws the y-axis.
+ *
+ * @param yScale - a D3 scale object
+ * @param padding - the padding
+ * @param height - the height of the SVG
+ * @param label - the y-axis label
+ */
+function drawYAxis(svg, yScale, padding, height, label) {
+  // Draw y-axis
+  svg.append("g")
+    .attr("transform", "translate(" + padding + ", 0)")
+    .call(d3.axisLeft(yScale));
+
+  // Draw y-axis title
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - 5)
+    .attr("x", 0 - (height / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text(label);
+}
