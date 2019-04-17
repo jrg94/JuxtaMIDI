@@ -463,7 +463,24 @@ As a result, we decided to build a visualization system which abstracts the
 self-assessment task. In other words, how do we take some of the cognitive
 overhead of making and comparing recordings and shift it to automation. The
 result was our JuxtaMIDI tool which allows a user to upload MIDI recordings
-and compare them visually, rather than aurally. 
+and compare them visually, rather than aurally.
+
+\subsection{Design Considerations}
+
+Unfortunately, we have no way of perceiving sound at a global level. In other
+words, we can't hear an entire song at one time. Luckily, we can see the
+big picture, so if there is any way to demonstrate the global features of
+music visually, we would have an excellent tool for self-assessment. For
+example, a student may find it useful to compare their dynamics relative
+to a professional recording. Without being able to visualize a global
+feature like dynamics, the user would have to listen to both tracks and do
+their best to gauge the dynamic range for themselves.
+
+As a result, a lot of consideration went into looking at global features of
+music like dynamics and note totals. These features are not easily extracted
+when listening to music, but they can be very easily detected in a visual
+format. Ultimately, we settled on visualizing the components we felt were
+the most difficult to track during practice. 
 
 \section{Results and Analysis}
 
