@@ -425,8 +425,18 @@ the following means:
 \begin{itemize}
   \item Type: 9
   \item Note: 47
-  \item Velocity: (47, 0)
+  \item Velocity: (90, 0)
+  \item Duration: 120
 \end{itemize}
+
+To do with this, we had to go up another level of abstraction using LUTs.
+For instance, it may be nice to know that a type 9 event indicates onset which
+marks the beginning of a note. It might also be helpful to know which note 47
+is and exactly how to make sense of the velocity tuple.
+
+Ultimately, we wanted the user to interact with the music in a way that they
+think about it on a daily basis: notes, rhythms, dynamics, chords, etc. To get
+there, however, we had to work I way up from binary MIDI files.
 
 \section{Results and Analysis}
 
