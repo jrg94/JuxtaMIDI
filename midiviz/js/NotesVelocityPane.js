@@ -10,9 +10,9 @@ class NotesVelocityPane {
   graph() {
     var svg = d3.select("#velocity-over-time");
 
-    var width = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().width * 2;
-    var height = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().height;
     var padding = 60;
+    var width = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().width * 2;
+    var height = d3.select(".master-graph-pane").node().getBoundingClientRect().height - padding;
 
     var keys = Object.keys(this.dashboard.midiFiles);
     var timestamps = this.dashboard.mappings.velocity;
