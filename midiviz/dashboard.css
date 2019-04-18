@@ -6,7 +6,7 @@ body {
 .container {
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: 9% 42% 42% auto;
+  grid-template-columns: 10% 42% 42% auto;
   grid-template-rows: 60% auto;
   width: 98%;
   height: 98%;
