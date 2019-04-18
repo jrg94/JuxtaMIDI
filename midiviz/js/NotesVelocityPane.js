@@ -19,7 +19,7 @@ class NotesVelocityPane {
 
     var xTimeScale = d3.scaleLinear()
       .domain([0, d3.max(timestamps, d => d.time)])
-      .range([padding, width - padding * 2]);
+      .range([padding, width - padding]);
 
     var yVelocityScale = d3.scaleLinear()
       .domain([d3.min(timestamps, d => d.loVelocity - 15), d3.max(timestamps, d => d.hiVelocity + 15)])
