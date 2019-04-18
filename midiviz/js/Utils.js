@@ -37,6 +37,7 @@ function drawTitle(svg, width, height, padding, title) {
     .style("text-anchor", "middle")
     .style("font-size", "18px")
     .text(title)
+    .classed("axes-labels", true);
 }
 
 /**
@@ -66,12 +67,12 @@ function drawXAxis(svg, xScale, padding, height, width, label, rotated=false) {
       .call(d3.axisBottom(xScale))
   }
 
-
   // Draw x-axis title
   svg.append("text")
-    .attr("transform", "translate(" + ((width / 2) - padding / 2) + " ," + (height - 10) + ")")
+    .attr("transform", "translate(" + ((width / 2) - padding / 2) + " ," + (height - 5) + ")")
     .style("text-anchor", "middle")
-    .text(label);
+    .text(label)
+    .classed("axes-labels", true);
 }
 
 /**
@@ -95,7 +96,8 @@ function drawYAxis(svg, yScale, padding, height, label) {
     .attr("x", 0 - (height / 2))
     .attr("dy", "1em")
     .style("text-anchor", "middle")
-    .text(label);
+    .text(label)
+    .classed("axes-labels", true);
 }
 
 /**

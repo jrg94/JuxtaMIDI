@@ -121,6 +121,10 @@ div.graph-disabled {
   padding: 2%;
 }
 
+.axes-labels {
+  font: 20px sans-serif;
+}
+
 .welcome-message {
   align-self: center;
   justify-self: center;
