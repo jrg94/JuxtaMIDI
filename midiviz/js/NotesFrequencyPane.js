@@ -33,8 +33,9 @@ class NotesFrequencyPane {
       .domain([0, d3.max(mapping, d => d.count)])
       .range([height - padding, padding]);
 
-    drawXAxis(svg, xNoteScale, padding, height, width, "Notes");
+    drawXAxis(svg, xNoteScale, padding, height, width, "Notes", true);
     drawYAxis(svg, yScale, padding, height, "Frequency")
+    drawTitle(svg, width, height, padding, "Note Frequency");
 
     svg.append("g")
       .selectAll("g")
@@ -54,7 +55,5 @@ class NotesFrequencyPane {
       .attr("height", d => height - yScale(d.count) - padding)
       .attr("opacity", d => d.match && d.fileCount > 1 ? 0.2 : 1.0)
       .attr("fill", d => d.color);
-
-    drawTitle(svg, width, height, padding, "Note Frequency");
   }
 }

@@ -48,16 +48,24 @@ function drawTitle(svg, width, height, padding, title) {
  * @param width - the width of the SVG
  * @param label - the x-axis label
  */
-function drawXAxis(svg, xScale, padding, height, width, label) {
-  // Draw x-axis
-  svg.append("g")
-    .attr("transform", "translate(0," + (height - padding) + ")")
-    .call(d3.axisBottom(xScale))
-    .selectAll("text")
-    .style("text-anchor", "end")
-    .attr("dx", "-.8em")
-    .attr("dy", ".15em")
-    .attr("transform", "rotate(-25)");
+function drawXAxis(svg, xScale, padding, height, width, label, rotated=false) {
+
+  if (rotated) {
+    svg.append("g")
+      .attr("transform", "translate(0," + (height - padding) + ")")
+      .call(d3.axisBottom(xScale))
+      .selectAll("text")
+      .attr("y", 0)
+      .attr("x", 9)
+      .attr("dy", ".35em")
+      .attr("transform", "rotate(90)")
+      .style("text-anchor", "start");
+  } else {
+    svg.append("g")
+      .attr("transform", "translate(0," + (height - padding) + ")")
+      .call(d3.axisBottom(xScale))
+  }
+
 
   // Draw x-axis title
   svg.append("text")

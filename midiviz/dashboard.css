@@ -117,6 +117,7 @@ div.graph-disabled {
 
 .graph-pane {
   overflow-y: hidden;
+  overflow-x: scroll;
   padding: 2%;
 }
 
@@ -130,10 +131,10 @@ div.graph-disabled {
   display: none;
 }
 
-
 .note-frequency-graph-pane {
   grid-column: 2;
   grid-row: 2;
+  overflow-x: hidden;
 }
 
 .velocity-over-time-graph-pane {
