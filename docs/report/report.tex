@@ -480,7 +480,7 @@ As a result, a lot of consideration went into looking at global features of
 music like dynamics and note totals. These features are not easily extracted
 when listening to music, but they can be very easily detected in a visual
 format. Ultimately, we settled on visualizing the components we felt were
-the most difficult to track during practice. 
+the most difficult to track during practice.
 
 \section{Results and Analysis}
 
@@ -626,7 +626,18 @@ For the final implementation, we completed \#1 and \#2 for the updated prototype
 \subsection{Production Implementation}
 
 Ultimately, the final production dashboard was extended to include a marker
-to illustrate playback. The marker is colored based on which track was playing.
+to illustrate playback. The marker was composed of a colored circle and a vertical
+line segment where the compound structure encodes both the current time of
+playback and which track is playing.
+
+In addition, we implemented a handful of bug fixes and performance updates. For
+example, playback had a handful of issues like continuing to play even after the
+song was deleted. Likewise, we reduced some of the data abstraction techniques to
+improve graph rendering time. However, the tool is still very slow.
+
+Finally, we added missing axes labels. In the process, we also made each SVG
+responsive, so they would properly fill any screen size. The drawback of this
+approach is text skewing. Now, text can seem inconsistent between graphs. 
 
 \section{Discussion}
 
