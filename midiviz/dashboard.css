@@ -1,17 +1,22 @@
 body {
   font-family: BlinkMacSystemFont,-apple-system,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
-  margin: 0;
   background-color: #8bc34a26;
 }
 
 .container {
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: 9% 43% 43% 3%;
+  grid-template-columns: 9% 42% 42% auto;
   grid-template-rows: 60% auto;
-  width: 100%;
-  height: 100vh;
-  margin: .5%;
+  width: 98%;
+  height: 98%;
+
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+  margin: auto;
 }
 
 .box {
