@@ -637,11 +637,23 @@ improve graph rendering time. However, the tool is still very slow.
 
 Finally, we added missing axes labels. In the process, we also made each SVG
 responsive, so they would properly fill any screen size. The drawback of this
-approach is text skewing. Now, text can seem inconsistent between graphs. 
+approach is text skewing. Now, text can seem inconsistent between graphs.
 
 \section{Discussion}
 
 \section{Conclusion}
+
+Overall, JuxtaMIDI turned out to be a solid tool for visualizing differences
+in MIDI files. In particular, the tool highlights errors in note frequency,
+dynamics, rhythm, and pitch. As a result, JuxtaMIDI may be helpful for
+students learning a MIDI-compatible instrument like the piano.
+
+In the future, we would like to expand JuxtaMIDI to allow for content filtering.
+For example, it would be nice to be able to select a region of the master graph
+and filter out all data not in that region on all three plots. Likewise, we
+were also interested in adding some feedback through automated error detection.
+For instance, if a user played quiet in a loud section, we would like to
+highlight that error for the user.
 
 It may seem odd to want to think of music in a visual way, but we feel our
 system will have a positive impact on musicians who want to improve their
