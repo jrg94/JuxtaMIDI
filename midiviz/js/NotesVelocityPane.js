@@ -11,8 +11,9 @@ class NotesVelocityPane {
     var svg = d3.select("#velocity-over-time");
 
     var padding = 50;
-    var width = 1400;
-    var height = 400;
+    var width;
+    var height;
+    [width, height] = getGraphDimensions("#velocity-over-time");
 
     var keys = Object.keys(this.dashboard.midiFiles);
     var timestamps = this.dashboard.mappings.velocity;

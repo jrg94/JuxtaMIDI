@@ -97,3 +97,11 @@ function drawYAxis(svg, yScale, padding, height, label) {
     .style("text-anchor", "middle")
     .text(label);
 }
+
+function getGraphDimensions(graph) {
+  var svg = d3.select(graph);
+  var viewBox = svg.attr("viewBox").split(" ");
+  var width = parseInt(viewBox[2], 10);
+  var height = parseInt(viewBox[3], 10);
+  return [width, height];
+}

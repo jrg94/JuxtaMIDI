@@ -17,8 +17,10 @@ class NotesPlayedPane {
     // TODO: Adjust width here based on parameters? (# of notes, length of song, screen size)?
     // Adjust title formula accordingly. Currently at * 2 for both
     var padding = 50;
-    var width = 3500;
-    var height = 600;
+    var width;
+    var height;
+    [width, height] = getGraphDimensions("#notes-over-time");
+
 
     let mapping = this.dashboard.mappings.notes;
 
