@@ -239,24 +239,19 @@ class MidiFilePane {
   applyTrackMarker(currentTick) {
     for (var graph of ["#notes-over-time", "#velocity-over-time"]) {
       var svg = d3.select(graph);
-      var width = svg.attr("width");
-      var height = svg.attr("height");
-      var padding = 60;
+      var viewBox = svg.attr("viewBox").split(" ");
+      var width = parseInt(viewBox[2], 10);
+      var height = parseInt(viewBox[3], 10);
+      var padding = 50;
 
-      var mapping, maxTime;
-      switch (graph) {
-        case "#notes-over-time":
-          mapping = this.dashboard.mappings.notes;
-          maxTime = mapping[mapping.length - 1].time + mapping[mapping.length - 1].duration;
-          break;
-        case "#velocity-over-time":
-          mapping = this.dashboard.mappings.velocity;
-          maxTime = mapping[mapping.length - 1].time;
-          break;
-      }
+      var mapping = this.dashboard.mappings.velocity;
+      var maxTime = mapping[mapping.length - 1].time;
+
       var xTimeScale = d3.scaleLinear()
         .domain([0, maxTime])
-        .range([padding, width - padding * 2]);
+        .range([padding, width - padding]);
+
+      console.log(graph + maxTime);
 
       svg.selectAll("circle")
         .remove();

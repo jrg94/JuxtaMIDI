@@ -39,6 +39,7 @@ class GraphViewPane {
       d3.selectAll(".graph-pane").classed("selected-view", false);
       d3.selectAll(".graph-pane").classed("graph-disabled", false);
       d3.selectAll(".graph-pane").classed("single-graph-activated", false);
+      this.dashboard.clearSvgs();
       this.dashboard.panes.notesPlayed.graph();
       this.dashboard.panes.notesFrequency.graph();
       this.dashboard.panes.notesVelocity.graph();

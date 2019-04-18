@@ -20,6 +20,12 @@ class Dashboard {
     };
   }
 
+  clearSvgs() {
+    d3.selectAll("svg")
+      .selectAll("*")
+      .remove();
+  }
+
   setMappings() {
     this.mappings = {
       notes: this.getNotesMapping(),
