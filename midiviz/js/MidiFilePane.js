@@ -253,10 +253,11 @@ class MidiFilePane {
         .domain([0, maxTime])
         .range([padding, width - padding]);
 
-      svg.selectAll("line")
+      svg.selectAll("line.temp-line")
         .remove();
 
       svg.append("line")
+        .classed("temp-line", true)
         .attr("x1", xTimeScale(currentTick.tick))
         .attr("y1", height - padding)
         .attr("x2", xTimeScale(currentTick.tick))
