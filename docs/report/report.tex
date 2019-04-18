@@ -630,14 +630,20 @@ to illustrate playback. The marker was composed of a colored circle and a vertic
 line segment where the compound structure encodes both the current time of
 playback and which track is playing.
 
-In addition, we implemented a handful of bug fixes and performance updates. For
-example, playback had a handful of issues like continuing to play even after the
-song was deleted. Likewise, we reduced some of the data abstraction techniques to
-improve graph rendering time. However, the tool is still very slow.
+In addition, we implemented a handful of fixes for the following issues: 
 
-Finally, we added missing axes labels. In the process, we also made each SVG
-responsive, so they would properly fill any screen size. The drawback of this
-approach is text skewing. Now, text can seem inconsistent between graphs.
+\begin{itemize}
+  \item File playback continued even after files were deleted.
+  \item Axes labels were missing.
+  \item Data abstraction techniques were slow.
+\end{itemize}
+
+For the most part, we fixed these issues. However, the tool is still fairly
+slow, and that issue scales as songs are added.
+
+Finally, we also made each SVG responsive, so they would properly fill
+any screen size. The drawback of this approach is text skewing. Now, text can
+seem inconsistent between graphs.
 
 \section{Discussion}
 
