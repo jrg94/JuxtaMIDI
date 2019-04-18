@@ -16,9 +16,9 @@ class NotesPlayedPane {
 
     // TODO: Adjust width here based on parameters? (# of notes, length of song, screen size)?
     // Adjust title formula accordingly. Currently at * 2 for both
-    var padding = 60;
+    var padding = svg.attr("padding");
     var width = d3.select(".master-graph-pane").node().getBoundingClientRect().width * 2;
-    var height = d3.select(".master-graph-pane").node().getBoundingClientRect().height - padding;
+    var height = d3.select(".master-graph-pane").node().getBoundingClientRect().height;
 
     d3.select("#notes-over-time")
       .html("")
