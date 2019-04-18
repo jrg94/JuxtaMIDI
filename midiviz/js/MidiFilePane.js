@@ -211,10 +211,12 @@ class MidiFilePane {
         var file = (midiFile in pane.dashboard.midiFiles) ? pane.dashboard.midiFiles[midiFile].file : pane.dashboard.hiddenMidiFiles[midiFile].file;
         if (file) {
           reader.readAsArrayBuffer(file);
-          reader.addEventListener("load", function () {
+          reader.addEventListener("load", function() {
             pane.dashboard.midiPlayer = new MidiPlayer.Player(function(event) {
               if (event.name == 'Note on') {
-                instrument.play(event.noteName, ac.currentTime, {gain:event.velocity/100});
+                instrument.play(event.noteName, ac.currentTime, {
+                  gain: event.velocity / 100
+                });
               }
             });
             pane.dashboard.midiPlayer.on('playing', pane.applyTrackMarker.bind(pane));
@@ -251,7 +253,16 @@ class MidiFilePane {
         .domain([0, maxTime])
         .range([padding, width - padding]);
 
-      console.log(graph + maxTime);
+      svg.selectAll("line")
+        .remove();
+
+      svg.append("line")
+        .attr("x1", xTimeScale(currentTick.tick))
+        .attr("y1", height - padding)
+        .attr("x2", xTimeScale(currentTick.tick))
+        .attr("y2", padding)
+        .attr("stroke-width", 1)
+        .attr("stroke", "black")
 
       svg.selectAll("circle")
         .remove();
@@ -260,7 +271,7 @@ class MidiFilePane {
         .attr("fill", this.dashboard.midiFiles[this.dashboard.midiPlayerFile].color)
         .attr("cx", xTimeScale(currentTick.tick))
         .attr("cy", height - padding)
-        .attr("r", 5);
+        .attr("r", 4);
     }
   }
 
@@ -294,7 +305,7 @@ class MidiFilePane {
    */
   pauseMidiFile(midiFile) {
     if (this.dashboard.midiPlayerFile === midiFile && typeof midiFile != 'undefined' &&
-        typeof this.dashboard.midiPlayer != 'undefined') {
+      typeof this.dashboard.midiPlayer != 'undefined') {
       this.dashboard.midiPlayer.pause();
       var playSpan = d3.select(`span.midi-play[data-file="${midiFile}"]`);
       var playSpanIcon = playSpan.select("i");
