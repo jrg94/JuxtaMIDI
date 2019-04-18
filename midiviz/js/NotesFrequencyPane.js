@@ -9,12 +9,9 @@ class NotesFrequencyPane {
   graph() {
     var svg = d3.select("#note-frequency");
 
-    var padding = 50;
-    var width;
-    var height;
-    [width, height] = getGraphDimensions("#note-frequency");
-
-    // TODO: Separate this padding into a map? top/bottom/left/right. It appears inconsistently centered now.
+    var width, height, padding;
+    [width, height, padding] = getPaneDimensions("#note-frequency");
+    setGraphDimensions("#note-frequency", width, height);
 
     var keys = Object.keys(this.dashboard.midiFiles);
     var mapping = this.dashboard.mappings.frequency;

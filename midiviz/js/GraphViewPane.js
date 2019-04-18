@@ -34,12 +34,12 @@ class GraphViewPane {
   switchToPane(pane) {
     d3.selectAll(".graph-view-buttons span").classed("disabled-view-button", false);
     d3.selectAll(".graph-view-buttons span").classed("selected-view-button", false);
+    this.dashboard.clearSvgs();
     if (pane == Views.ALL) {
       d3.select("#view-all").classed("selected-view-button", true);
       d3.selectAll(".graph-pane").classed("selected-view", false);
       d3.selectAll(".graph-pane").classed("graph-disabled", false);
       d3.selectAll(".graph-pane").classed("single-graph-activated", false);
-      this.dashboard.clearSvgs();
       this.dashboard.panes.notesPlayed.graph();
       this.dashboard.panes.notesFrequency.graph();
       this.dashboard.panes.notesVelocity.graph();

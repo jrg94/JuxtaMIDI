@@ -22,6 +22,7 @@ class Dashboard {
 
   clearSvgs() {
     d3.selectAll("svg")
+      .html("")
       .selectAll("*")
       .remove();
   }
