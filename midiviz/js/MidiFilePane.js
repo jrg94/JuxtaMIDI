@@ -211,10 +211,12 @@ class MidiFilePane {
         var file = (midiFile in pane.dashboard.midiFiles) ? pane.dashboard.midiFiles[midiFile].file : pane.dashboard.hiddenMidiFiles[midiFile].file;
         if (file) {
           reader.readAsArrayBuffer(file);
-          reader.addEventListener("load", function () {
+          reader.addEventListener("load", function() {
             pane.dashboard.midiPlayer = new MidiPlayer.Player(function(event) {
               if (event.name == 'Note on') {
-                instrument.play(event.noteName, ac.currentTime, {gain:event.velocity/100});
+                instrument.play(event.noteName, ac.currentTime, {
+                  gain: event.velocity / 100
+                });
               }
             });
             pane.dashboard.midiPlayer.on('playing', pane.applyTrackMarker.bind(pane));
@@ -239,24 +241,29 @@ class MidiFilePane {
   applyTrackMarker(currentTick) {
     for (var graph of ["#notes-over-time", "#velocity-over-time"]) {
       var svg = d3.select(graph);
-      var width = svg.attr("width");
-      var height = svg.attr("height");
-      var padding = 60;
+      var viewBox = svg.attr("viewBox").split(" ");
+      var width = parseInt(viewBox[2], 10);
+      var height = parseInt(viewBox[3], 10);
+      var padding = 50;
 
-      var mapping, maxTime;
-      switch (graph) {
-        case "#notes-over-time":
-          mapping = this.dashboard.mappings.notes;
-          maxTime = mapping[mapping.length - 1].time + mapping[mapping.length - 1].duration;
-          break;
-        case "#velocity-over-time":
-          mapping = this.dashboard.mappings.velocity;
-          maxTime = mapping[mapping.length - 1].time;
-          break;
-      }
+      var mapping = this.dashboard.mappings.velocity;
+      var maxTime = mapping[mapping.length - 1].time;
+
       var xTimeScale = d3.scaleLinear()
         .domain([0, maxTime])
-        .range([padding, width - padding * 2]);
+        .range([padding, width - padding]);
+
+      svg.selectAll("line.temp-line")
+        .remove();
+
+      svg.append("line")
+        .classed("temp-line", true)
+        .attr("x1", xTimeScale(currentTick.tick))
+        .attr("y1", height - padding)
+        .attr("x2", xTimeScale(currentTick.tick))
+        .attr("y2", padding)
+        .attr("stroke-width", 1)
+        .attr("stroke", "black")
 
       svg.selectAll("circle")
         .remove();
@@ -265,7 +272,7 @@ class MidiFilePane {
         .attr("fill", this.dashboard.midiFiles[this.dashboard.midiPlayerFile].color)
         .attr("cx", xTimeScale(currentTick.tick))
         .attr("cy", height - padding)
-        .attr("r", 5);
+        .attr("r", 4);
     }
   }
 
@@ -299,7 +306,7 @@ class MidiFilePane {
    */
   pauseMidiFile(midiFile) {
     if (this.dashboard.midiPlayerFile === midiFile && typeof midiFile != 'undefined' &&
-        typeof this.dashboard.midiPlayer != 'undefined') {
+      typeof this.dashboard.midiPlayer != 'undefined') {
       this.dashboard.midiPlayer.pause();
       var playSpan = d3.select(`span.midi-play[data-file="${midiFile}"]`);
       var playSpanIcon = playSpan.select("i");

@@ -16,20 +16,15 @@ class NotesPlayedPane {
 
     // TODO: Adjust width here based on parameters? (# of notes, length of song, screen size)?
     // Adjust title formula accordingly. Currently at * 2 for both
-    var width = d3.select(".master-graph-pane").node().getBoundingClientRect().width * 2;
-    var height = d3.select(".master-graph-pane").node().getBoundingClientRect().height;
-    var padding = 60;
-
-    d3.select("#notes-over-time")
-      .html("")
-      .attr("width", width)
-      .attr("height", height);
+    var padding = 50;
+    var width = 3500;
+    var height = 600;
 
     let mapping = this.dashboard.mappings.notes;
 
     var xTimeScale = d3.scaleLinear()
       .domain([0, d3.max(mapping, d => d.time + d.duration)])
-      .range([padding, width - padding * 2]);
+      .range([padding, width - padding]);
 
     var yNoteScale = d3.scaleBand()
       .domain(mapping.map(d => d.note))
@@ -42,18 +37,8 @@ class NotesPlayedPane {
       .rangeRound([0, yNoteScale.bandwidth()])
       .padding(0.05);
 
-    svg.append("g")
-      .attr("transform", "translate(0," + (height - padding) + ")")
-      .call(d3.axisBottom(xTimeScale))
-      .selectAll("text")
-      .style("text-anchor", "end")
-      .attr("dx", "-.8em")
-      .attr("dy", ".15em")
-      .attr("transform", "rotate(-45)");
-
-    svg.append("g")
-      .attr("transform", "translate(" + padding + ", 0)")
-      .call(d3.axisLeft(yNoteScale));
+    drawXAxis(svg, xTimeScale, padding, height, width / 2, "Time (index)");
+    drawYAxis(svg, yNoteScale, padding, height, "Notes")
 
     drawTitle(svg, width / 2, height, padding, "Notes Played");
 

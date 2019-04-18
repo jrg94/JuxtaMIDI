@@ -22,8 +22,6 @@ class Dashboard {
 
   clearSvgs() {
     d3.selectAll("svg")
-      .attr("height", null) // Reset width/height here, otherwise it carries over changes
-      .attr("width", null)
       .selectAll("*")
       .remove();
   }

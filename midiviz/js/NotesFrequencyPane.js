@@ -9,15 +9,10 @@ class NotesFrequencyPane {
   graph() {
     var svg = d3.select("#note-frequency");
 
-    var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
-    var height = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().height;
-    var padding = 60;
+    var padding = 50;
+    var width = 700;
+    var height = 400;
     // TODO: Separate this padding into a map? top/bottom/left/right. It appears inconsistently centered now.
-
-    d3.select("#note-frequency")
-      .html("")
-      .attr("width", width)
-      .attr("height", height);
 
     var keys = Object.keys(this.dashboard.midiFiles);
     var mapping = this.dashboard.mappings.frequency;
@@ -25,7 +20,7 @@ class NotesFrequencyPane {
 
     var xNoteScale = d3.scaleBand()
       .domain(mapping.map(d => d.note))
-      .range([padding, width - padding * 2])
+      .range([padding, width - padding])
       .padding(.1);
 
     const trackNames = [...new Set(mapping.map(d => d.name))];
@@ -38,18 +33,9 @@ class NotesFrequencyPane {
       .domain([0, d3.max(mapping, d => d.count)])
       .range([height - padding, padding]);
 
-    svg.append("g")
-      .attr("transform", "translate(0," + (height - padding) + ")")
-      .call(d3.axisBottom(xNoteScale))
-      .selectAll("text")
-      .style("text-anchor", "end")
-      .attr("dx", "-.8em")
-      .attr("dy", ".15em")
-      .attr("transform", "rotate(-45)");
-
-    svg.append("g")
-      .attr("transform", "translate(" + padding + ", 0)")
-      .call(d3.axisLeft(yScale));
+    drawXAxis(svg, xNoteScale, padding, height, width, "Notes", true);
+    drawYAxis(svg, yScale, padding, height, "Frequency")
+    drawTitle(svg, width, height, padding, "Note Frequency");
 
     svg.append("g")
       .selectAll("g")
@@ -69,7 +55,5 @@ class NotesFrequencyPane {
       .attr("height", d => height - yScale(d.count) - padding)
       .attr("opacity", d => d.match && d.fileCount > 1 ? 0.2 : 1.0)
       .attr("fill", d => d.color);
-
-    drawTitle(svg, width, height, padding, "Note Frequency");
   }
 }
