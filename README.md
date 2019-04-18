@@ -13,6 +13,7 @@ JuxtaMIDI -- a tool to compare and contrast MIDI recordings.
   - [Source Code][15]
 - Production
   - [Dashboard][4] (See [Sample MIDI Files Section][21] for samples)
+  - [Release Page][22]
   - [Source Code][17]
 - Final Report
   - [PDF][6]
@@ -54,3 +55,4 @@ JuxtaMIDI -- a tool to compare and contrast MIDI recordings.
 [19]: data/Mario-Few.mid
 [20]: data/Mario-Shift.mid
 [21]: #sample-midi-files
+[22]: https://github.com/jrg94/JuxtaMIDI/releases/tag/v1.3.0
