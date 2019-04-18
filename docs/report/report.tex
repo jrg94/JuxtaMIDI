@@ -630,7 +630,7 @@ to illustrate playback. The marker was composed of a colored circle and a vertic
 line segment where the compound structure encodes both the current time of
 playback and which track is playing.
 
-In addition, we implemented a handful of fixes for the following issues: 
+In addition, we implemented a handful of fixes for the following issues:
 
 \begin{itemize}
   \item File playback continued even after files were deleted.
@@ -646,6 +646,23 @@ any screen size. The drawback of this approach is text skewing. Now, text can
 seem inconsistent between graphs.
 
 \section{Discussion}
+
+For musicians, practicing an instrument has long been a feedback loop between
+student and instructor. Naturally, we felt there was an opportunity to add
+a new feedback option through data visualization.
+
+Currently, the JuxtaMIDI solution is very limited. The only people who
+could take advantage of this tool are musicians who play MIDI-compatible
+instruments or musicians who are interested in comparing MIDI tracks.
+Even then, the tool itself is a bit limited. For example, time offsets
+are a major problem when comparing tracks. If a student were to get off by
+a beat, their notes over time plot and velocity over plot would be shifted.
+
+Regardless, we still believe the JuxtaMIDI tool is excellent for observing
+global traits of music. For example, the tool may be handy for determining
+the key of a track based on the note histogram. Likewise, the tool does a
+great job of giving an overview of velocity which may be useful for understanding
+a song's dynamic trajectory.
 
 \section{Conclusion}
 
