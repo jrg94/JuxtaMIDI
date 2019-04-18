@@ -9,9 +9,9 @@ class NotesFrequencyPane {
   graph() {
     var svg = d3.select("#note-frequency");
 
-    var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
-    var height = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().height;
     var padding = 60;
+    var width = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().width;
+    var height = d3.select(".note-frequency-graph-pane").node().getBoundingClientRect().height - padding;
     // TODO: Separate this padding into a map? top/bottom/left/right. It appears inconsistently centered now.
 
     d3.select("#note-frequency")
@@ -38,18 +38,8 @@ class NotesFrequencyPane {
       .domain([0, d3.max(mapping, d => d.count)])
       .range([height - padding, padding]);
 
-    svg.append("g")
-      .attr("transform", "translate(0," + (height - padding) + ")")
-      .call(d3.axisBottom(xNoteScale))
-      .selectAll("text")
-      .style("text-anchor", "end")
-      .attr("dx", "-.8em")
-      .attr("dy", ".15em")
-      .attr("transform", "rotate(-45)");
-
-    svg.append("g")
-      .attr("transform", "translate(" + padding + ", 0)")
-      .call(d3.axisLeft(yScale));
+    drawXAxis(svg, xNoteScale, padding, height, width, "Notes");
+    drawYAxis(svg, yScale, padding, height, "Frequency")
 
     svg.append("g")
       .selectAll("g")

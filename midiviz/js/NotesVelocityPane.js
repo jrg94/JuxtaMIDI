@@ -12,7 +12,9 @@ class NotesVelocityPane {
 
     var padding = 60;
     var width = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().width * 2;
-    var height = d3.select(".master-graph-pane").node().getBoundingClientRect().height - padding;
+    var height = d3.select(".velocity-over-time-graph-pane").node().getBoundingClientRect().height - padding;
+
+    console.log("yo!");
 
     var keys = Object.keys(this.dashboard.midiFiles);
     var timestamps = this.dashboard.mappings.velocity;
@@ -30,18 +32,8 @@ class NotesVelocityPane {
       .domain([d3.min(timestamps, d => d.loVelocity - 15), d3.max(timestamps, d => d.hiVelocity + 15)])
       .range([height - padding, padding]);
 
-    svg.append("g")
-      .attr("transform", "translate(0," + (height - padding) + ")")
-      .call(d3.axisBottom(xTimeScale))
-      .selectAll("text")
-      .style("text-anchor", "end")
-      .attr("dx", "-.8em")
-      .attr("dy", ".15em")
-      .attr("transform", "rotate(-45)");
-
-    svg.append("g")
-      .attr("transform", "translate(" + padding + ", 0)")
-      .call(d3.axisLeft(yVelocityScale));
+    drawXAxis(svg, xTimeScale, padding, height, width / 2, "Time (index)");
+    drawYAxis(svg, yVelocityScale, padding, height, "Velocity")
 
     var subsets = keys.map(key => timestamps.filter(d => d.name == key));
 
