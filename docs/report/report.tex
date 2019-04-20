@@ -249,7 +249,7 @@ static website using just JavaScript, CSS, and HTML.
 \begin{figure}[h]
   \centering
   \includegraphics[width=\columnwidth]{dashboard-single-track}
-  \caption{The dashboard overview}
+  \caption{The dashboard gives an overview of the music data in three forms.}
   \label{fig:dashboard}
 \end{figure}
 
@@ -268,9 +268,16 @@ columns.
 
 \subsubsection{MIDI Selection Interface}
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{midi-selection-single-track}
+  \caption{The MIDI selection pane allows a user to interact with the music files.}
+  \label{fig:midi-selection}
+\end{figure}
+
 As mentioned, the entire first column was dedicated to the MIDI selection
-interface. This interface consisted of a single MIDI upload button and any
-number of MIDI file items.
+interface as seen in \ref{fig:midi-selection}. This interface consisted of a
+single MIDI upload button and any number of MIDI file items.
 
 The upload button works just like any file upload interface. When a file is
 uploaded, a callback function is executed. In this case, we parse the midi file,
@@ -292,11 +299,19 @@ graph panes.
 
 \subsubsection{Notes Over Time Pane}
 
-In the top pane, we render the notes over time graph. Each note is encoded in
-three visual channels: color, position, size. The color gives us the track
-mapping, so it should match whatever color the file was assigned in the MIDI
-selection pane. Meanwhile, the position encodes two pieces of information:
-note and time. Finally, the size encodes note duration.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{notes-played-single-track}
+  \caption{The notes played pane shows the notes played over times.}
+  \label{fig:notes-played}
+\end{figure}
+
+In the top pane, we render the notes over time graph as seen in the
+\ref{fig:notes-played}. Each note is encoded in three visual channels: color,
+position, size. The color gives us the track mapping, so it should match
+whatever color the file was assigned in the MIDI selection pane. Meanwhile, the
+position encodes two pieces of information: note and time. Finally, the size
+encodes note duration.
 
 When looking at this graph, it is helpful to imagine a piano along the y-axis.
 Lower pitches are near the top of the graph while higher pitches are closer to the
