@@ -146,7 +146,7 @@ compare practice MIDI files with professional MIDI files. The goal is to isolate
 areas in the practice file which are most unlike the professional file for the
 sake of improvement.
 
-This project is named "JuxtaMIDI", since it juxtaposes MIDI files
+This project is named JuxtaMIDI, since it juxtaposes MIDI files
 for users to compare and analyze.
 
 \section{Planning}
@@ -504,8 +504,7 @@ meaningful to our end user. For example, the resulting JavaScript object
 contained a lot of nested information about tracks and events but almost no
 clear information on how that data maps to musical notes, rhythms, and dynamics.
 To make matters worse, MIDI files store events using numeric codes, so the
-data is not easy to read. For example, how are we supposed to know what
-the following means:
+data is not easy to read, like below:
 
 \begin{itemize}
   \item Type: 9
@@ -514,10 +513,9 @@ the following means:
   \item Duration: 120
 \end{itemize}
 
-To do with this, we had to go up another level of abstraction using LUTs.
-For instance, it may be nice to know that a type 9 event indicates onset which
-marks the beginning of a note. It might also be helpful to know which note 47
-is and exactly how to make sense of the velocity tuple.
+To deal with this, we had to do significant data modifications for our work.
+For example, a type 9 event indicates onset which marks the beginning of a note, while a type 8 event represents the end.
+Some MIDI files also choose to represent their note off events as note onsets with 0 volume.
 
 Ultimately, we wanted the user to interact with the music in a way that they
 think about it on a daily basis: notes, rhythms, dynamics, chords, etc. To get
@@ -573,10 +571,6 @@ Evaluation was done in two phases, an initial prototype on March 7, 2019 and an
 updated prototype on April 6, 2019. Feedback was gathered from both phases to
 evaluate and improve the product.
 
-For the updated prototype evaluation, we shared the tool with one of our advisors.
-Unfortunately, they hadn’t gotten around to the tool in time due to vis paper
-deadlines. As a result, we decided to review the tool ourselves.
-
 \subsection{Prototype Design}
 
 The initial prototype aimed to accomplish several of the major tasks mentioned
@@ -620,8 +614,8 @@ list contains the feedback from our peers:
 \subsection{Musician Feedback}
 
 In addition to the in class feedback, we also chose to evaluate the JuxtaMIDI
-platform ourselves. In particular, Stephen leveraged his intermediate piano
-playing abilities to generate the following list of comments:
+platform ourselves. In particular, Stephen leveraged his piano background to come up with
+some thoughts.
 
 Inherent limitations:
 \begin{itemize}
@@ -690,7 +684,7 @@ following changes:
 \begin{enumerate}
   \item Adding a time marker to show where the user is in the song
   \item Changing velocity plot to be more expressive
-  \item Reordering the color array so additional tracks have drastically different colors
+  \item Improving color choices or overlay so that tracks are more easily distinguished
   \item Adding option for user to specify tempo, changing time to measure
 \end{enumerate}
 

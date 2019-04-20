@@ -43,7 +43,7 @@ class Dashboard {
    *  ...]
    */
   getNotesMapping() {
-    var mapping = []
+    var mapping = [];
     for (const [name, midiFile] of Object.entries(this.midiFiles)) {
       var track = midiFile.track;
       track.forEach(function(midiEvent) {
@@ -52,7 +52,8 @@ class Dashboard {
           var currentEvent = midiEvent.event[i];
           runningTime += currentEvent.deltaTime;
 
-          if (currentEvent.type == 9 && currentEvent.data[1] > 0) { // Note is "noteOn" event
+          if (currentEvent.type == 9 && currentEvent.data[1] > 0) {
+            // Note is "noteOn" event
             var currentNote = currentEvent.data[0];
             var runningTimeSinceCurrent = 0;
 
@@ -66,7 +67,11 @@ class Dashboard {
               runningTimeSinceCurrent += nextEvent.deltaTime;
               if ("data" in nextEvent && nextEvent.data.length > 0) {
                 var nextNote = nextEvent.data[0];
-                if ((nextEvent.type == 8 || nextEvent.type == 9) && nextNote == currentNote && currentEvent.channel == nextEvent.channel) {
+                if (
+                  (nextEvent.type == 8 || nextEvent.type == 9) &&
+                  nextNote == currentNote &&
+                  currentEvent.channel == nextEvent.channel
+                ) {
                   mapping.push({
                     name: name,
                     time: runningTime,
@@ -83,10 +88,13 @@ class Dashboard {
         }
       });
     }
-    mapping.sort((a, b) => Constants.NOTE_MAPPING.indexOf(b.note) - Constants.NOTE_MAPPING.indexOf(a.note))
+    mapping.sort(
+      (a, b) =>
+        Constants.NOTE_MAPPING.indexOf(b.note) -
+        Constants.NOTE_MAPPING.indexOf(a.note)
+    );
     return mapping;
   }
-
 
   /**
    * Generate a mapping of timestmaps and velocities.
@@ -94,7 +102,7 @@ class Dashboard {
    * [{name: "3.mid", time: 10, velocity: 201, note: "F#4", color: "#a6cee3"}, ...]
    */
   getVelocityMapping() {
-    var mapping = []
+    var mapping = [];
     for (const [name, midiFile] of Object.entries(this.midiFiles)) {
       var track = midiFile.track;
       track.forEach(function(midiEvent) {
@@ -104,14 +112,23 @@ class Dashboard {
           if (d.type == 9 && d.data[1] > 0) {
             var existingTimestamp;
             for (var timestamp of mapping) {
-              if (timestamp["name"] == name && timestamp["time"] == runningTime) {
+              if (
+                timestamp["name"] == name &&
+                timestamp["time"] == runningTime
+              ) {
                 existingTimestamp = timestamp;
                 break;
               }
             }
             if (existingTimestamp) {
-              existingTimestamp.loVelocity = Math.min(d.data[1], existingTimestamp.loVelocity);
-              existingTimestamp.hiVelocity = Math.max(d.data[1], existingTimestamp.hiVelocity);
+              existingTimestamp.loVelocity = Math.min(
+                d.data[1],
+                existingTimestamp.loVelocity
+              );
+              existingTimestamp.hiVelocity = Math.max(
+                d.data[1],
+                existingTimestamp.hiVelocity
+              );
             } else {
               mapping.push({
                 name: name,
@@ -125,10 +142,9 @@ class Dashboard {
         });
       });
     }
-    mapping.sort((a, b) => a.time - b.time)
+    mapping.sort((a, b) => a.time - b.time);
     return mapping;
   }
-
 
   /**
    * Populates a mapping based on note frequency.
@@ -154,7 +170,7 @@ class Dashboard {
                 color: midiFile.color,
                 note: find,
                 count: 1
-              })
+              });
             }
           }
         });
@@ -167,8 +183,8 @@ class Dashboard {
     master.forEach(function(d) {
       const notes = mapping.filter(item => item.note == d.note);
       const match = notes.every(item => item.count == notes[0].count);
-      notes.forEach(item => item.match = match);
-      notes.forEach(item => item.fileCount = files.length);
+      notes.forEach(item => (item.match = match));
+      notes.forEach(item => (item.fileCount = files.length));
     });
 
     return mapping;
