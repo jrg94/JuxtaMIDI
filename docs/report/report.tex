@@ -350,11 +350,18 @@ sort that axis by the note frequency of the primary track.
 
 \subsubsection{Note Velocity Pane}
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{note-velocity-single-track}
+  \caption{The note velocity pane shows the range of note velocities over time.}
+  \label{fig:note-velocity}
+\end{figure}
+
 While the other two plots were relatively straightforward, we had a lot of
-trouble deciding on the note velocity plot. Ideally, what we would like to be
-able to capture in this plot is dynamics. In other words, how can we show
-the ebb and flow of volume over time to the user. As it turns out, it is harder
-than it seems.
+trouble deciding on the note velocity plot as seen in figure \ref{fig:note-velocity}.
+Ideally, what we would like to be able to capture in this plot is dynamics. In
+other words, how can we show the ebb and flow of volume over time to the user.
+As it turns out, it is harder than it seems.
 
 Initially, we tried summing the velocity of all the notes at each time step and
 plotting the results. Unfortunately, the resulting curve was pretty eratic. In
@@ -372,8 +379,16 @@ same units as the notes over time plot, and the y-axis is raw velocity.
 
 \subsubsection{Plot Filtering Pane}
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{plot-filtering-single-track}
+  \caption{The plot filtering pane allows a user to expand each plot for viewing.}
+  \label{fig:plot-filtering}
+\end{figure}
+
 Finally, we added a plot filtering pane which gives us control over which pane
-we can see at any given time. There are four options:
+we can see at any given time as seen in figure \ref{fig:plot-filtering}. There
+are four options:
 
 \begin{itemize}
   \item All panes as described in the dashboard overview
