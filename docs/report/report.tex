@@ -408,11 +408,19 @@ haven't discussed exactly how that interactivity works up to this point. To
 reiterate, there are four main ways to interact with each file: toggling,
 renaming, deleting, and playing.
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{dashboard-multi-track}
+  \caption{An example of the dashboard with three music files--two active.}
+  \label{fig:dashboard-multi}
+\end{figure}
+
 When we toggle a file, the state of that file changes based on its previous
 state. In other words, if we were originally showing a file in all three graphs,
-toggling it would remove it from the graphs. Toggling it again would render in
-all three graphs once again. Meanwhile, deleting a file will remove the file
-from the program completely, and renaming a file updates all the tooltips.
+toggling it would remove it from the graphs as seen in figure
+\ref{fig:dashboard-multi}. Toggling it again would render in all three graphs
+once again. Meanwhile, deleting a file will remove the file from the program
+completely, and renaming a file updates all the tooltips.
 
 In addition, users can play each file as well. When a file is playing, a marker
 is added to each time-domain graph (i.e. notes of time, velocity over time, etc.)
