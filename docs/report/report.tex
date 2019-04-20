@@ -48,12 +48,13 @@
 \usepackage{mathptmx}                  % use matching math font
 \usepackage{times}                     % we use Times as the main font
 %\renewcommand*\ttdefault{txtt}         % a nicer typewriter font
-\usepackage{cite}                      % needed to automatically sort the references
 \usepackage{tabu}                      % only used for the table example
 \usepackage{booktabs}                  % only used for the table example
 %% We encourage the use of mathptmx for consistent usage of times font
 %% throughout the proceedings. However, if you encounter conflicts
 %% with other math-related packages, you may want to disable it.
+\usepackage[backend=bibtex]{biblatex}
+\bibliography{bib}{}
 
 %% In preprint mode you may define your own headline.
 %\preprinttext{To appear in IEEE Transactions on Visualization and Computer Graphics.}
@@ -154,6 +155,29 @@ As students interested in music and music education, we wanted to explore how da
 could improve the traditional and often tedious methods of practice. Additionally, we came up with some
 research questions, design goals, tasks, and metrics which we used to map
 out our implementation.
+
+\subsection{Related Work}
+
+Many authors have explored music visualization and analysis, often using MIDI files
+as their data source, since mp3s and other sound formats are difficult to work with. A few have explored MIDI comparison and analysis.
+
+Music visualization includes examining 3D Space and color for non-musicians \cite{visualization},
+and emotion-based work \cite{emotion}. Some of these work with MIDI, while others work with sound files directly.
+
+Software like GarageBand \cite{garage-band} help users record MIDI input and this was used as inspiration for the Master notes pane. Other
+software like MuseScore \cite{muse-score} turns the MIDI input into sheet music, which is a difficult task without complete accuracy.
+These tools are more geared towards composition and not learning though, but they are used as inspiration for the project.
+
+MIDI analysis and classification includes looking at genres \cite{genre-classification}
+and even melody extraction \cite{melody-extraction}. The former converts the MIDI pieces to audio,
+and analyze the audio directly using audio features. Our work, like the later, analyzes the MIDI file events directly.
+
+Some education work examines students perspectives on composing with MIDI \cite{student-perspectives}, showing how
+beginning students easily picked up on recording music with MIDI sequencing software. Sound quality was an issue
+students noted, but the ease of students learning the software and working with MIDI files and visualizations
+helps support the work in this paper.
+
+Our work attempts to combine MIDI analysis, music visualization, and apply it towards learning.
 
 \subsection{Research Questions}
 
@@ -730,5 +754,7 @@ highlight that error for the user.
 It may seem odd to want to think of music in a visual way, but we feel our
 system will have a positive impact on musicians who want to improve their
 practice sessions.
+
+\printbibliography
 
 \end{document}
