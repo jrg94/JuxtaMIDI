@@ -246,10 +246,18 @@ static website using just JavaScript, CSS, and HTML.
 
 \subsubsection{Dashboard Overview}
 
-In terms of general design, we went with a dashboard approach using CSS grids.
-In other words, we divided the space into four columns by percentage of screen
-width from left to right: 9\%, 43\%, 43\%, and 3\%. Likewise, we divided
-the space into two rows by screen height from top to bottom: 60\% and auto.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{dashboard-single-track}
+  \caption{The dashboard overview}
+  \label{fig:dashboard}
+\end{figure}
+
+In terms of general design, we went with a dashboard approach using CSS grids
+as seen in figure \ref{fig:dashboard}. In other words, we divided the space into
+four columns by percentage of screen width from left to right: 9\%, 43\%, 43\%,
+and 3\%. Likewise, we divided the space into two rows by screen height from top
+to bottom: 60\% and auto.
 
 Each dashboard element was then assigned some range of grid points that they
 could occupy. For example, the MIDI selection interface was given the entire
